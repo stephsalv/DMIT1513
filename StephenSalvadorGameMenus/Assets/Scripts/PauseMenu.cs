@@ -5,34 +5,59 @@ using UnityEngine.SceneManagement;
 
 public class PauseMenu : MonoBehaviour
 {
-    Animator myAnimator;
+    [SerializeField] GameObject pauseMenu, pauseButton, playButton, exitButton;
+    private bool isPaused = false;
+
 
     void Start()
     {
-        myAnimator = GetComponent<Animator>();
+        pauseMenu .SetActive(false);
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (Keyboard.current.escapeKey.wasPressedThisFrame)
         {
-            myAnimator.SetBool("Open", !myAnimator.GetBool("Open"));
+            if (isPaused)
+                Resume();
+            else
+                Pause();
         }
-    }
-    public void Resume()
-    {
-        SceneManager.LoadSceneAsync(1);
     }
 
     public void ReturnToTitle()
     {
-        SceneManager.LoadSceneAsync(2);
+        Time.timeScale = 1f; // Reset time before switching scenes
+        SceneManager.LoadScene(0);
+    }
+    public void Play()
+    {
+        Time.timeScale = 1f; // Reset time before switching scenes
+        SceneManager.LoadScene(1);
     }
 
-    public void ExitButton()
+    public void Exit()
     {
         Debug.Log("Quitting Game...");
         Application.Quit();
+    }
+
+    public void Pause()
+    {
+        Time.timeScale = 0f;
+        pauseMenu.SetActive(true);
+        pauseButton.SetActive(false);
+        playButton.SetActive(false);
+        exitButton.SetActive(false);
+        isPaused = true;
+    }
+    public void Resume()
+    {
+        Time.timeScale = 0f;
+        pauseMenu.SetActive(false);
+        pauseButton.SetActive(true);
+        playButton.SetActive(true);
+        exitButton.SetActive(true);
+        isPaused = false;
     }
 }

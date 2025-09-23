@@ -1,34 +1,59 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+
 
 
 public class CarSelection : MonoBehaviour
 {
-    [SerializeField] private Button previousBtn;
-    [SerializeField] private Button nextBtn;
 
-    private int currentCar;
+    public GameObject[] cars;
+    public int currentCar;
+    public bool inGameplayScene = false;
 
-    private void Awake()
+    void Start()
     {
-        SelectCar(0);
+        int selectedCar = PlayerPrefs.GetInt("SelectedCarID");
+        if(inGameplayScene == true)
+        {
+            cars[selectedCar].SetActive(true);
+            currentCar = selectedCar;
+        }
+    }
+    void Update()
+    {
+
     }
 
-    private void SelectCar(int index)
+    public void Next()
     {
-        previousBtn.interactable = (index != 0);
-        nextBtn.interactable = (index != transform.childCount -1);
-
-        for (int i = 0; 1 < transform.childCount; i++)
+        if (currentCar < cars.Length - 1)
         {
-            transform.GetChild(1).gameObject.SetActive(i == index);
+            currentCar += 1;
+            for (int i = 0; i < cars.Length; i++)
+            {
+                cars[i].SetActive(false);
+                cars[currentCar].SetActive(true);
+            }
+        }
+    }
+    public void Previous()
+    {
+        if (currentCar > 0)
+        {
+            currentCar -= 1;
+            for (int i = 0; i < cars.Length; i++)
+            {
+                cars[i].SetActive(false);
+                cars[currentCar].SetActive(true);
+            }
         }
     }
 
-    public void ChangeCar(int change)
+    public void Select()
     {
-        currentCar += change;
-        SelectCar(currentCar);
+        PlayerPrefs.SetInt("SelectedCarID", currentCar);
+        SceneManager.LoadScene(2); //goes to gameplay scene
     }
 
 }
