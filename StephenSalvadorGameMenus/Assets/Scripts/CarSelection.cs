@@ -6,7 +6,6 @@ using UnityEngine.SceneManagement;
 
 public class CarSelection : MonoBehaviour
 {
-
     public GameObject[] cars;
     public int currentCar;
     public bool inGameplayScene = false;
@@ -14,12 +13,13 @@ public class CarSelection : MonoBehaviour
     void Start()
     {
         int selectedCar = PlayerPrefs.GetInt("SelectedCarID");
-        if(inGameplayScene == true)
+        if (inGameplayScene == true)
         {
             cars[selectedCar].SetActive(true);
             currentCar = selectedCar;
         }
     }
+
     void Update()
     {
 
@@ -37,6 +37,7 @@ public class CarSelection : MonoBehaviour
             }
         }
     }
+
     public void Previous()
     {
         if (currentCar > 0)
@@ -53,7 +54,7 @@ public class CarSelection : MonoBehaviour
     public void Select()
     {
         PlayerPrefs.SetInt("SelectedCarID", currentCar);
-        SceneManager.LoadScene(2); //goes to gameplay scene
+        PlayerPrefs.Save();
+        SceneManager.LoadScene(2); // Load gameplay scene
     }
-
 }

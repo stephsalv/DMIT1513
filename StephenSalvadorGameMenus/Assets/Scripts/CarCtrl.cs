@@ -4,56 +4,45 @@ using UnityEngine;
 public class CarController : MonoBehaviour
 {
     public Rigidbody theRB;
-    public float maxSpeed;
-    public float forwardAccel = 0f, reverseAccel = 0f;
-    private float speedInput;
-    public float turnStrength = 0f;
-    private float turnInput;
-    public ParticleSystem[] dustTrail;
-    public float maxEmissions = 25f, emissionFadeSpeed = 20f;
-    private float emissionRate;
-    public bool grounded;
     public Transform groundRayPoint;
     public LayerMask WhatIsGround;
     public float groundRayLength = 0.75f;
+
+    private float speedInput;
+    private float turnInput;
+    private bool grounded;
     private float dragOnGround;
 
     void Start()
     {
         theRB.transform.parent = null;
         dragOnGround = theRB.linearDamping;
+
+        // Load settings from Singleton
+        speedInput = 0f;
     }
 
     void Update()
     {
+        float maxSpeed = CarSettingsManager.Instance.maxSpeed;
+        float forwardAccel = CarSettingsManager.Instance.forwardAccel;
+        float reverseAccel = forwardAccel * 0.5f; // Optional tweak
+        float turnStrength = CarSettingsManager.Instance.turnStrength;
+
         speedInput = 0f;
-        if (Input.GetAxis("Vertical") > 0)
-        {
-            speedInput = Input.GetAxis("Vertical") * forwardAccel;
-        }
-        else if (Input.GetAxis("Vertical") < 0)
-        {
-            speedInput = Input.GetAxis("Vertical") * reverseAccel;
-        }
+        float vertical = Input.GetAxis("Vertical");
+
+        if (vertical > 0)
+            speedInput = vertical * forwardAccel;
+        else if (vertical < 0)
+            speedInput = vertical * reverseAccel;
 
         turnInput = Input.GetAxis("Horizontal");
 
-        if (Input.GetAxis("Vertical") != 0)
+        if (vertical != 0)
         {
-            transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles + new Vector3(0f, turnInput * turnStrength * Time.deltaTime * MathF.Sign(speedInput) * (theRB.linearVelocity.magnitude / maxSpeed), 0f));
-        }
-
-        // Control particle
-        emissionRate = Mathf.MoveTowards(emissionRate, 25f, emissionFadeSpeed * Time.deltaTime);
-        if (grounded)
-        {
-            emissionRate = maxEmissions;
-        }
-
-        for (int i = 0; i < dustTrail.Length; i++)
-        {
-            var emissionModule = dustTrail[i].emission;
-            emissionModule.rateOverTime = emissionRate;
+            float turnAmount = turnInput * turnStrength * Time.deltaTime * Mathf.Sign(speedInput) * (theRB.linearVelocity.magnitude / maxSpeed);
+            transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles + new Vector3(0f, turnAmount, 0f));
         }
 
         if (theRB.linearVelocity.magnitude > maxSpeed)
@@ -62,16 +51,9 @@ public class CarController : MonoBehaviour
         }
     }
 
-    private void FixedUpdate()
+    void FixedUpdate()
     {
-        grounded = false;
-
-        RaycastHit hit;
-
-        if (Physics.Raycast(groundRayPoint.position, -transform.up, out hit, groundRayLength, WhatIsGround))
-        {
-            grounded = true;
-        }
+        grounded = Physics.Raycast(groundRayPoint.position, -transform.up, groundRayLength, WhatIsGround);
 
         if (grounded)
         {
@@ -79,8 +61,6 @@ public class CarController : MonoBehaviour
             theRB.AddForce(transform.forward * speedInput * 1000f);
         }
 
-        theRB.AddForce(transform.forward * speedInput * 1000f);
         transform.position = theRB.position;
     }
-
 }

@@ -6,6 +6,10 @@ TagManager:
   tags:
   - Ground
   - Vehicle
+  - Target
+  - Pos1
+  - Pos2
+  - Pos3
   layers:
   - Default
   - TransparentFX

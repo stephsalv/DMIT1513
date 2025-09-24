@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class PauseMenu : MonoBehaviour
 {
-    [SerializeField] GameObject pauseMenu, pauseButton, playButton, exitButton;
+    [SerializeField] GameObject pauseMenu, gameplayUI, pauseButton, playButton, exitButton;
     private bool isPaused = false;
 
 
@@ -30,6 +30,11 @@ public class PauseMenu : MonoBehaviour
         Time.timeScale = 1f; // Reset time before switching scenes
         SceneManager.LoadScene(0);
     }
+    public void Customize()
+    {
+        Time.timeScale = 1f; // Reset time before switching scenes
+        SceneManager.LoadScene(1);
+    }
     public void Play()
     {
         Time.timeScale = 1f; // Reset time before switching scenes
@@ -46,18 +51,16 @@ public class PauseMenu : MonoBehaviour
     {
         Time.timeScale = 0f;
         pauseMenu.SetActive(true);
-        pauseButton.SetActive(false);
-        playButton.SetActive(false);
-        exitButton.SetActive(false);
+        gameplayUI.SetActive(false); // Hide everything else
         isPaused = true;
     }
+
     public void Resume()
     {
-        Time.timeScale = 0f;
+        Time.timeScale = 1f;
         pauseMenu.SetActive(false);
-        pauseButton.SetActive(true);
-        playButton.SetActive(true);
-        exitButton.SetActive(true);
+        gameplayUI.SetActive(true); // Show gameplay UI again
         isPaused = false;
     }
+
 }
