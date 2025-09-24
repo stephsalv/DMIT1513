@@ -7,11 +7,19 @@ public class CarController : MonoBehaviour
     public Transform groundRayPoint;
     public LayerMask WhatIsGround;
     public float groundRayLength = 0.75f;
+    public float maxSpeed;
 
     private float speedInput;
     private float turnInput;
     private bool grounded;
     private float dragOnGround;
+
+    // Added audio variables
+    public AudioClip idleEngineSound;
+    public AudioClip dashEngineSound;
+    private AudioSource engineSource;
+    private AudioSource driftSource;
+    private bool isMoving = false; // Moving check variables
 
     void Start()
     {
@@ -20,6 +28,18 @@ public class CarController : MonoBehaviour
 
         // Load settings from Singleton
         speedInput = 0f;
+
+        // Add audio source
+        engineSource = gameObject.AddComponent<AudioSource>();
+        driftSource = gameObject.AddComponent<AudioSource>();
+
+        // Set engine sound
+        engineSource.clip = idleEngineSound;
+        engineSource.loop = true;
+        engineSource.playOnAwake = false;
+        engineSource.volume = 0.3f; // Setting the default volume
+
+        engineSource.Play();
     }
 
     void Update()
@@ -49,6 +69,8 @@ public class CarController : MonoBehaviour
         {
             theRB.linearVelocity = theRB.linearVelocity.normalized * maxSpeed;
         }
+        // Update engine sound
+        UpdateEngineSound();
     }
 
     void FixedUpdate()
@@ -62,5 +84,25 @@ public class CarController : MonoBehaviour
         }
 
         transform.position = theRB.position;
+    }
+    private void UpdateEngineSound()
+    {
+        float speedMagnitude = theRB.linearVelocity.magnitude;
+        bool isCurrentlyMoving = speedMagnitude > 0.5f;
+
+        if (isCurrentlyMoving != isMoving)
+        {
+            isMoving = isCurrentlyMoving;
+            if (isMoving)
+            {
+                engineSource.clip = dashEngineSound;
+            }
+            else
+            {
+                engineSource.clip = idleEngineSound;
+            }
+            engineSource.Play();
+        }
+        engineSource.pitch = Mathf.Lerp(0.8f, 2.0f, speedMagnitude / maxSpeed);
     }
 }
