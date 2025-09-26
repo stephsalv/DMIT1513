@@ -1,18 +1,14 @@
-using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class CarController : MonoBehaviour
 {
     public Rigidbody theRB;
     public Transform groundRayPoint;
     public LayerMask WhatIsGround;
-    public float groundRayLength = 0.75f;
-    public float maxSpeed;
-
-    private float speedInput;
-    private float turnInput;
+    public float groundRayLength = 0.75f, maxSpeed, turnStrength;
+    private float speedInput, turnInput, dragOnGround;
     private bool grounded;
-    private float dragOnGround;
 
     // Added audio variables
     public AudioClip idleEngineSound;
@@ -46,7 +42,7 @@ public class CarController : MonoBehaviour
     {
         float maxSpeed = CarSettingsManager.Instance.maxSpeed;
         float forwardAccel = CarSettingsManager.Instance.forwardAccel;
-        float reverseAccel = forwardAccel * 0.5f; // Optional tweak
+        float reverseAccel = forwardAccel * 0.5f;
         float turnStrength = CarSettingsManager.Instance.turnStrength;
 
         speedInput = 0f;
