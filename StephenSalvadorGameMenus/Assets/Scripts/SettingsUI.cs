@@ -13,19 +13,19 @@ public class CarSettingsUI : MonoBehaviour
 
     public void SetSpeedFast()
     {
-        CarSettingsManager.Instance.SetMaxSpeed(80f);
+        CarSettingsManager.Instance.SetMaxSpeed(60f);
         HighlightSelected(speedButtons[0], speedButtons);
     }
 
     public void SetSpeedSlow()
     {
-        CarSettingsManager.Instance.SetMaxSpeed(60f);
+        CarSettingsManager.Instance.SetMaxSpeed(40f);
         HighlightSelected(speedButtons[1], speedButtons);
     }
 
     public void SetAccelHigh()
     {
-        CarSettingsManager.Instance.SetForwardAccel(30f);
+        CarSettingsManager.Instance.SetForwardAccel(40f);
         HighlightSelected(accelButtons[0], accelButtons);
     }
 
@@ -43,7 +43,7 @@ public class CarSettingsUI : MonoBehaviour
 
     public void SetTurnWide()
     {
-        CarSettingsManager.Instance.SetTurnStrength(40f);
+        CarSettingsManager.Instance.SetTurnStrength(50f);
         HighlightSelected(turnButtons[1], turnButtons);
     }
 

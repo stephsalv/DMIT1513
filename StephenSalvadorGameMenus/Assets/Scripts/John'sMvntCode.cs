@@ -1,68 +1,64 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class TankControl : MonoBehaviour
+public class CarControl : MonoBehaviour
 {
-    [SerializeField] float movementSpeed = 3.0f, rotationSpeed = 100.0f, forwardValue, backwardValue, rightValue, leftValue, rightTurretValue, leftTurretValue;
-
-
-    [SerializeField] GameObject turret;
-
+    [SerializeField] float decelerationRate = 5f;
+    [SerializeField] GameObject car;
     [SerializeField] int gamepadIndex;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
+    float currentSpeed = 0f;
+    float inputForward = 0f;
+    float inputTurn = 0f;
 
-    // Update is called once per frame
     void FixedUpdate()
     {
-        // Keyboard Control
-        //if (Keyboard.current.wKey.isPressed)
-        //{
-        //    transform.Translate(Vector3.forward * movementSpeed * Time.fixedDeltaTime);
-        //}
+        // Get current settings from the Singleton
+        float maxSpeed = CarSettingsManager.Instance.maxSpeed;
+        float accelSpeed = CarSettingsManager.Instance.forwardAccel;
+        float rotationSpeed = CarSettingsManager.Instance.turnStrength;
 
-        //if (Keyboard.current.sKey.isPressed)
-        //{
-        //    transform.Translate(-Vector3.forward * movementSpeed * Time.fixedDeltaTime);
-        //}
+        // Reset input
+        inputForward = 0f;
+        inputTurn = 0f;
 
-        //if (Keyboard.current.aKey.isPressed)
-        //{
-        //    transform.Rotate(-Vector3.up * rotationSpeed * Time.fixedDeltaTime);
-        //}
+        // Keyboard Input
+        if (Keyboard.current.wKey.isPressed) inputForward = 1f;
+        if (Keyboard.current.sKey.isPressed) inputForward = -1f;
+        if (Keyboard.current.aKey.isPressed) inputTurn = -1f;
+        if (Keyboard.current.dKey.isPressed) inputTurn = 1f;
 
-        //if (Keyboard.current.dKey.isPressed)
-        //{
-        //    transform.Rotate(Vector3.up * rotationSpeed * Time.fixedDeltaTime);
-        //}
+        // Gamepad Input
+        if (Gamepad.all.Count > gamepadIndex)
+        {
+            var gamepad = Gamepad.all[gamepadIndex];
+            inputForward += gamepad.leftStick.y.ReadValue(); // forward/backward
+            inputTurn += gamepad.leftStick.x.ReadValue();    // left/right
+        }
 
-        //if (Keyboard.current.jKey.isPressed)
-        //{
-        //    turret.transform.Rotate(-Vector3.up * rotationSpeed * Time.fixedDeltaTime);
-        //}
+        // Apply acceleration
+        if (Mathf.Abs(inputForward) > 0.1f)
+        {
+            currentSpeed += inputForward * accelSpeed * Time.fixedDeltaTime;
+        }
+        else
+        {
+            // Apply deceleration
+            if (currentSpeed > 0)
+                currentSpeed -= decelerationRate * Time.fixedDeltaTime;
+            else if (currentSpeed < 0)
+                currentSpeed += decelerationRate * Time.fixedDeltaTime;
 
-        //if (Keyboard.current.lKey.isPressed)
-        //{
-        //    turret.transform.Rotate(Vector3.up * rotationSpeed * Time.fixedDeltaTime);
-        //}
+            // Clamp near-zero to zero
+            if (Mathf.Abs(currentSpeed) < 0.1f)
+                currentSpeed = 0f;
+        }
 
-        // Gampad Control
-        forwardValue = Gamepad.all[gamepadIndex].leftStick.up.value;
-        backwardValue = Gamepad.all[gamepadIndex].leftStick.down.value;
-        rightValue = Gamepad.all[gamepadIndex].rightStick.right.value;
-        leftValue = Gamepad.all[gamepadIndex].rightStick.left.value;
-        // rightTurretValue = Gamepad.all[gamepadIndex].rightStick.right.value;
-        // leftTurretValue = Gamepad.all[gamepadIndex].rightStick.left.value;
+        // Clamp speed
+        currentSpeed = Mathf.Clamp(currentSpeed, -maxSpeed, maxSpeed);
 
-        transform.Translate(Vector3.forward * (forwardValue - backwardValue) * movementSpeed * Time.fixedDeltaTime);
-        transform.Rotate(Vector3.up, (rightValue - leftValue) * rotationSpeed * Time.fixedDeltaTime);
-        // turret.transform.Rotate(Vector3.up, (rightTurretValue - leftTurretValue) * rotationSpeed * Time.fixedDeltaTime);
-
-        
+        // Move and rotate
+        transform.Translate(Vector3.forward * currentSpeed * Time.fixedDeltaTime);
+        transform.Rotate(Vector3.up * inputTurn * rotationSpeed * Time.fixedDeltaTime);
     }
 }
-
