@@ -1723,7 +1723,7 @@ GameObject:
   - component: {fileID: 1130794029}
   - component: {fileID: 1130794028}
   m_Layer: 5
-  m_Name: Camera
+  m_Name: CameraButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2369,7 +2369,7 @@ PrefabInstance:
       objectReference: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
     - target: {fileID: 7813587922378169494, guid: a7bf8e71846ff9f408b969be7ed66cbb, type: 3}
       propertyPath: m_DefaultActionMap
-      value: Player
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 7813587922378169494, guid: a7bf8e71846ff9f408b969be7ed66cbb, type: 3}
       propertyPath: m_DefaultControlScheme
