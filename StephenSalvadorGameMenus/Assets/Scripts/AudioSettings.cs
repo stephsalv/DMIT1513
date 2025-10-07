@@ -14,6 +14,21 @@ public class AudioSettings : MonoBehaviour
     //public AudioClip supra;
 
     public static AudioSettings instance;
+    private void Awake()
+    {
+        //if (instance == null)
+        //{
+        //    instance = this;
+        //    DontDestroyOnLoad(this);
+
+        //}
+        //else
+        //{
+        //    Destroy(gameObject);
+        //}
+        DontDestroyOnLoad(gameObject);
+
+    }
 
     private void Start()
     {
@@ -26,18 +41,5 @@ public class AudioSettings : MonoBehaviour
     //    SFXSource.PlayOneShot(clip);
     //}
 
-    private void Awake()
-    {
-        if (instance == null)
-        {
-            instance = this;
-            DontDestroyOnLoad(this);
 
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-
-    }
 }
