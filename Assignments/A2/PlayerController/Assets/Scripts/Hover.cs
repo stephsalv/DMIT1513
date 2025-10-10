@@ -1,88 +1,72 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(Rigidbody))]
-public class Hoverboard : MonoBehaviour
+public class Hovercraft : MonoBehaviour
 {
     [Header("Movement Settings")]
-    public float moveForce = 1000f;
-    public float rotateTorque = 500f;
+    public float forwardAccel = 30f;
+    public float reverseAccel = 20f;
+    public float turnStrength = 50f;
+    public float maxSpeed = 10f;
 
     [Header("Hover Settings")]
-    public float hoverHeight = 1f;           // Target hover height
-    public float hoverForce = 1000f;         // Force applied to maintain hover
-    public float hoverDamping = 0.5f;        // Smoothness of hover
-    public float maxHoverDistance = 5f;      // Max distance to check ground
+    public float hoverHeight = 1f;
+    public float hoverForce = 100f;
+    public float hoverDamping = 5f;
 
-    [Header("Input Actions")]
-    public InputAction moveAction;  // Vector2: x = rotation, y = forward/back
+    [Header("Input Settings")]
+    public KeyCode forwardKey = KeyCode.W;
+    public KeyCode backwardKey = KeyCode.S;
+    public KeyCode leftKey = KeyCode.A;
+    public KeyCode rightKey = KeyCode.D;
 
     private Rigidbody rb;
+    private float speedInput;
+    private float turnInput;
 
-    private void Awake()
+    void Start()
     {
         rb = GetComponent<Rigidbody>();
+        rb.interpolation = RigidbodyInterpolation.Interpolate;
+        rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
     }
 
-    private void OnEnable()
+    void Update()
     {
-        moveAction.Enable();
+        // Handle input
+        speedInput = 0f;
+        if (Input.GetKey(forwardKey)) speedInput += 1f;
+        if (Input.GetKey(backwardKey)) speedInput -= 1f;
+
+        turnInput = 0f;
+        if (Input.GetKey(leftKey)) turnInput -= 1f;
+        if (Input.GetKey(rightKey)) turnInput += 1f;
     }
 
-    private void OnDisable()
-    {
-        moveAction.Disable();
-    }
-
-    private void FixedUpdate()
+    void FixedUpdate()
     {
         HandleMovement();
-        HandleHover();
     }
 
     private void HandleMovement()
     {
-        Vector2 input = moveAction.ReadValue<Vector2>();
+        // Forward/backward
+        float accel = speedInput >= 0 ? forwardAccel : reverseAccel;
+        rb.AddForce(transform.forward * speedInput * accel, ForceMode.Acceleration);
 
-        // Forward/backward force
-        Vector3 forwardForce = transform.forward * input.y * moveForce * Time.fixedDeltaTime;
-        rb.AddForce(forwardForce);
-
-        // Rotate vehicle (yaw)
-        Vector3 torque = Vector3.up * input.x * rotateTorque * Time.fixedDeltaTime;
-        rb.AddTorque(torque);
-    }
-
-    private void HandleHover()
-    {
-        // Raycast downward from multiple points on the vehicle
-        Vector3[] hoverPoints = new Vector3[]
+        // Clamp horizontal speed
+        Vector3 horizontalVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
+        if (horizontalVelocity.magnitude > maxSpeed)
         {
-            transform.position,                             // center
-            transform.position + transform.forward,        // front
-            transform.position - transform.forward,        // back
-            transform.position + transform.right,          // right
-            transform.position - transform.right           // left
-        };
-
-        float closestDistance = maxHoverDistance;
-
-        foreach (Vector3 point in hoverPoints)
-        {
-            if (Physics.Raycast(point, Vector3.down, out RaycastHit hit, maxHoverDistance))
-            {
-                if (hit.distance < closestDistance)
-                    closestDistance = hit.distance;
-            }
+            horizontalVelocity = horizontalVelocity.normalized * maxSpeed;
+            rb.linearVelocity = new Vector3(horizontalVelocity.x, rb.linearVelocity.y, horizontalVelocity.z);
         }
 
-        float heightError = hoverHeight - closestDistance;
-
-        // Apply upward force proportional to height difference
-        rb.AddForce(Vector3.up * heightError * hoverForce * Time.fixedDeltaTime, ForceMode.Acceleration);
-
-        // Optional: damping to reduce oscillations
-        rb.AddForce(-rb.linearVelocity.y * Vector3.up * hoverDamping, ForceMode.Acceleration);
+        // Turn
+        if (Mathf.Abs(speedInput) > 0.1f)
+        {
+            Quaternion turnOffset = Quaternion.Euler(0f, turnInput * turnStrength * Time.fixedDeltaTime, 0f);
+            rb.MoveRotation(rb.rotation * turnOffset);
+        }
     }
-
 }

@@ -20,7 +20,6 @@ public class FrontLoaderArmBucket : MonoBehaviour
     [Header("Input Actions")]
     public InputAction armAction;    // Vector2: y = up/down
     public InputAction bucketAction; // Vector2: y = up/down
-    public InputAction pickupAction; // Button
 
     private Rigidbody pickedObject;
 
@@ -28,20 +27,17 @@ public class FrontLoaderArmBucket : MonoBehaviour
     {
         armAction.Enable();
         bucketAction.Enable();
-        pickupAction.Enable();
     }
 
     private void OnDisable()
     {
         armAction.Disable();
         bucketAction.Disable();
-        pickupAction.Disable();
     }
 
     private void FixedUpdate()
     {
         HandleArmAndBucket();
-        HandlePickup();
     }
 
     private void HandleArmAndBucket()
@@ -63,35 +59,6 @@ public class FrontLoaderArmBucket : MonoBehaviour
             float newBucketX = NormalizeAngle(bucket.localEulerAngles.x - bucketInput.y * bucketSpeed * Time.fixedDeltaTime);
             newBucketX = Mathf.Clamp(newBucketX, -bucketMaxDown, bucketMaxUp);
             bucket.localEulerAngles = new Vector3(newBucketX, bucket.localEulerAngles.y, bucket.localEulerAngles.z);
-        }
-    }
-
-    private void HandlePickup()
-    {
-        if (pickupAction.triggered)
-        {
-            if (pickedObject == null)
-            {
-                // Pick up nearby Rigidbody
-                Collider[] hits = Physics.OverlapSphere(bucketPickupPoint.position, pickupDistance);
-                foreach (var hit in hits)
-                {
-                    if (hit.attachedRigidbody != null)
-                    {
-                        pickedObject = hit.attachedRigidbody;
-                        pickedObject.transform.SetParent(bucketPickupPoint);
-                        pickedObject.isKinematic = true;
-                        break;
-                    }
-                }
-            }
-            else
-            {
-                // Release object
-                pickedObject.transform.SetParent(null);
-                pickedObject.isKinematic = false;
-                pickedObject = null;
-            }
         }
     }
 
