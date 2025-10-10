@@ -503,16 +503,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 138341349}
   m_CullTransparentMesh: 1
---- !u!4 &207962340 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 705591901672145901, guid: a7bf8e71846ff9f408b969be7ed66cbb, type: 3}
-  m_PrefabInstance: {fileID: 1552866529}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &223988252 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4557760419434686586, guid: a7bf8e71846ff9f408b969be7ed66cbb, type: 3}
-  m_PrefabInstance: {fileID: 1552866529}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &265225635
 GameObject:
   m_ObjectHideFlags: 0
@@ -916,17 +906,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 474523671}
   m_CullTransparentMesh: 1
---- !u!114 &522658878 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7953367308351119031, guid: a7bf8e71846ff9f408b969be7ed66cbb, type: 3}
-  m_PrefabInstance: {fileID: 1552866529}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a6d1554e33d06754cb85a12393ec39df, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SplitScreenCamera
 --- !u!1 &523592910
 GameObject:
   m_ObjectHideFlags: 0
@@ -1066,7 +1045,7 @@ MonoBehaviour:
       m_SingletonActionBindings: []
       m_Flags: 0
     m_Reference: {fileID: 0}
-  m_PlayerPrefab: {fileID: 1816077449}
+  m_PlayerPrefab: {fileID: 1552866530}
   m_SplitScreen: 0
   m_MaintainAspectRatioInSplitScreen: 0
   m_FixedNumberOfSplitScreens: -1
@@ -1091,16 +1070,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &642602852 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 3082343332578393695, guid: a7bf8e71846ff9f408b969be7ed66cbb, type: 3}
-  m_PrefabInstance: {fileID: 1552866529}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &648388855 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 6223854051164396965, guid: a7bf8e71846ff9f408b969be7ed66cbb, type: 3}
-  m_PrefabInstance: {fileID: 1552866529}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &655112250
 GameObject:
   m_ObjectHideFlags: 0
@@ -1382,28 +1351,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 750455761}
   m_CullTransparentMesh: 1
---- !u!1 &904532402 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8253260439807004323, guid: a7bf8e71846ff9f408b969be7ed66cbb, type: 3}
-  m_PrefabInstance: {fileID: 1552866529}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &904532404
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 904532402}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 53d86b3638cf2ce4782c7507604c7e51, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::WheelSteeringVisualizer
-  frontLeftWheel: {fileID: 2142068862}
-  frontRightWheel: {fileID: 978011894}
-  maxSteerAngle: 30
-  steerSmoothness: 5
-  gamepadIndex: 0
 --- !u!1 &949300965
 GameObject:
   m_ObjectHideFlags: 0
@@ -1537,38 +1484,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 949300965}
   m_CullTransparentMesh: 1
---- !u!4 &978011894 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 3436584854965192324, guid: a7bf8e71846ff9f408b969be7ed66cbb, type: 3}
-  m_PrefabInstance: {fileID: 1552866529}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &1012863309 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4589850787489319621, guid: a7bf8e71846ff9f408b969be7ed66cbb, type: 3}
-  m_PrefabInstance: {fileID: 1552866529}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1012863311
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1012863309}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 53d86b3638cf2ce4782c7507604c7e51, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::WheelSteeringVisualizer
-  frontLeftWheel: {fileID: 2070631041}
-  frontRightWheel: {fileID: 1073408332}
-  maxSteerAngle: 30
-  steerSmoothness: 5
-  gamepadIndex: 0
---- !u!4 &1038533348 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 956223825841582409, guid: a7bf8e71846ff9f408b969be7ed66cbb, type: 3}
-  m_PrefabInstance: {fileID: 1552866529}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1051701856
 GameObject:
   m_ObjectHideFlags: 0
@@ -1705,11 +1620,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1051701856}
   m_CullTransparentMesh: 1
---- !u!4 &1073408332 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 937277815200635544, guid: a7bf8e71846ff9f408b969be7ed66cbb, type: 3}
-  m_PrefabInstance: {fileID: 1552866529}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1130794026
 GameObject:
   m_ObjectHideFlags: 0
@@ -1792,7 +1702,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 522658878}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: FollowSplitCamera, Assembly-CSharp
         m_MethodName: Next
         m_Mode: 1
@@ -2025,28 +1935,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1168444025}
   m_CullTransparentMesh: 1
---- !u!1 &1208766936 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6650905639227210956, guid: a7bf8e71846ff9f408b969be7ed66cbb, type: 3}
-  m_PrefabInstance: {fileID: 1552866529}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1208766938
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1208766936}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 53d86b3638cf2ce4782c7507604c7e51, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::WheelSteeringVisualizer
-  frontLeftWheel: {fileID: 207962340}
-  frontRightWheel: {fileID: 642602852}
-  maxSteerAngle: 30
-  steerSmoothness: 5
-  gamepadIndex: 0
 --- !u!1 &1236949515
 GameObject:
   m_ObjectHideFlags: 0
@@ -2270,7 +2158,7 @@ PrefabInstance:
     - target: {fileID: 1555365941646434389, guid: a7bf8e71846ff9f408b969be7ed66cbb, type: 3}
       propertyPath: car
       value: 
-      objectReference: {fileID: 1816077449}
+      objectReference: {fileID: 0}
     - target: {fileID: 1555365941646434389, guid: a7bf8e71846ff9f408b969be7ed66cbb, type: 3}
       propertyPath: leftValue
       value: 10
@@ -2327,6 +2215,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3274290409202853123, guid: a7bf8e71846ff9f408b969be7ed66cbb, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3710102572546842643, guid: a7bf8e71846ff9f408b969be7ed66cbb, type: 3}
       propertyPath: m_Name
       value: PlayerCar
@@ -2344,6 +2236,14 @@ PrefabInstance:
       value: MainCamera
       objectReference: {fileID: 0}
     - target: {fileID: 4589850787489319621, guid: a7bf8e71846ff9f408b969be7ed66cbb, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5115761884794685260, guid: a7bf8e71846ff9f408b969be7ed66cbb, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5745966083132514131, guid: a7bf8e71846ff9f408b969be7ed66cbb, type: 3}
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
@@ -2366,6 +2266,10 @@ PrefabInstance:
     - target: {fileID: 7620372304137369500, guid: a7bf8e71846ff9f408b969be7ed66cbb, type: 3}
       propertyPath: m_LocalPosition.y
       value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7651816138823903997, guid: a7bf8e71846ff9f408b969be7ed66cbb, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7813587922378169494, guid: a7bf8e71846ff9f408b969be7ed66cbb, type: 3}
       propertyPath: m_Actions
@@ -2390,11 +2294,31 @@ PrefabInstance:
     - target: {fileID: 7953367308351119031, guid: a7bf8e71846ff9f408b969be7ed66cbb, type: 3}
       propertyPath: player
       value: 
-      objectReference: {fileID: 1816077449}
+      objectReference: {fileID: 0}
     - target: {fileID: 8034850109998816239, guid: a7bf8e71846ff9f408b969be7ed66cbb, type: 3}
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8091589153742407829, guid: a7bf8e71846ff9f408b969be7ed66cbb, type: 3}
+      propertyPath: 'cars.Array.data[0]'
+      value: 
+      objectReference: {fileID: 1552866535}
+    - target: {fileID: 8091589153742407829, guid: a7bf8e71846ff9f408b969be7ed66cbb, type: 3}
+      propertyPath: 'cars.Array.data[1]'
+      value: 
+      objectReference: {fileID: 1552866534}
+    - target: {fileID: 8091589153742407829, guid: a7bf8e71846ff9f408b969be7ed66cbb, type: 3}
+      propertyPath: 'cars.Array.data[2]'
+      value: 
+      objectReference: {fileID: 1552866533}
+    - target: {fileID: 8091589153742407829, guid: a7bf8e71846ff9f408b969be7ed66cbb, type: 3}
+      propertyPath: 'cars.Array.data[3]'
+      value: 
+      objectReference: {fileID: 1552866532}
+    - target: {fileID: 8091589153742407829, guid: a7bf8e71846ff9f408b969be7ed66cbb, type: 3}
+      propertyPath: 'cars.Array.data[4]'
+      value: 
+      objectReference: {fileID: 1552866531}
     - target: {fileID: 8253260439807004323, guid: a7bf8e71846ff9f408b969be7ed66cbb, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -2403,26 +2327,45 @@ PrefabInstance:
       propertyPath: m_LocalPosition.x
       value: 5.82
       objectReference: {fileID: 0}
+    - target: {fileID: 8760224257879959162, guid: a7bf8e71846ff9f408b969be7ed66cbb, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 6650905639227210956, guid: a7bf8e71846ff9f408b969be7ed66cbb, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1208766938}
-    - targetCorrespondingSourceObject: {fileID: 7553227266095525931, guid: a7bf8e71846ff9f408b969be7ed66cbb, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 2106171590}
-    - targetCorrespondingSourceObject: {fileID: 8253260439807004323, guid: a7bf8e71846ff9f408b969be7ed66cbb, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 904532404}
-    - targetCorrespondingSourceObject: {fileID: 8034850109998816239, guid: a7bf8e71846ff9f408b969be7ed66cbb, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 2100702627}
-    - targetCorrespondingSourceObject: {fileID: 4589850787489319621, guid: a7bf8e71846ff9f408b969be7ed66cbb, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1012863311}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a7bf8e71846ff9f408b969be7ed66cbb, type: 3}
+--- !u!1 &1552866530 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4079784206529183618, guid: a7bf8e71846ff9f408b969be7ed66cbb, type: 3}
+  m_PrefabInstance: {fileID: 1552866529}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1552866531 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8760224257879959162, guid: a7bf8e71846ff9f408b969be7ed66cbb, type: 3}
+  m_PrefabInstance: {fileID: 1552866529}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1552866532 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7651816138823903997, guid: a7bf8e71846ff9f408b969be7ed66cbb, type: 3}
+  m_PrefabInstance: {fileID: 1552866529}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1552866533 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3274290409202853123, guid: a7bf8e71846ff9f408b969be7ed66cbb, type: 3}
+  m_PrefabInstance: {fileID: 1552866529}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1552866534 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5745966083132514131, guid: a7bf8e71846ff9f408b969be7ed66cbb, type: 3}
+  m_PrefabInstance: {fileID: 1552866529}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1552866535 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3964130041753894255, guid: a7bf8e71846ff9f408b969be7ed66cbb, type: 3}
+  m_PrefabInstance: {fileID: 1552866529}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1735720680
 GameObject:
   m_ObjectHideFlags: 0
@@ -2523,16 +2466,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1735720680}
   m_CullTransparentMesh: 1
---- !u!4 &1790106279 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4617363123299488469, guid: a7bf8e71846ff9f408b969be7ed66cbb, type: 3}
-  m_PrefabInstance: {fileID: 1552866529}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &1816077449 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3710102572546842643, guid: a7bf8e71846ff9f408b969be7ed66cbb, type: 3}
-  m_PrefabInstance: {fileID: 1552866529}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1899012490
 GameObject:
   m_ObjectHideFlags: 0
@@ -3110,60 +3043,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &2070631041 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 2713068624975928097, guid: a7bf8e71846ff9f408b969be7ed66cbb, type: 3}
-  m_PrefabInstance: {fileID: 1552866529}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &2100702625 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8034850109998816239, guid: a7bf8e71846ff9f408b969be7ed66cbb, type: 3}
-  m_PrefabInstance: {fileID: 1552866529}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &2100702627
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2100702625}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 53d86b3638cf2ce4782c7507604c7e51, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::WheelSteeringVisualizer
-  frontLeftWheel: {fileID: 1790106279}
-  frontRightWheel: {fileID: 648388855}
-  maxSteerAngle: 30
-  steerSmoothness: 5
-  gamepadIndex: 0
---- !u!1 &2106171588 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7553227266095525931, guid: a7bf8e71846ff9f408b969be7ed66cbb, type: 3}
-  m_PrefabInstance: {fileID: 1552866529}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &2106171590
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2106171588}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 53d86b3638cf2ce4782c7507604c7e51, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::WheelSteeringVisualizer
-  frontLeftWheel: {fileID: 223988252}
-  frontRightWheel: {fileID: 1038533348}
-  maxSteerAngle: 30
-  steerSmoothness: 5
-  gamepadIndex: 0
---- !u!4 &2142068862 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4028966047177588224, guid: a7bf8e71846ff9f408b969be7ed66cbb, type: 3}
-  m_PrefabInstance: {fileID: 1552866529}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
