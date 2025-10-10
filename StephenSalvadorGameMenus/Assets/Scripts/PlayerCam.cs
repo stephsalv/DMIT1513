@@ -1,8 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-[RequireComponent(typeof(Camera))]
-public class FollowSplitCamera : MonoBehaviour
+public class PlayerCamera : MonoBehaviour
 {
     [Header("Follow Settings")]
     public Transform player;            // The player to follow
@@ -12,11 +11,7 @@ public class FollowSplitCamera : MonoBehaviour
     public float moveSpeed = 5f;        // Follow smoothing
     public float lookSpeed = 5f;        // Rotation smoothing
     public int index = 0;               // Active camera angle
-
-    [Header("Split Screen Settings")]
     private Camera cam;
-    private int playerIndex;
-    private int totalPlayers;
 
     private void Awake()
     {
@@ -25,50 +20,10 @@ public class FollowSplitCamera : MonoBehaviour
 
     private void Start()
     {
-        var input = GetComponentInParent<PlayerInput>();
-        if (input != null)
-        {
-            playerIndex = input.playerIndex;
-            cam.depth = playerIndex;
-        }
-
-        PlayerInputManager.instance.onPlayerJoined += HandlePlayerJoined;
-        totalPlayers = PlayerInput.all.Count;
-        SetupCameraViewport();
-
         // Restore camera angle index if saved
         index = PlayerPrefs.GetInt("save_cam_index", index);
     }
 
-    private void HandlePlayerJoined(PlayerInput input)
-    {
-        totalPlayers = PlayerInput.all.Count;
-        SetupCameraViewport();
-    }
-
-    private void SetupCameraViewport()
-    {
-        switch (totalPlayers)
-        {
-            case 1:
-                cam.rect = new Rect(0, 0, 1, 1);
-                break;
-            case 2:
-                cam.rect = new Rect(playerIndex == 0 ? 0 : 0.5f, 0, 0.5f, 1);
-                break;
-            case 3:
-                if (playerIndex == 0)
-                    cam.rect = new Rect(0, 0.5f, 0.5f, 0.5f);
-                else if (playerIndex == 1)
-                    cam.rect = new Rect(0.5f, 0.5f, 0.5f, 0.5f);
-                else
-                    cam.rect = new Rect(0, 0, 1, 0.5f);
-                break;
-            default:
-                cam.rect = new Rect((playerIndex % 2) * 0.5f, (playerIndex < 2) ? 0.5f : 0f, 0.5f, 0.5f);
-                break;
-        }
-    }
 
     private void LateUpdate()
     {
@@ -101,10 +56,5 @@ public class FollowSplitCamera : MonoBehaviour
 
         PlayerPrefs.SetInt("save_cam_index", index);
         PlayerPrefs.Save();
-    }
-
-    public void AssignPlayer(Transform newPlayer)
-    {
-        player = newPlayer;
     }
 }
