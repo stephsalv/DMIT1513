@@ -1,77 +1,83 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.Users;
 
-[RequireComponent(typeof(Rigidbody))]
 public class TruckControl : MonoBehaviour
 {
-    [SerializeField] float movementSpeed = 3.0f;
+    [SerializeField] float moveSpeed = 3.0f;
     [SerializeField] float rotationSpeed = 100.0f;
 
-    [SerializeField] GameObject arm;
-    [SerializeField] GameObject bucket;
+    [SerializeField] Transform arm;
+    [SerializeField] float armSpeed = 30.0f;
+    [SerializeField] float armMinAngle = 25.0f;
+    [SerializeField] float armMaxAngle = -60.0f;
 
-    [SerializeField] InputActionAsset inputActionsAsset;
-    [SerializeField] string actionMapName = "Player";
-    [SerializeField] int gamepadIndex = 0;
+    [SerializeField] Transform bucket;
+    [SerializeField] float bucketSpeed = 40.0f;
+    [SerializeField] float bucketMinAngle = 70.0f;
+    [SerializeField] float bucketMaxAngle = -40.0f;
 
-    private InputAction moveAction;
-    private InputAction armRotateAction;
-    private InputAction bucketRotateAction;
+    private float armAngle = 0f;
+    private float bucketAngle = 0f;
 
-    private Rigidbody rbody;
+    Rigidbody rbody;
 
-    private Vector2 moveValue;
-    private float armRotateValue;
-    private float bucketRotateValue;
-
-    void Awake()
+    void Start()
     {
         rbody = GetComponent<Rigidbody>();
-
-        // Find action map & actions
-        var actionMap = inputActionsAsset.FindActionMap(actionMapName, true);
-
-        moveAction = actionMap.FindAction("Move", true);
-        armRotateAction = actionMap.FindAction("TurretRotate", true);
-        bucketRotateAction = actionMap.FindAction("BucketRotate", false); // optional
-
-        moveAction.Enable();
-        armRotateAction.Enable();
-        bucketRotateAction?.Enable();
-
-        // Optional: Assign to specific gamepad if available
-        if (Gamepad.all.Count > gamepadIndex)
-        {
-            var gamepad = Gamepad.all[gamepadIndex];
-            InputUser.PerformPairingWithDevice(gamepad);
-        }
     }
 
     void Update()
     {
-        moveValue = moveAction.ReadValue<Vector2>();
-        armRotateValue = armRotateAction.ReadValue<float>();
-        bucketRotateValue = bucketRotateAction != null ? bucketRotateAction.ReadValue<float>() : 0f;
+        Movement();
+        ArmRotation();
+        BucketRotation();
     }
 
-    void FixedUpdate()
+    void Movement()
     {
-        Vector3 moveDirection = transform.forward * moveValue.y * movementSpeed * Time.fixedDeltaTime;
-        Vector3 newPosition = rbody.position + moveDirection;
-        rbody.MovePosition(newPosition);
+        // Move forward/backward
+        float moveInput = 0f;
+        if (Keyboard.current.wKey.isPressed) moveInput = 1f;
+        else if (Keyboard.current.sKey.isPressed) moveInput = -1f;
 
-        Quaternion turnRotation = Quaternion.Euler(0f, moveValue.x * rotationSpeed * Time.fixedDeltaTime, 0f);
-        rbody.MoveRotation(rbody.rotation * turnRotation);
+        // Rotate left/right
+        float rotateInput = 0f;
+        if (Keyboard.current.aKey.isPressed) rotateInput = -1f;
+        else if (Keyboard.current.dKey.isPressed) rotateInput = 1f;
 
-        if (arm != null)
-        {
-            arm.transform.Rotate(Vector3.up, armRotateValue * rotationSpeed * Time.fixedDeltaTime, Space.Self);
-        }
+        // Apply translation and rotation
+        transform.Translate(Vector3.forward * moveInput * moveSpeed * Time.deltaTime);
+        transform.Rotate(Vector3.up, rotateInput * rotationSpeed * Time.deltaTime);
+    }
 
-        if (bucket != null)
-        {
-            bucket.transform.Rotate(Vector3.right, bucketRotateValue * rotationSpeed * Time.fixedDeltaTime, Space.Self);
-        }
+    void ArmRotation()
+    {
+        if (arm == null) return;
+
+        float armInput = 0f;
+        if (Keyboard.current.uKey.isPressed) armInput = 1f;
+        else if (Keyboard.current.jKey.isPressed) armInput = -1f;
+
+        armAngle += armInput * armSpeed * Time.deltaTime;
+
+        armAngle = Mathf.Clamp(armAngle, armMinAngle, armMaxAngle);
+
+        arm.localRotation = Quaternion.Euler(armAngle, 0f, 0f);
+    }
+
+    void BucketRotation()
+    {
+        if (bucket == null) return;
+
+        float bucketInput = 0f;
+        if (Keyboard.current.iKey.isPressed) bucketInput = 1f;
+        else if (Keyboard.current.kKey.isPressed) bucketInput = -1f;
+
+        bucketAngle += bucketInput * bucketSpeed * Time.deltaTime;
+
+        bucketAngle = Mathf.Clamp(bucketAngle, bucketMinAngle, bucketMaxAngle);
+
+        bucket.localRotation = Quaternion.Euler(bucketAngle, 0f, 0f);
     }
 }
+
