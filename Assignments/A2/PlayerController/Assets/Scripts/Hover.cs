@@ -1,72 +1,41 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
-[RequireComponent(typeof(Rigidbody))]
-public class Hovercraft : MonoBehaviour
+public class HoverScript : MonoBehaviour
 {
-    [Header("Movement Settings")]
-    public float forwardAccel = 30f;
-    public float reverseAccel = 20f;
-    public float turnStrength = 50f;
-    public float maxSpeed = 10f;
+    Rigidbody rbody;
 
-    [Header("Hover Settings")]
-    public float hoverHeight = 1f;
-    public float hoverForce = 100f;
-    public float hoverDamping = 5f;
+    [SerializeField] float forceAmount, forceTurn;
 
-    [Header("Input Settings")]
-    public KeyCode forwardKey = KeyCode.W;
-    public KeyCode backwardKey = KeyCode.S;
-    public KeyCode leftKey = KeyCode.A;
-    public KeyCode rightKey = KeyCode.D;
+    [SerializeField] InputAction moveAction, moveAction2;
+    Vector2 moveValue, moveValue2;
 
-    private Rigidbody rb;
-    private float speedInput;
-    private float turnInput;
+    [SerializeField] GameObject leftPos, rightPos;
 
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        rb = GetComponent<Rigidbody>();
-        rb.interpolation = RigidbodyInterpolation.Interpolate;
-        rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+        rbody = GetComponent<Rigidbody>();
+
+        moveAction.Enable();
+        moveAction2.Enable();
     }
 
+    // Update is called once per frame
     void Update()
     {
-        // Handle input
-        speedInput = 0f;
-        if (Input.GetKey(forwardKey)) speedInput += 1f;
-        if (Input.GetKey(backwardKey)) speedInput -= 1f;
-
-        turnInput = 0f;
-        if (Input.GetKey(leftKey)) turnInput -= 1f;
-        if (Input.GetKey(rightKey)) turnInput += 1f;
+        moveValue = moveAction.ReadValue<Vector2>();
+        moveValue2 = moveAction2.ReadValue<Vector2>();
     }
 
-    void FixedUpdate()
+    private void FixedUpdate()
     {
-        HandleMovement();
-    }
+        //rbody.AddRelativeForce(Vector3.forward * moveValue.y * forceAmount * Time.fixedDeltaTime);
 
-    private void HandleMovement()
-    {
-        // Forward/backward
-        float accel = speedInput >= 0 ? forwardAccel : reverseAccel;
-        rb.AddForce(transform.forward * speedInput * accel, ForceMode.Acceleration);
+        //rbody.AddRelativeTorque(Vector3.up * moveValue.x * forceTurn * Time.fixedDeltaTime);
 
-        // Clamp horizontal speed
-        Vector3 horizontalVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
-        if (horizontalVelocity.magnitude > maxSpeed)
-        {
-            horizontalVelocity = horizontalVelocity.normalized * maxSpeed;
-            rb.linearVelocity = new Vector3(horizontalVelocity.x, rb.linearVelocity.y, horizontalVelocity.z);
-        }
+        rbody.AddForceAtPosition(leftPos.transform.forward * moveValue.y * forceAmount * Time.fixedDeltaTime, leftPos.transform.position);
 
-        // Turn
-        if (Mathf.Abs(speedInput) > 0.1f)
-        {
-            Quaternion turnOffset = Quaternion.Euler(0f, turnInput * turnStrength * Time.fixedDeltaTime, 0f);
-            rb.MoveRotation(rb.rotation * turnOffset);
-        }
+        rbody.AddForceAtPosition(rightPos.transform.forward * moveValue2.y * forceAmount * Time.fixedDeltaTime, rightPos.transform.position);
     }
 }
