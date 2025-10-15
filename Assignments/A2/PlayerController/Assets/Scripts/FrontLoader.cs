@@ -8,16 +8,17 @@ public class TruckControl : MonoBehaviour
 
     [SerializeField] Transform arm;
     [SerializeField] float armSpeed = 30.0f;
-    [SerializeField] float armMinAngle = 25.0f;
-    [SerializeField] float armMaxAngle = -60.0f;
+    [SerializeField] float armMinAngle = -60.0f;
+    [SerializeField] float armMaxAngle = 25.0f;
 
     [SerializeField] Transform bucket;
     [SerializeField] float bucketSpeed = 40.0f;
-    [SerializeField] float bucketMinAngle = 70.0f;
-    [SerializeField] float bucketMaxAngle = -40.0f;
+    [SerializeField] float bucketMinAngle = 40.0f;
+    [SerializeField] float bucketMaxAngle = -70.0f;
 
     private float armAngle = 0f;
     private float bucketAngle = 0f;
+
 
     Rigidbody rbody;
 
@@ -31,6 +32,11 @@ public class TruckControl : MonoBehaviour
         Movement();
         ArmRotation();
         BucketRotation();
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        { 
+            Application.Quit(); // Quit the build
+        }
     }
 
     void Movement()

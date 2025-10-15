@@ -154,14 +154,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9bb86d2bb2fcc949874df8775a37d4f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Hoverboard
-  forwardAccel: 0
-  reverseAccel: 0
-  turnStrength: 0
-  maxSpeed: 0
-  hoverHeight: 1
-  hoverForce: 100
-  hoverDamping: 5
-  forwardKey: 273
-  backwardKey: 274
-  leftKey: 276
-  rightKey: 275
+  forceAmount: 50
+  forceTurn: 0
+  moveAction:
+    m_Name: Move
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: c0f29a3f-f245-4fb1-877d-becd3f6bbff3
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
+  leftPos: {fileID: 0}
+  rightPos: {fileID: 0}
