@@ -502,4 +502,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 641a1900c8c55be42aa06fa0ab12a708, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RandomBounce
-  speed: 25
+  speed: 15
