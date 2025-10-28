@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 854652661311814506}
   m_Layer: 0
-  m_Name: WeaponPivot
+  m_Name: Weapons
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -77,7 +77,8 @@ GameObject:
   - component: {fileID: 7874403431857245086}
   - component: {fileID: 2726746713121773799}
   - component: {fileID: 2125997328102427739}
-  - component: {fileID: 5907674797874347349}
+  - component: {fileID: 8051730510543163785}
+  - component: {fileID: 4947951422824233332}
   m_Layer: 0
   m_Name: BodyModel
   m_TagString: Player
@@ -156,8 +157,8 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!136 &5907674797874347349
-CapsuleCollider:
+--- !u!135 &8051730510543163785
+SphereCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -171,14 +172,24 @@ CapsuleCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
+  serializedVersion: 3
+  m_Radius: 4
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &4947951422824233332
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8257156299067145680}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2ddea2c2889ed34ebc6ac7c6c78adc3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NPC
 --- !u!1001 &2353548789611548276
 PrefabInstance:
   m_ObjectHideFlags: 0

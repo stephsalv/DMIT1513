@@ -223,7 +223,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06719db423a969f4cac414b7f12d9239, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthScript: {fileID: 0}
+  healthScript: {fileID: 3470783952605882368}
   healthbar: {fileID: 4419742095779595524}
   myCanvas: {fileID: 5929238798395608427}
 --- !u!1 &7945971877112329936
@@ -502,4 +502,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 641a1900c8c55be42aa06fa0ab12a708, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RandomBounce
-  speed: 5
+  speed: 10

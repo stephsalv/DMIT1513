@@ -6,12 +6,12 @@ public class RandomBounce : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        // Check if the collided object has the "Player" tag
-        if (collision.gameObject.CompareTag("Player"))
-        {
-            Destroy(collision.gameObject);
-            return; // Skip bounce logic if player is destroyed
-        }
+        //// Check if the collided object has the "Player" tag
+        //if (collision.gameObject.CompareTag("Player"))
+        //{
+        //    Destroy(collision.gameObject);
+        //    return; // Skip bounce logic if player is destroyed
+        //}
 
         // Generate a random direction
         Vector3 randomDirection = new Vector3(

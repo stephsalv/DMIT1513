@@ -3,7 +3,7 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] InputAction moveAction, rotateAction, fireAction, fireAction2;
+    [SerializeField] InputAction moveAction, rotateAction, fireAction; //fireAction2;
 
     Vector2 moveValue, rotateValue;
 
@@ -49,10 +49,10 @@ public class PlayerController : MonoBehaviour
         {
             BroadcastMessage("FireWeapon");
         }
-        if (fireAction2.IsPressed())
-        {
-            BroadcastMessage("FireWeapon2");
-        }
+        //if (fireAction2.IsPressed())
+        //{
+        //    BroadcastMessage("FireWeapon2");
+        //}
 
         if (Keyboard.current.cKey.wasPressedThisFrame)
         {
@@ -79,7 +79,7 @@ public class PlayerController : MonoBehaviour
         moveAction.Enable();
         rotateAction.Enable();
         fireAction.Enable();
-        fireAction2.Enable();
+        //fireAction2.Enable();
     }
 
     private void OnDisable()
@@ -87,6 +87,6 @@ public class PlayerController : MonoBehaviour
         moveAction.Disable();
         rotateAction.Disable();
         fireAction.Disable();
-        fireAction2.Disable();
+        //fireAction2.Disable();
     }
 }

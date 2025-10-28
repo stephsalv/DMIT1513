@@ -40,14 +40,6 @@ public class TankControl : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        // Keyboard inputs
-        //forwardValue = Keyboard.current.wKey.value;
-        //backwardValue = Keyboard.current.sKey.value;
-        //leftValue = Keyboard.current.aKey.value;
-        //rightValue = Keyboard.current.dKey.value;
-        //leftTurretValue = Keyboard.current.jKey.value;
-        //rightTurretValue = Keyboard.current.lKey.value;
-
         // Gamepad inputs
         //if (Gamepad.all.Count > gamepadIndex)
         //{
@@ -60,10 +52,18 @@ public class TankControl : MonoBehaviour
         //    leftTurretValue = Gamepad.all[gamepadIndex].rightStick.left.value;
         //}
 
-        //if (Keyboard.current.spaceKey.wasPressedThisFrame && grounded && !jump)
-        //{
-        //    jump = true;            
-        //}
+        // Keyboard inputs
+        forwardValue = Keyboard.current.wKey.value;
+        backwardValue = Keyboard.current.sKey.value;
+        leftValue = Keyboard.current.aKey.value;
+        rightValue = Keyboard.current.dKey.value;
+        leftTurretValue = Keyboard.current.jKey.value;
+        rightTurretValue = Keyboard.current.lKey.value;
+
+        if (Keyboard.current.spaceKey.wasPressedThisFrame && grounded && !jump)
+        {
+            jump = true;
+        }
 
         moveValue = moveAction.ReadValue<Vector2>();
         turretRotateValue = turretRotateAction.ReadValue<float>();
@@ -80,13 +80,13 @@ public class TankControl : MonoBehaviour
         transform.Rotate(Vector3.up, moveValue.x * rotationSpeed * Time.fixedDeltaTime);
         turret.transform.Rotate(Vector3.up, turretRotateValue * rotationSpeed * Time.fixedDeltaTime);
 
-        //if (jump)
-        //{
-        //    rbody.linearVelocity = Vector3.zero;
-        //    rbody.AddRelativeForce(Vector3.up * 20.0f, ForceMode.Impulse);
-        //    grounded = false;
-        //    jump = false;
-        //}
+        if (jump)
+        {
+            rbody.linearVelocity = Vector3.zero;
+            rbody.AddRelativeForce(Vector3.up * 20.0f, ForceMode.Impulse);
+            grounded = false;
+            jump = false;
+        }
     }
 
     private void OnTriggerEnter(Collider other)
