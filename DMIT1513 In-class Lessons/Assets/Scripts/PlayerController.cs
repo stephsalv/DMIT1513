@@ -3,17 +3,18 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] InputAction moveAction, rotateAction, fireAction;
+    [SerializeField] InputAction moveAction, rotateAction, fireAction, fireAction2;
 
     Vector2 moveValue, rotateValue;
 
-    float rotationSpeed;
-    public float movementSpeed = 10.0f;
+    float movementSpeed, rotationSpeed;
 
-    [SerializeField] GameObject weaponPivot1;
-
+    [SerializeField] GameObject weaponPivot;
 
     Vector3 angles;
+
+    [SerializeField] GameObject firstPerson, thirdPerson, playerCam;
+    bool firstPersonPerspective = true;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -30,23 +31,41 @@ public class PlayerController : MonoBehaviour
 
         transform.Rotate(Vector3.up, rotateValue.x * rotationSpeed * Time.fixedDeltaTime);
 
-        weaponPivot1.transform.Rotate(Vector3.right, -rotateValue.y * rotationSpeed * Time.fixedDeltaTime);
+        weaponPivot.transform.Rotate(Vector3.right, -rotateValue.y * rotationSpeed * Time.fixedDeltaTime);
 
-        angles = weaponPivot1.transform.localEulerAngles;
+        angles = weaponPivot.transform.localEulerAngles;
 
         if (angles.x < 300 && angles.x > 180)
         {
-            weaponPivot1.transform.localRotation = Quaternion.Euler(300, 0, 0);
+            weaponPivot.transform.localRotation = Quaternion.Euler(300, 0, 0);
         }
 
         if (angles.x > 45 && angles.x < 180)
         {
-            weaponPivot1.transform.localRotation = Quaternion.Euler(45, 0, 0);
+            weaponPivot.transform.localRotation = Quaternion.Euler(45, 0, 0);
         }
 
         if (fireAction.IsPressed())
         {
             BroadcastMessage("FireWeapon");
+        }
+        if (fireAction2.IsPressed())
+        {
+            BroadcastMessage("FireWeapon2");
+        }
+
+        if (Keyboard.current.cKey.wasPressedThisFrame)
+        {
+            firstPersonPerspective = !firstPersonPerspective;
+
+            if (firstPersonPerspective)
+            {
+                playerCam.transform.localPosition = firstPerson.transform.localPosition;
+            }
+            else
+            {
+                playerCam.transform.localPosition = thirdPerson.transform.localPosition;
+            }
         }
     }
 
@@ -60,7 +79,7 @@ public class PlayerController : MonoBehaviour
         moveAction.Enable();
         rotateAction.Enable();
         fireAction.Enable();
-
+        fireAction2.Enable();
     }
 
     private void OnDisable()
@@ -68,7 +87,6 @@ public class PlayerController : MonoBehaviour
         moveAction.Disable();
         rotateAction.Disable();
         fireAction.Disable();
-
+        fireAction2.Disable();
     }
-
 }
