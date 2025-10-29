@@ -3,29 +3,46 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] InputAction moveAction, rotateAction, fireAction; //fireAction2;
+    [Header("Input Actions")]
+    [SerializeField] private InputAction moveAction;
+    [SerializeField] private InputAction rotateAction;
+    [SerializeField] private InputAction fireAction;
 
-    Vector2 moveValue, rotateValue;
+    [Header("Movement Settings")]
+    [SerializeField] private float movementSpeed = 10f;
+    [SerializeField] private float rotationSpeed = 100f;
 
-    float movementSpeed, rotationSpeed;
+    [Header("References")]
+    [SerializeField] private GameObject weaponPivot;
+    [SerializeField] private GameObject firstPerson;
+    [SerializeField] private GameObject thirdPerson;
+    [SerializeField] private GameObject playerCam;
 
-    [SerializeField] GameObject weaponPivot;
+    public static bool dialogue = false;
 
-    Vector3 angles;
+    private Vector2 moveValue;
+    private Vector2 rotateValue;
+    private bool firstPersonPerspective = true;
+    private Vector3 angles;
 
-    [SerializeField] GameObject firstPerson, thirdPerson, playerCam;
-    bool firstPersonPerspective = true;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        movementSpeed = 10.0f;
-        rotationSpeed = 100.0f;
+        playerCam.transform.localPosition = firstPerson.transform.localPosition;
     }
 
     // Update is called once per frame
     void Update()
     {
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+
+        if (dialogue)
+        {
+            return;
+        }
+
         moveValue = moveAction.ReadValue<Vector2>();
         rotateValue = rotateAction.ReadValue<Vector2>();
 
@@ -34,12 +51,10 @@ public class PlayerController : MonoBehaviour
         weaponPivot.transform.Rotate(Vector3.right, -rotateValue.y * rotationSpeed * Time.fixedDeltaTime);
 
         angles = weaponPivot.transform.localEulerAngles;
-
         if (angles.x < 300 && angles.x > 180)
         {
             weaponPivot.transform.localRotation = Quaternion.Euler(300, 0, 0);
         }
-
         if (angles.x > 45 && angles.x < 180)
         {
             weaponPivot.transform.localRotation = Quaternion.Euler(45, 0, 0);
@@ -49,10 +64,6 @@ public class PlayerController : MonoBehaviour
         {
             BroadcastMessage("FireWeapon");
         }
-        //if (fireAction2.IsPressed())
-        //{
-        //    BroadcastMessage("FireWeapon2");
-        //}
 
         if (Keyboard.current.cKey.wasPressedThisFrame)
         {
@@ -71,7 +82,20 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        transform.Translate(new Vector3(moveValue.x, 0, moveValue.y) * movementSpeed * Time.fixedDeltaTime);
+        if (!PlayerController.dialogue)
+        {
+            transform.Translate(new Vector3(moveValue.x, 0, moveValue.y) * movementSpeed * Time.fixedDeltaTime);
+        }
+        if (dialogue)
+        {
+            return;
+        }
+    }
+    void MyInput()
+    {
+        // Get horizontal and vertical input
+        moveValue.x = Input.GetAxis("Horizontal"); // A/D or Left/Right
+        moveValue.y = Input.GetAxis("Vertical");   // W/S or Up/Down
     }
 
     private void OnEnable()
