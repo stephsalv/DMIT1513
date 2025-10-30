@@ -37,8 +37,8 @@ public class NPC : MonoBehaviour
         // Add all dialogue lines to the queue
         dialogueQueue.Clear();
         dialogueQueue.Enqueue("Hello, can you please help me?");
-        dialogueQueue.Enqueue("I ran out of ammo. The bubbles will drop ammo once you destroy them.");
-        dialogueQueue.Enqueue("Could you help me get 5 ammo boxes?");
+        dialogueQueue.Enqueue("We need a key to get to the next level");
+        dialogueQueue.Enqueue("Could you defeat the 5 bubbles for me?");
         dialogueQueue.Enqueue("Thank you! Goodluck, soldier!");
 
         ShowNextDialogue();
