@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.XR;
 public class PlayerController : MonoBehaviour
 {
     [Header("Input Actions")]
@@ -12,8 +11,7 @@ public class PlayerController : MonoBehaviour
     [Header("Movement Settings")]
     [SerializeField] private float movementSpeed = 10f;
     [SerializeField] private float rotationSpeed = 100f;
-    [SerializeField] private float jumpForce = 5f;
-    [SerializeField] private float gravity = -9.81f;
+
 
     [Header("References")]
     [SerializeField] private GameObject weaponPivot;
@@ -27,8 +25,12 @@ public class PlayerController : MonoBehaviour
     private bool firstPersonPerspective = true;
     private Vector3 angles;
 
-    private Vector3 velocity;
-    private bool isGrounded = true; // simple grounded check
+    [SerializeField] private float jumpForce = 5f;
+    [SerializeField] private float gravity = -9.81f;
+    [SerializeField] private float groundHeight = 0f;
+
+    private float verticalVelocity = 0f;
+    private bool isGrounded = true;
 
     void Start()
     {
@@ -75,24 +77,33 @@ public class PlayerController : MonoBehaviour
                 playerCam.transform.localPosition = thirdPerson.transform.localPosition;
             }
         }
+        // Skip movement during dialogue
+        if (dialogue) return;
+
         // Jump input
-        if (Keyboard.current.spaceKey.wasPressedThisFrame)
+        if (Keyboard.current.spaceKey.wasPressedThisFrame && isGrounded)
         {
-            Jump();
+            verticalVelocity = jumpForce;
+            isGrounded = false;
         }
-        // Gravity
+
+        // Apply gravity
         if (!isGrounded)
         {
-            velocity.y += gravity * Time.deltaTime;
+            verticalVelocity += gravity * Time.deltaTime;
         }
-    }
 
-    private void Jump()
-    {
-        if (isGrounded)
+        // Apply vertical movement
+        transform.Translate(Vector3.up * verticalVelocity * Time.deltaTime, Space.World);
+
+        // Simple ground check (flat ground)
+        if (transform.position.y <= groundHeight)
         {
-            velocity.y = Mathf.Sqrt(jumpForce * -2f * gravity);
-            isGrounded = false;
+            Vector3 pos = transform.position;
+            pos.y = groundHeight;
+            transform.position = pos;
+            verticalVelocity = 0f;
+            isGrounded = true;
         }
     }
     private void FixedUpdate()
@@ -105,22 +116,7 @@ public class PlayerController : MonoBehaviour
         {
             return;
         }
-        // Vertical movement (jump + gravity)
-        transform.Translate(Vector3.up * velocity.y * Time.fixedDeltaTime, Space.World);
 
-        // Simple grounded check
-        if (transform.position.y <= 0f) // assuming 0 is ground level
-        {
-            isGrounded = true;
-            velocity.y = 0f;
-            Vector3 pos = transform.position;
-            pos.y = 0f;
-            transform.position = pos;
-        }
-        else
-        {
-            isGrounded = false;
-        }
     }
     void MyInput()
     {
