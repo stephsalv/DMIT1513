@@ -9,8 +9,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private InputAction jumpAction;
 
     [Header("Movement Settings")]
-    [SerializeField] private float movementSpeed = 10f;
-    [SerializeField] private float rotationSpeed = 100f;
+    [SerializeField] private float movementSpeed = 8f;
+    [SerializeField] private float rotationSpeed = 80f;
 
 
     [Header("References")]
