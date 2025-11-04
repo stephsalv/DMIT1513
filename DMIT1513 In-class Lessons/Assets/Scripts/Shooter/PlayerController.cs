@@ -18,6 +18,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private GameObject firstPerson;
     [SerializeField] private GameObject thirdPerson;
     [SerializeField] private GameObject playerCam;
+    [SerializeField] private GameObject sideView;
+
 
     public static bool dialogue = false;
     private Vector2 moveValue;
@@ -44,7 +46,30 @@ public class PlayerController : MonoBehaviour
 
         if (dialogue)
         {
+            // Move camera to side view
+            playerCam.transform.localPosition = sideView.transform.localPosition;
+            // Make the camera face the player's left side (local -X direction)
+            playerCam.transform.localRotation = Quaternion.LookRotation(-transform.right, Vector3.up);
             return;
+        }
+        else
+        {
+            // Restore camera position and rotation when not in dialogue
+            if (firstPersonPerspective)
+            {
+                playerCam.transform.localPosition = firstPerson.transform.localPosition;
+                playerCam.transform.localRotation = firstPerson.transform.localRotation;
+            }
+            else
+            {
+                playerCam.transform.localPosition = thirdPerson.transform.localPosition;
+                playerCam.transform.localRotation = thirdPerson.transform.localRotation;
+            }
+        }
+
+        if (Keyboard.current.escapeKey.wasPressedThisFrame)
+        {
+            Application.Quit();
         }
 
         moveValue = moveAction.ReadValue<Vector2>();
