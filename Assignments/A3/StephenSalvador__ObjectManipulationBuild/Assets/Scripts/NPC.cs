@@ -4,7 +4,6 @@ using TMPro;
 
 public class NPC : MonoBehaviour
 {
-    [Header("Dialogue")]
     public GameObject dialoguePrefab;
     public GameObject dialogueCanvas;
     public Transform dialogueParent;
@@ -15,9 +14,18 @@ public class NPC : MonoBehaviour
     private bool playerDetected = false;
     private bool hasTalked = false;
 
-    [Header("Quest UI")]
     [SerializeField] private QuestUI questUI;
+    [SerializeField] private GameObject interactCanvas;
 
+    void Start()
+    {
+        // Hide canvases at start for safety
+        if (dialogueCanvas != null)
+            dialogueCanvas.SetActive(false);
+
+        if (interactCanvas != null)
+            interactCanvas.SetActive(false);
+    }
     void Update()
     {
         if (playerDetected && Input.GetKeyDown(KeyCode.F))
@@ -35,12 +43,24 @@ public class NPC : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player")) playerDetected = true;
+        if (other.CompareTag("Player"))
+        {
+            playerDetected = true;
+
+            if (interactCanvas != null)
+                interactCanvas.SetActive(true);
+        }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("Player")) playerDetected = false;
+        if (other.CompareTag("Player"))
+        {
+            playerDetected = false;
+
+            if (interactCanvas != null)
+                interactCanvas.SetActive(false);
+        }
     }
 
     private void StartDialogue()
@@ -56,7 +76,8 @@ public class NPC : MonoBehaviour
         dialogueQueue.Enqueue("Hello, can you please help me?");
         dialogueQueue.Enqueue("We need a key to get to the next level");
         dialogueQueue.Enqueue("Could you defeat the 5 bubbles for me?");
-        dialogueQueue.Enqueue("Thank you! Good luck, soldier!");
+        dialogueQueue.Enqueue("Go to the door at the end once you are done!");
+        dialogueQueue.Enqueue("Thanks. Goodluck, friend!");
 
         ShowNextDialogue();
     }
@@ -93,5 +114,8 @@ public class NPC : MonoBehaviour
             questUI.ShowQuestUI();
             hasTalked = true;
         }
+
+        if (interactCanvas != null && playerDetected)
+            interactCanvas.SetActive(true);
     }
 }

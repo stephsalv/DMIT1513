@@ -3,8 +3,8 @@ using TMPro;
 
 public class QuestUI : MonoBehaviour
 {
-    [SerializeField] private GameObject questPanel; // Panel or Canvas group
-    [SerializeField] private TextMeshProUGUI keyText;
+    [SerializeField] GameObject questPanel; // Panel or Canvas group
+    [SerializeField] TextMeshProUGUI keyText;
 
     private void Start()
     {
@@ -27,5 +27,16 @@ public class QuestUI : MonoBehaviour
         if (keyText == null || QuestManager.Instance == null) return;
 
         keyText.text = $"Keys: {QuestManager.Instance.KeysCollected} / {QuestManager.Instance.KeysNeeded}";
+    }
+    private void OnEnable()
+    {
+        if (QuestManager.Instance != null)
+            QuestManager.Instance.OnKeysUpdated += UpdateKeyText;
+    }
+
+    private void OnDisable()
+    {
+        if (QuestManager.Instance != null)
+            QuestManager.Instance.OnKeysUpdated -= UpdateKeyText;
     }
 }
