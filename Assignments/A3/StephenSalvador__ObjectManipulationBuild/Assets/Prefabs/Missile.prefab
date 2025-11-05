@@ -74,7 +74,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Projectile
   lifetime: 5
-  damage: 20
+  damage: 2
   contactDestruct: 1
 --- !u!1 &4862530817472077800
 GameObject:

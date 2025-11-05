@@ -2,11 +2,11 @@ using UnityEngine;
 
 public class Weapon : MonoBehaviour
 {
-    [SerializeField] float fireRate, velocity; 
-    float timeStamp;
-
-    [SerializeField] GameObject barrelEnd, projectile;
-
+    [SerializeField] private float fireRate = 0.5f;
+    [SerializeField] private float velocity = 20f;
+    [SerializeField] private GameObject barrelEnd;
+    [SerializeField] private GameObject projectile;
+    private float timeStamp;
 
     void FireWeapon()
     {

@@ -4,14 +4,19 @@ using TMPro;
 
 public class NPC : MonoBehaviour
 {
-    public GameObject d_template; // The dialogue prefab
-    public GameObject canva;      // The dialogue canvas
-    public Transform dialogueParent; // Optional: parent for dialogue UI
+    [Header("Dialogue")]
+    public GameObject dialoguePrefab;
+    public GameObject dialogueCanvas;
+    public Transform dialogueParent;
 
-    private bool playerDetected = false;
-    private bool isInDialogue = false;
     private Queue<string> dialogueQueue = new Queue<string>();
     private GameObject currentDialogueBox;
+    private bool isInDialogue = false;
+    private bool playerDetected = false;
+    private bool hasTalked = false;
+
+    [Header("Quest UI")]
+    [SerializeField] private QuestUI questUI;
 
     void Update()
     {
@@ -28,61 +33,65 @@ public class NPC : MonoBehaviour
         }
     }
 
-    void StartDialogue()
+    private void OnTriggerEnter(Collider other)
     {
+        if (other.CompareTag("Player")) playerDetected = true;
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Player")) playerDetected = false;
+    }
+
+    private void StartDialogue()
+    {
+        if (hasTalked) return;
+
         isInDialogue = true;
-        canva.SetActive(true);
+        dialogueCanvas.SetActive(true);
         PlayerController.dialogue = true;
 
-        // Add all dialogue lines to the queue
+        // Dialogue lines
         dialogueQueue.Clear();
         dialogueQueue.Enqueue("Hello, can you please help me?");
         dialogueQueue.Enqueue("We need a key to get to the next level");
         dialogueQueue.Enqueue("Could you defeat the 5 bubbles for me?");
-        dialogueQueue.Enqueue("Thank you! Goodluck, soldier!");
+        dialogueQueue.Enqueue("Thank you! Good luck, soldier!");
 
         ShowNextDialogue();
     }
 
-    void ShowNextDialogue()
+    private void ShowNextDialogue()
     {
-        // Remove the previous dialogue box
         if (currentDialogueBox != null)
             Destroy(currentDialogueBox);
 
-        // If no more lines, end dialogue
         if (dialogueQueue.Count == 0)
         {
             EndDialogue();
             return;
         }
 
-        // Get the next line and instantiate the dialogue UI
         string text = dialogueQueue.Dequeue();
-        currentDialogueBox = Instantiate(d_template, dialogueParent ? dialogueParent : canva.transform);
+        currentDialogueBox = Instantiate(dialoguePrefab, dialogueParent ? dialogueParent : dialogueCanvas.transform);
         currentDialogueBox.transform.localScale = Vector3.one;
         currentDialogueBox.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = text;
     }
 
-    void EndDialogue()
+    private void EndDialogue()
     {
         isInDialogue = false;
         PlayerController.dialogue = false;
-        canva.SetActive(false);
 
         if (currentDialogueBox != null)
             Destroy(currentDialogueBox);
-    }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Player"))
-            playerDetected = true;
-    }
+        dialogueCanvas.SetActive(false);
 
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.CompareTag("Player"))
-            playerDetected = false;
+        if (questUI != null && !hasTalked)
+        {
+            questUI.ShowQuestUI();
+            hasTalked = true;
+        }
     }
 }

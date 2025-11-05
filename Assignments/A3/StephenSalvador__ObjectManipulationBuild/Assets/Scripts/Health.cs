@@ -1,13 +1,16 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using System;
 
 public class Health : MonoBehaviour
 {
-    [SerializeField]
-    float currentHealth, minHealth = 0, maxHealth = 100;
-    
-    // Start is called before the first frame update
+    [SerializeField] private float currentHealth;
+    [SerializeField] private float minHealth = 0f;
+    [SerializeField] private float maxHealth = 100f;
+
+    public event Action<GameObject> OnDamaged;
+    public event Action OnDied;
+    public event Action<GameObject> OnHealed;
+
     void Start()
     {
         currentHealth = maxHealth;
@@ -19,8 +22,8 @@ public class Health : MonoBehaviour
     }
 
     public float GetMaxHealth()
-    { 
-        return maxHealth; 
+    {
+        return maxHealth;
     }
 
     public void ApplyDamage(float damage)
@@ -29,11 +32,15 @@ public class Health : MonoBehaviour
 
         if (currentHealth < minHealth)
         {
-            currentHealth = minHealth;            
+            currentHealth = minHealth;
         }
 
-        if (currentHealth == minHealth)
+        // Trigger OnDamaged event (no origin provided)
+        OnDamaged?.Invoke(null);
+
+        if (currentHealth <= minHealth)
         {
+            OnDied?.Invoke();
             gameObject.SetActive(false);
         }
     }
@@ -47,21 +54,25 @@ public class Health : MonoBehaviour
             currentHealth = minHealth;
         }
 
-        if (currentHealth == minHealth)
+        // Trigger event for external listeners (e.g. LootDrop, AI)
+        OnDamaged?.Invoke(origin);
+
+        if (currentHealth <= minHealth)
         {
+            OnDied?.Invoke();
             gameObject.SetActive(false);
         }
-
-        SendMessageUpwards("CharacterDamaged", origin);
     }
 
-    public void HealDamage(float damage, GameObject origin)
+    public void HealDamage(float amount, GameObject origin)
     {
-        currentHealth += damage;
+        currentHealth += amount;
 
         if (currentHealth > maxHealth)
         {
             currentHealth = maxHealth;
         }
+
+        OnHealed?.Invoke(origin);
     }
 }

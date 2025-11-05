@@ -31,6 +31,11 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float gravity = -9.81f;
     [SerializeField] private float groundHeight = 0f;
 
+    [Header("Weapons")]
+    [SerializeField] private GameObject weapon1;
+    [SerializeField] private GameObject weapon2;
+    private int activeWeaponIndex = 1;
+
     private float verticalVelocity = 0f;
     private bool isGrounded = true;
 
@@ -130,6 +135,16 @@ public class PlayerController : MonoBehaviour
             verticalVelocity = 0f;
             isGrounded = true;
         }
+
+        if (Keyboard.current.qKey.wasPressedThisFrame)
+        {
+            SwapWeapons();
+        }
+
+        if (Keyboard.current.escapeKey.wasPressedThisFrame)
+        {
+            Application.Quit();
+        }
     }
     private void FixedUpdate()
     {
@@ -163,5 +178,16 @@ public class PlayerController : MonoBehaviour
         rotateAction.Disable();
         fireAction.Disable();
         jumpAction.Disable();
+    }
+    private void SwapWeapons()
+    {
+        activeWeaponIndex = (activeWeaponIndex == 1) ? 2 : 1;
+        SetActiveWeapon(activeWeaponIndex);
+    }
+
+    private void SetActiveWeapon(int index)
+    {
+        if (weapon1 != null) weapon1.SetActive(index == 1);
+        if (weapon2 != null) weapon2.SetActive(index == 2);
     }
 }

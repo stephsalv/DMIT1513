@@ -2,11 +2,9 @@ using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
-    [SerializeField] float lifetime, damage;
-
-    [SerializeField] bool contactDestruct;
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    [SerializeField] private float lifetime = 3f;
+    [SerializeField] private float damage = 10f;
+    [SerializeField] private bool contactDestruct = true;
     void Start()
     {
         Invoke("Destruct", lifetime);
@@ -25,10 +23,11 @@ public class Projectile : MonoBehaviour
 
             if (health != null)
             {
-                health.ApplyDamage(damage);
+                health.ApplyDamage(damage, gameObject);
             }
         }
 
         Destruct();
     }
 }
+
