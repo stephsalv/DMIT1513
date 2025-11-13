@@ -18,7 +18,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private GameObject firstPerson;
     [SerializeField] private GameObject thirdPerson;
     [SerializeField] private GameObject playerCam;
-    [SerializeField] private GameObject sideView;
+    [SerializeField] private GameObject sideCam;
 
 
     public static bool dialogue = false;
@@ -51,15 +51,18 @@ public class PlayerController : MonoBehaviour
 
         if (dialogue)
         {
-            // Move camera to side view
-            playerCam.transform.localPosition = sideView.transform.localPosition;
-            // Make the camera face the player's left side (local -X direction)
-            playerCam.transform.localRotation = Quaternion.LookRotation(-transform.right, Vector3.up);
-            return;
+            // Activate dialogue camera
+            sideCam.SetActive(true);
+            playerCam.SetActive(false);
+            return; // Skip movement, rotation, weapons
         }
         else
         {
-            // Restore camera position and rotation when not in dialogue
+            // Restore player camera
+            sideCam.SetActive(false);
+            playerCam.SetActive(true);
+
+            // Restore first/third person camera positions
             if (firstPersonPerspective)
             {
                 playerCam.transform.localPosition = firstPerson.transform.localPosition;
@@ -71,6 +74,7 @@ public class PlayerController : MonoBehaviour
                 playerCam.transform.localRotation = thirdPerson.transform.localRotation;
             }
         }
+
 
         if (Keyboard.current.escapeKey.wasPressedThisFrame)
         {

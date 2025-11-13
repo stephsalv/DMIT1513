@@ -1,5 +1,5 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
+using System;
 
 public class QuestManager : MonoBehaviour
 {
@@ -11,6 +11,9 @@ public class QuestManager : MonoBehaviour
 
     public event Action OnKeysUpdated;
 
+    [Header("Quest Progress")]
+    public bool HasTalkedToNPC { get; private set; } = false;
+
     private void Awake()
     {
         if (Instance == null) Instance = this;
@@ -20,12 +23,12 @@ public class QuestManager : MonoBehaviour
     public void CollectKey(int amount = 1)
     {
         keysCollected += amount;
-        Debug.Log($"Keys collected: {keysCollected}/{keysNeeded}");
-
         OnKeysUpdated?.Invoke();
     }
 
     public bool HasEnoughKeys() => keysCollected >= keysNeeded;
+
+    public void SetTalkedToNPC() => HasTalkedToNPC = true;
 
     public int KeysCollected => keysCollected;
     public int KeysNeeded => keysNeeded;

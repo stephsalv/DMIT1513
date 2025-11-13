@@ -18,6 +18,6 @@ public class LootDrop : MonoBehaviour
         Vector3 position = transform.position;
         GameObject key = Instantiate(keyModel, position + Vector3.up, Quaternion.identity);
         key.SetActive(true);
-        Destroy(key, 5f);
+        //Destroy(key, 5f); to increase difficulty
     }
 }

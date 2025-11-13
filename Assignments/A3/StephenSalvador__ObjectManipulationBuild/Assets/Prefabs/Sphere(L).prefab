@@ -424,6 +424,7 @@ GameObject:
   - component: {fileID: 3470783952605882368}
   - component: {fileID: 2793683475080406917}
   - component: {fileID: 6838593416625780874}
+  - component: {fileID: 22386020372244667}
   m_Layer: 0
   m_Name: Sphere(L)
   m_TagString: Untagged
@@ -502,4 +503,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 641a1900c8c55be42aa06fa0ab12a708, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RandomBounce
-  speed: 10
+  speed: 15
+--- !u!114 &22386020372244667
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8508163694989813639}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ace3b24b20de92449c041078d09cb3f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LootDrop
+  keyModel: {fileID: 2065727868015920641, guid: 61d18774cb720034d8b46121acfcf768, type: 3}

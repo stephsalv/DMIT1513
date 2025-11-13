@@ -74,10 +74,10 @@ public class NPC : MonoBehaviour
         // Dialogue lines
         dialogueQueue.Clear();
         dialogueQueue.Enqueue("Hello, can you please help me?");
-        dialogueQueue.Enqueue("We need a key to get to the next level");
-        dialogueQueue.Enqueue("Could you defeat the 5 bubbles for me?");
-        dialogueQueue.Enqueue("Go to the door at the end once you are done!");
-        dialogueQueue.Enqueue("Thanks. Goodluck, friend!");
+        dialogueQueue.Enqueue("We need 3 keys to get to the next level...");
+        dialogueQueue.Enqueue("Could you defeat the 3 bubbles for me?");
+        dialogueQueue.Enqueue("Through the door at the end once you're done!");
+        dialogueQueue.Enqueue("Goodluck, friend!");
 
         ShowNextDialogue();
     }
@@ -113,9 +113,11 @@ public class NPC : MonoBehaviour
         {
             questUI.ShowQuestUI();
             hasTalked = true;
+
+            QuestManager.Instance.SetTalkedToNPC();
         }
 
-        if (interactCanvas != null && playerDetected)
-            interactCanvas.SetActive(true);
+        //if (interactCanvas != null && playerDetected)
+        //    interactCanvas.SetActive(true);
     }
 }
