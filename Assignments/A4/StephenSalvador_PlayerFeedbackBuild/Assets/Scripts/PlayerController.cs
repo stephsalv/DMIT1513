@@ -9,6 +9,12 @@ public class PlayerController : MonoBehaviour
     public float speed = 10f;
     public float lookSpeed = 10f;
 
+    void Start()
+    {
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+    }
+
     private void Awake()
     {
         controls = new InputSystem_Actions();
