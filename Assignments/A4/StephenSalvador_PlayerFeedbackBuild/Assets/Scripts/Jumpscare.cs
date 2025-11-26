@@ -22,6 +22,7 @@ public class Jumpscare : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
+            Debug.Log("[Jumpscare] Player entered trigger. Starting jumpscare sequence.");
             StartCoroutine(PlayerDead());
         }
     }
@@ -40,30 +41,36 @@ public class Jumpscare : MonoBehaviour
         scream.Stop();
         jumpscareIMG.SetActive(false);
 
-        // Load Game Over scene
-        SceneManager.LoadScene(2);
+        Debug.Log("[Jumpscare] Finished. Quitting game...");
+        Application.Quit();
     }
 
     // Called by Title Button
     public void TitleButtonJumpScare()
     {
+        Debug.Log("[Jumpscare] Title button jumpscare triggered.");
         StartCoroutine(TitleJumpScareSequence());
     }
 
     private IEnumerator TitleJumpScareSequence()
     {
-        // Show image and play scream
-        jumpscareIMG.SetActive(true);
-        scream.Play();
+        if (jumpscareIMG != null)
+            jumpscareIMG.SetActive(true);
 
-        // Wait for audioDuration seconds
-        yield return new WaitForSeconds(audioDuration);
+        if (scream != null)
+            scream.Play();
 
-        // Stop audio and hide image
-        scream.Stop();
-        jumpscareIMG.SetActive(false);
+        Debug.Log("[Jumpscare] Playing title jumpscare audio.");
 
-        // Load Title scene
+        yield return new WaitForSeconds(1);
+
+        if (scream != null)
+            scream.Stop();
+
+        if (jumpscareIMG != null)
+            jumpscareIMG.SetActive(false);
+
+        Debug.Log("[Jumpscare] Audio finished. Loading Title scene (Scene 0).");
         SceneManager.LoadScene(0);
     }
 }

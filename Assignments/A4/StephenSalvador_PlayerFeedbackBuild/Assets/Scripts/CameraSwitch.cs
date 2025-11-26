@@ -1,29 +1,72 @@
+using TMPro;
 using UnityEngine;
 
 public class CameraSwitch : MonoBehaviour
 {
+    [Header("Camera to Fix")]
     public SecurityCamera cameraToFix;
+
+    [Header("UI")]
+    public GameObject uiPanel;
+    public TextMeshProUGUI uiText;
+    private string promptMessage = "Press [E] to fix camera";
+
     private bool playerInRange = false;
 
-    void OnTriggerEnter(Collider other)
+    private void Start()
     {
-        if (other.CompareTag("Player"))
-            playerInRange = true;
+        if (uiPanel != null)
+            uiPanel.SetActive(false);
+        else
+            Debug.LogWarning("[CameraSwitch] UI Panel not assigned!");
+
+        if (uiText == null)
+            Debug.LogWarning("[CameraSwitch] TMP Text not assigned!");
     }
 
-    void OnTriggerExit(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
-            playerInRange = false;
+        if (!other.CompareTag("Player")) return;
+
+        playerInRange = true;
+        Debug.Log("[CameraSwitch] Player entered camera trigger!");
+
+        if (uiPanel != null)
+            uiPanel.SetActive(true);
+
+        if (uiText != null)
+            uiText.text = promptMessage;
     }
 
-    void Update()
+    private void OnTriggerExit(Collider other)
     {
-        if (playerInRange && Input.GetKeyDown(KeyCode.E))
+        if (!other.CompareTag("Player")) return;
+
+        playerInRange = false;
+        Debug.Log("[CameraSwitch] Player exited camera trigger!");
+
+        if (uiPanel != null)
+            uiPanel.SetActive(false);
+    }
+
+    private void Update()
+    {
+        if (!playerInRange) return;
+
+        if (Input.GetKeyDown(KeyCode.E))
         {
-            cameraToFix.TurnOn();
-            Debug.Log("Camera fixed!");
+            if (cameraToFix != null)
+            {
+                cameraToFix.TurnOn();
+                Debug.Log("[CameraSwitch] Player pressed E. Camera fixed!");
+
+                if (uiPanel != null)
+                    uiPanel.SetActive(false);
+            }
+            else
+            {
+                Debug.LogWarning("[CameraSwitch] CameraToFix not assigned!");
+            }
         }
     }
 }
-
