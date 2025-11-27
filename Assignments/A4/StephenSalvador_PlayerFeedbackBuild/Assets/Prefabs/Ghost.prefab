@@ -87,13 +87,13 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3367720395078889881}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0b1d6a75cd1e2ae4f9d3da6813b69be4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AIGhost
-  moveSpeed: 3
-  directionTime: 2
+  waypoints: []
+  speed: 3
 --- !u!1 &3926154472463060831
 GameObject:
   m_ObjectHideFlags: 0

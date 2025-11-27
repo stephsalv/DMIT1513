@@ -100,7 +100,6 @@ GameObject:
   - component: {fileID: 4576274868038586142}
   - component: {fileID: 4891237707460137510}
   - component: {fileID: 2236462130975222453}
-  - component: {fileID: 1020160871245517698}
   m_Layer: 0
   m_Name: Switch Button
   m_TagString: Untagged
@@ -179,27 +178,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &1020160871245517698
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2683351066088963030}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 90.05402, y: 36.468216, z: 19.26953}
-  m_Center: {x: -14.840365, y: 17.2341, z: -0.05540252}
 --- !u!1 &3304238170084016937
 GameObject:
   m_ObjectHideFlags: 0
@@ -390,6 +368,7 @@ GameObject:
   - component: {fileID: 265889903586912881}
   - component: {fileID: 2617812101501673147}
   - component: {fileID: 8207531567341153122}
+  - component: {fileID: -262095563036822486}
   m_Layer: 0
   m_Name: Surveillance Camera
   m_TagString: Untagged
@@ -488,6 +467,27 @@ MonoBehaviour:
   cameraToFix: {fileID: 0}
   uiPanel: {fileID: 0}
   uiText: {fileID: 0}
+--- !u!65 &-262095563036822486
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4563459568915873646}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.39357913, y: 2.4207227, z: 0.7383196}
+  m_Center: {x: -0.002239287, y: -1.1218581, z: 0.3691598}
 --- !u!1 &7428213431903784499
 GameObject:
   m_ObjectHideFlags: 0

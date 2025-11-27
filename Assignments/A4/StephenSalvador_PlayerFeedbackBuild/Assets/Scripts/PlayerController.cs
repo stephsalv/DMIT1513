@@ -1,15 +1,31 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
+[RequireComponent(typeof(CharacterController))]
 public class PlayerController : MonoBehaviour
 {
+    [Header("Movement")]
+    public float walkSpeed = 5f;
+    public float runSpeed = 8f;
+    public float jumpHeight = 1.5f;
+    public float gravity = -9.81f;
+
+    [Header("Mouse Look")]
+    public Transform playerCamera;
+    public float mouseSensitivity = 2f;
+    private float xRotation = 0f;
+
+    private CharacterController controller;
+    private Vector3 velocity;
+    private bool isGrounded;
+
     private InputSystem_Actions controls;
     private Vector2 moveInput;
     private Vector2 lookInput;
+    private bool jumpInput;
+    private bool sprintInput;
 
-    public float speed = 10f;
-    public float lookSpeed = 10f;
-
-    void Start()
+    private void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -17,20 +33,28 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
-        controls = new InputSystem_Actions();
+        controller = GetComponent<CharacterController>();
+        controls = new InputSystem_Actions(); // Generated from Input Actions
+
+        // Movement
+        controls.Player.Move.performed += ctx => moveInput = ctx.ReadValue<Vector2>();
+        controls.Player.Move.canceled += ctx => moveInput = Vector2.zero;
+
+        // Look
+        controls.Player.Look.performed += ctx => lookInput = ctx.ReadValue<Vector2>();
+        controls.Player.Look.canceled += ctx => lookInput = Vector2.zero;
+
+        // Jump
+        controls.Player.Jump.performed += ctx => jumpInput = true;
+
+        // Sprint
+        controls.Player.Sprint.performed += ctx => sprintInput = true;
+        controls.Player.Sprint.canceled += ctx => sprintInput = false;
     }
 
     private void OnEnable()
     {
         controls.Player.Enable();
-
-        controls.Player.Move.performed += ctx => moveInput = ctx.ReadValue<Vector2>();
-        controls.Player.Move.canceled += ctx => moveInput = Vector2.zero;
-
-        controls.Player.Look.performed += ctx => lookInput = ctx.ReadValue<Vector2>();
-        controls.Player.Look.canceled += ctx => lookInput = Vector2.zero;
-
-        controls.Player.Jump.performed += ctx => Jump();
     }
 
     private void OnDisable()
@@ -40,16 +64,41 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        // Movement
-        Vector3 move = new Vector3(moveInput.x, 0, moveInput.y) * speed * Time.deltaTime;
-        transform.Translate(move, Space.Self);
-
-        // Look
-        transform.Rotate(Vector3.up, lookInput.x * lookSpeed * Time.deltaTime);
+        HandleMovement();
+        HandleMouseLook();
     }
 
-    private void Jump()
+    private void HandleMovement()
     {
-        Debug.Log("Jump!");
+        isGrounded = controller.isGrounded;
+        if (isGrounded && velocity.y < 0)
+            velocity.y = -2f;
+
+        Vector3 move = transform.right * moveInput.x + transform.forward * moveInput.y;
+        float speed = sprintInput ? runSpeed : walkSpeed;
+        controller.Move(move * speed * Time.deltaTime);
+
+        // Jump
+        if (jumpInput && isGrounded)
+        {
+            velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
+        }
+        jumpInput = false;
+
+        // Gravity
+        velocity.y += gravity * Time.deltaTime;
+        controller.Move(velocity * Time.deltaTime);
+    }
+
+    private void HandleMouseLook()
+    {
+        float mouseX = lookInput.x * mouseSensitivity;
+        float mouseY = lookInput.y * mouseSensitivity;
+
+        xRotation -= mouseY;
+        xRotation = Mathf.Clamp(xRotation, -90f, 90f);
+
+        playerCamera.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
+        transform.Rotate(Vector3.up * mouseX);
     }
 }

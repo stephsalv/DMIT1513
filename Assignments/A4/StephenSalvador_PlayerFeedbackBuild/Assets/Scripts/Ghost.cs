@@ -1,46 +1,85 @@
 using UnityEngine;
 
-public class Ghost : MonoBehaviour
+public class GhostAI : MonoBehaviour
 {
-    [Header("Movement Settings")]
-    public float moveSpeed = 3f;          // Ghost movement speed
-    public float directionTime = 2f;      // How long to move in a direction before picking a new one
+    public Transform[] waypoints;
 
-    private float timer;
-    private Vector3 moveDirection;
+    public float speed = 3f;
 
-    private void Start()
+    private int currentWaypointIndex = 0;
+
+    private Rigidbody rb;
+    public Transform player;
+    public float detectionRange = 10f;
+
+    void Start()
     {
-        PickNewDirection();
+        rb = GetComponent<Rigidbody>();
     }
 
-    private void Update()
+    void FixedUpdate()
     {
-        // Move ghost
-        transform.position += moveDirection * moveSpeed * Time.deltaTime;
-
-        // Countdown
-        timer -= Time.deltaTime;
-
-        // Time to change direction?
-        if (timer <= 0)
+        if (PlayerInRange())
         {
-            PickNewDirection();
+            ChasePlayer();
+        }
+        else
+        {
+            Patrol();
+        }
+
+    }
+
+    void Patrol()
+    {
+        if (waypoints.Length == 0) return;
+
+        Transform targetWaypoint = waypoints[currentWaypointIndex];
+        Vector3 direction = (targetWaypoint.position - transform.position).normalized;
+
+        rb.MovePosition(transform.position + direction * speed * Time.deltaTime);
+
+        if (Vector3.Distance(transform.position, targetWaypoint.position) < 0.1f)
+        {
+            currentWaypointIndex = (currentWaypointIndex + 1) % waypoints.Length;
         }
     }
 
-    void PickNewDirection()
+    bool PlayerInRange()
     {
-        // Pick random XZ direction (no up/down)
-        float x = Random.Range(-1f, 1f);
-        float z = Random.Range(-1f, 1f);
+        return Vector3.Distance(transform.position, player.position) <= detectionRange;
+    }
 
-        moveDirection = new Vector3(x, 0, z).normalized;
+    void ChasePlayer()
+    {
+        Vector3 direction = (player.position - transform.position).normalized;
+        rb.MovePosition(transform.position + direction * speed * Time.fixedDeltaTime);
+    }
 
-        timer = directionTime;
+    private void OnDrawGizmos()
+    {
+        if (waypoints != null && waypoints.Length > 0)
+        {
+            Gizmos.color = Color.yellow;
+            foreach (Transform waypoint in waypoints)
+            {
+                if (waypoint != null)
+                {
+                    Gizmos.DrawSphere(waypoint.position, 0.3f);
+                }
+            }
+        }
 
-        // Face the direction the ghost is going
-        if (moveDirection != Vector3.zero)
-            transform.rotation = Quaternion.LookRotation(moveDirection);
+        Gizmos.color = Color.red;
+        for (int i = 0; i < waypoints.Length; i++)
+        {
+            if (waypoints[i] != null && waypoints[(i + 1) % waypoints.Length] != null)
+            {
+                Gizmos.DrawLine(waypoints[i].position, waypoints[(i + 1) % waypoints.Length].position);
+            }
+        }
+
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(transform.position, detectionRange);
     }
 }
