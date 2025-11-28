@@ -259,7 +259,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &79409911
 Transform:
   m_ObjectHideFlags: 0
@@ -7157,7 +7157,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &607584165
 Transform:
   m_ObjectHideFlags: 0
@@ -13837,7 +13837,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1209133615
 Transform:
   m_ObjectHideFlags: 0
@@ -16013,7 +16013,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1896926509
 Transform:
   m_ObjectHideFlags: 0
@@ -17605,7 +17605,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3278065102819597504, guid: b4c9097c8e638194b9ede812fe353895, type: 3}
       propertyPath: runSpeed
-      value: 8
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 3278065102819597504, guid: b4c9097c8e638194b9ede812fe353895, type: 3}
       propertyPath: lookSpeed
@@ -17613,7 +17613,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3278065102819597504, guid: b4c9097c8e638194b9ede812fe353895, type: 3}
       propertyPath: walkSpeed
-      value: 5
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 3278065102819597504, guid: b4c9097c8e638194b9ede812fe353895, type: 3}
       propertyPath: playerCamera
@@ -17649,7 +17649,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6744111664298630586, guid: b4c9097c8e638194b9ede812fe353895, type: 3}
       propertyPath: m_Radius
-      value: 0.48
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 6744111664298630586, guid: b4c9097c8e638194b9ede812fe353895, type: 3}
       propertyPath: m_Enabled
@@ -18444,7 +18444,7 @@ Transform:
   m_GameObject: {fileID: 3367720394364391669}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 14.01, y: 0, z: 82.96}
+  m_LocalPosition: {x: -6.52, y: 0, z: 82.96}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -19894,9 +19894,9 @@ MonoBehaviour:
   - {fileID: 577617390}
   - {fileID: 983990822}
   - {fileID: 981012029}
-  speed: 5
+  speed: 4
   player: {fileID: 967851630}
-  detectionRange: 8
+  detectionRange: 5
 --- !u!136 &7722959993725524059
 CapsuleCollider:
   m_ObjectHideFlags: 0
