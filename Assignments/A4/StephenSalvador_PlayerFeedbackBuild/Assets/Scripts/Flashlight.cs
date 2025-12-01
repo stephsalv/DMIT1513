@@ -1,35 +1,59 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Flashlight : MonoBehaviour
 {
-    public GameObject ON;
-    public GameObject OFF;
-    private bool isON;
+    [Header("Flashlight Settings")]
+    public GameObject spotLight;
+    public float range = 10f;
+    public LayerMask ghostLayer;
+
+    private bool isON = false;
 
     void Start()
     {
-        ON.SetActive(false);
-        OFF.SetActive(false);
-        isON = false;
+        spotLight.SetActive(false);
     }
 
-    // Update is called once per frame
     void Update()
     {
+        // Toggle flashlight
         if (Input.GetKeyUp(KeyCode.F))
         {
-            if (isON)
+            isON = !isON;
+            spotLight.SetActive(isON);
+            Debug.Log("Flashlight " + (isON ? "ON" : "OFF"));
+        }
+
+        if (isON)
+            ShineLight();
+    }
+
+    private void ShineLight()
+    {
+        // Use a ray from the spotlight forward
+        Ray ray = new Ray(spotLight.transform.position, spotLight.transform.forward);
+        Debug.DrawLine(ray.origin, ray.origin + ray.direction * range, Color.yellow);
+
+        if (Physics.Raycast(ray, out RaycastHit hit, range, ghostLayer))
+        {
+            Debug.Log("Flashlight hit: " + hit.collider.name);
+
+            // If the ghost has CryingState, directly trigger it
+            CryingState crying = hit.collider.GetComponent<CryingState>();
+            if (crying != null)
             {
-                ON.SetActive(false);
-                OFF.SetActive(true);
-            }
-            if (!isON)
-            {
-                ON.SetActive(true);
-                OFF.SetActive(false);
+                // Reset timer and play audio immediately
+                crying.enabled = true;
+                Debug.Log("Ghost entered CryingState: " + hit.collider.name);
             }
 
-            isON = !isON;
+            // Optionally, if using AttackState → Crying transition
+            AttackState attack = hit.collider.GetComponent<AttackState>();
+            if (attack != null)
+            {
+                attack.isHitByFlashlight = true;
+                Debug.Log("Triggered CryingState via AttackState: " + hit.collider.name);
+            }
         }
     }
 }
