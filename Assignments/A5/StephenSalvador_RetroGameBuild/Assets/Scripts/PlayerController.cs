@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-[RequireComponent(typeof(Rigidbody))]
 public class PlayerController : MonoBehaviour
 {
     public float moveSpeed = 5f;
@@ -9,7 +8,7 @@ public class PlayerController : MonoBehaviour
     public bool isAlive = true;
 
     private Rigidbody rb;
-    private Vector2 _moveDirection;
+    private Vector2 moveInput;
 
     public InputActionReference move;
 
@@ -20,30 +19,34 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        _moveDirection = move.action.ReadValue<Vector2>();
+        moveInput = move.action.ReadValue<Vector2>();
     }
 
     private void FixedUpdate()
     {
         if (!isAlive) return;
 
-        // Convert 2D input to 3D movement (x, z)
-        Vector3 movement = new Vector3(_moveDirection.x, 0f, _moveDirection.y) * moveSpeed;
+        // Movement
+        Vector3 movement = new Vector3(moveInput.x, 0f, moveInput.y) * moveSpeed;
         rb.linearVelocity = movement;
+
+        // Rotate to movement direction
+        if (movement.sqrMagnitude > 0.01f)
+        {
+            transform.rotation = Quaternion.LookRotation(movement);
+        }
     }
 
     private void OnCollisionEnter(Collision collision)
     {
         if (!isAlive) return;
 
-        // Player vs Player
         if (collision.gameObject.CompareTag("Player"))
         {
             Die();
             collision.gameObject.GetComponent<PlayerController>()?.Die();
         }
 
-        // Player vs Ghost
         if (collision.gameObject.CompareTag("Ghost"))
         {
             var ghost = collision.gameObject.GetComponent<Ghost>();
@@ -58,14 +61,12 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        // Player vs Fruit
         if (collision.gameObject.CompareTag("Fruit"))
         {
             score += 1;
             Destroy(collision.gameObject);
         }
 
-        // Player vs Plus Powerup
         if (collision.gameObject.CompareTag("Plus"))
         {
             Destroy(collision.gameObject);

@@ -2,39 +2,44 @@ using UnityEngine;
 using UnityEngine.AI;
 using System.Collections;
 
-[RequireComponent(typeof(NavMeshAgent))]
 public class Ghost : MonoBehaviour
 {
     public int scoreValue = 5;
     public bool isVulnerable = false;
 
-    private AIMover aiMover;
+    public float fleeDistance = 5f;      // How far to flee when vulnerable
+    public float updateRate = 0.2f;      // How often to update target
+
     private NavMeshAgent agent;
+    public GameObject currentTarget;
+    private float timer = 0f;
 
     void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
-        aiMover = GetComponent<AIMover>();
     }
 
     void Update()
     {
-        if (!isVulnerable)
+        timer += Time.deltaTime;
+        if (timer >= updateRate)
         {
-            GameObject nearestPlayer = FindClosestPlayer();
-            if (nearestPlayer != null)
-                aiMover.SetTarget(nearestPlayer);
-        }
-        else
-        {
-            FleeFromPlayers();
+            if (!isVulnerable)
+            {
+                ChaseClosestPlayer();
+            }
+            else
+            {
+                FleeFromPlayers();
+            }
+            timer = 0f;
         }
     }
 
-    private GameObject FindClosestPlayer()
+    private void ChaseClosestPlayer()
     {
-        float closestDistance = Mathf.Infinity;
         GameObject closestPlayer = null;
+        float closestDistance = Mathf.Infinity;
 
         foreach (var player in GameManager.Instance.players)
         {
@@ -48,7 +53,10 @@ public class Ghost : MonoBehaviour
             }
         }
 
-        return closestPlayer;
+        currentTarget = closestPlayer;
+
+        if (currentTarget != null)
+            agent.SetDestination(currentTarget.transform.position);
     }
 
     private void FleeFromPlayers()
@@ -66,12 +74,31 @@ public class Ghost : MonoBehaviour
         if (count > 0)
             fleeDirection /= count;
 
-        aiMover.SetTarget(transform.position + fleeDirection * 5f);
+        agent.SetDestination(transform.position + fleeDirection * fleeDistance);
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            var player = collision.gameObject.GetComponent<PlayerController>();
+            if (player != null)
+            {
+                if (isVulnerable)
+                {
+                    player.score += scoreValue;
+                    Die();
+                }
+                else
+                {
+                    player.Die();
+                }
+            }
+        }
     }
 
     public void Die()
     {
-        // Reset state
         isVulnerable = false;
         transform.position = GhostManager.Instance.GetSpawnPosition();
     }
