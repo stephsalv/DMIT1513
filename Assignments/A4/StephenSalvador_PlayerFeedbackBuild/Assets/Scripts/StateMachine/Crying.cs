@@ -3,46 +3,50 @@ using UnityEngine;
 public class CryingState : State
 {
     public IdleState idleState;
-    public float cryingDuration = 3f;
+    public float cryingDuration = 7f;
 
     private float timer = 0f;
     private Rigidbody rb;
-    private AudioSource audioSource;
+    public AudioSource audioSource;
     private bool hasPlayedAudio = false;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
-        audioSource = GetComponent<AudioSource>();
     }
 
     public override State RunCurrentState()
     {
-        // Stop movement
+        // Stop movement completely while crying
         if (rb != null)
         {
             rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
         }
 
-        // Play crying audio once
-        if (!hasPlayedAudio)
+        // Play audio once when entering this state
+        if (!hasPlayedAudio && audioSource != null)
         {
             audioSource.Play();
             hasPlayedAudio = true;
         }
 
-        // Count timer
+        // Countdown crying duration
         timer += Time.deltaTime;
 
         if (timer >= cryingDuration)
         {
             timer = 0f;
-            audioSource.Stop();
+
+            // Stop audio and reset flag
+            if (audioSource != null)
+                audioSource.Stop();
             hasPlayedAudio = false;
+
+            // Return to IdleState
             return idleState;
         }
 
         return this;
     }
 }
-

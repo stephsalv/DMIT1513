@@ -1,5 +1,6 @@
 using UnityEngine;
 using TMPro;
+using System.Collections;
 
 public class WaterSprinkler : MonoBehaviour
 {
@@ -13,6 +14,8 @@ public class WaterSprinkler : MonoBehaviour
 
     private bool playerInRange = false;
     private bool isActive = true;
+
+    public GameObject hunterGhost;
 
     private void Start()
     {
@@ -37,14 +40,42 @@ public class WaterSprinkler : MonoBehaviour
     {
         if (sprinklerParticles != null && isActive)
         {
+            // Stop sprinkler
             sprinklerParticles.Stop();
             isActive = false;
             Debug.Log("[Sprinkler] Sprinkler turned off!");
 
+            // Hide previous UI
             if (uiPanel != null)
-                uiPanel.SetActive(false); // Hide UI when turned off
+                uiPanel.SetActive(false);
+
+            // Activate Hunter ghost
+            if (hunterGhost != null)
+            {
+                hunterGhost.SetActive(true);
+                Debug.Log("[Sprinkler] Hunter ghost activated!");
+
+                // Show new UI message for 3 seconds
+                if (uiPanel != null && uiText != null)
+                {
+                    StartCoroutine(ShowTemporaryMessage("Do you hear that? I think something else is out there too...", 3f));
+                }
+            }
         }
     }
+
+    // Coroutine to show a message temporarily
+    private IEnumerator ShowTemporaryMessage(string message, float duration)
+    {
+        uiText.text = message;
+        uiPanel.SetActive(true);
+
+        yield return new WaitForSeconds(duration);
+
+        uiPanel.SetActive(false);
+    }
+
+
 
     private void OnTriggerEnter(Collider other)
     {
