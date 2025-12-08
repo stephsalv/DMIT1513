@@ -1,6 +1,11 @@
 using UnityEngine;
 using UnityEngine.AI;
 using System.Collections;
+using NUnit.Framework;
+
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.AI;
 
 public class Ghost : MonoBehaviour
 {
@@ -12,6 +17,7 @@ public class Ghost : MonoBehaviour
 
     private NavMeshAgent agent;
     public GameObject currentTarget;
+    public List<GameObject> trackedPlayers = new List<GameObject>();
     private float timer = 0f;
 
     void Awake()
@@ -26,7 +32,8 @@ public class Ghost : MonoBehaviour
         {
             if (!isVulnerable)
             {
-                ChaseClosestPlayer();
+                UpdateCurrentTarget();  // always pick closest
+                ChaseCurrentTarget();
             }
             else
             {
@@ -36,27 +43,35 @@ public class Ghost : MonoBehaviour
         }
     }
 
-    private void ChaseClosestPlayer()
+    // Update the current target to the closest player in the tracked list
+    private void UpdateCurrentTarget()
     {
         GameObject closestPlayer = null;
         float closestDistance = Mathf.Infinity;
 
-        foreach (var player in GameManager.Instance.players)
+        foreach (var player in trackedPlayers)
         {
-            if (!player.isAlive) continue;
+            if (player == null) continue;
+            PlayerController pc = player.GetComponent<PlayerController>();
+            if (pc == null || !pc.isAlive) continue;
 
             float dist = Vector3.Distance(transform.position, player.transform.position);
             if (dist < closestDistance)
             {
                 closestDistance = dist;
-                closestPlayer = player.gameObject;
+                closestPlayer = player;
             }
         }
 
         currentTarget = closestPlayer;
+    }
 
+    private void ChaseCurrentTarget()
+    {
         if (currentTarget != null)
+        {
             agent.SetDestination(currentTarget.transform.position);
+        }
     }
 
     private void FleeFromPlayers()
@@ -64,36 +79,43 @@ public class Ghost : MonoBehaviour
         Vector3 fleeDirection = Vector3.zero;
         int count = 0;
 
-        foreach (var player in GameManager.Instance.players)
+        foreach (var player in trackedPlayers)
         {
-            if (!player.isAlive) continue;
+            if (player == null) continue;
+            PlayerController pc = player.GetComponent<PlayerController>();
+            if (pc == null || !pc.isAlive) continue;
+
             fleeDirection += (transform.position - player.transform.position).normalized;
             count++;
         }
 
-        if (count > 0)
-            fleeDirection /= count;
+        if (count == 0) return;
 
-        agent.SetDestination(transform.position + fleeDirection * fleeDistance);
+        fleeDirection /= count;
+
+        Vector3 fleeTarget = transform.position + fleeDirection * fleeDistance;
+
+        if (NavMesh.SamplePosition(fleeTarget, out NavMeshHit hit, fleeDistance, NavMesh.AllAreas))
+        {
+            agent.SetDestination(hit.position);
+        }
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Player"))
+        if (!collision.gameObject.CompareTag("Player")) return;
+
+        PlayerController hitPlayer = collision.gameObject.GetComponent<PlayerController>();
+        if (hitPlayer == null || !hitPlayer.isAlive) return;
+
+        if (isVulnerable)
         {
-            var player = collision.gameObject.GetComponent<PlayerController>();
-            if (player != null)
-            {
-                if (isVulnerable)
-                {
-                    player.score += scoreValue;
-                    Die();
-                }
-                else
-                {
-                    player.Die();
-                }
-            }
+            hitPlayer.score += scoreValue;
+            Die();
+        }
+        else
+        {
+            hitPlayer.Die();
         }
     }
 
@@ -102,4 +124,22 @@ public class Ghost : MonoBehaviour
         isVulnerable = false;
         transform.position = GhostManager.Instance.GetSpawnPosition();
     }
+
+    // Trigger system to add/remove players
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player") && !trackedPlayers.Contains(other.gameObject))
+        {
+            trackedPlayers.Add(other.gameObject);
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Player") && trackedPlayers.Contains(other.gameObject))
+        {
+            trackedPlayers.Remove(other.gameObject);
+        }
+    }
 }
+
