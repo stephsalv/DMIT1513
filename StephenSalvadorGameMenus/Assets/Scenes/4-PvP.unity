@@ -2868,13 +2868,33 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 387807600234569455, guid: a7bf8e71846ff9f408b969be7ed66cbb, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 644229614691354776, guid: a7bf8e71846ff9f408b969be7ed66cbb, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 838392399360528656, guid: a7bf8e71846ff9f408b969be7ed66cbb, type: 3}
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2106383854384379387, guid: a7bf8e71846ff9f408b969be7ed66cbb, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2157017891837974418, guid: a7bf8e71846ff9f408b969be7ed66cbb, type: 3}
       propertyPath: m_Name
       value: PlayerCar
+      objectReference: {fileID: 0}
+    - target: {fileID: 5918497168194815708, guid: a7bf8e71846ff9f408b969be7ed66cbb, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6667992268265121232, guid: a7bf8e71846ff9f408b969be7ed66cbb, type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

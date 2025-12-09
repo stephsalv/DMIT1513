@@ -62,5 +62,4 @@ public class PauseMenu : MonoBehaviour
         gameplayUI.SetActive(true); // Show gameplay UI again
         isPaused = false;
     }
-
 }

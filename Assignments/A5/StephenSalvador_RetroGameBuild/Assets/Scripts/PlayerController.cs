@@ -3,18 +3,18 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-    public float moveSpeed = 5f;
+    public float moveSpeed = 15f;
     public float rotationSpeed = 100f;
     public int score = 0;
     public bool isAlive = true;
+
+    public InputActionAsset inputActions;
 
     private Rigidbody rb;
     private Vector2 moveInput;
     private Vector2 lookInput;
 
-
-    public InputActionReference move;
-    public InputActionReference look;
+    public InputActionReference move, look;
 
     public GameObject playerCanvas;
 
@@ -27,6 +27,7 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         AssignGamepad();
     }
+
     void AssignGamepad()
     {
         var gamepads = Gamepad.all;
@@ -45,7 +46,6 @@ public class PlayerController : MonoBehaviour
     {
         moveInput = move.action.ReadValue<Vector2>();
         lookInput = look.action.ReadValue<Vector2>();
-
     }
 
     private void FixedUpdate()
@@ -74,20 +74,6 @@ public class PlayerController : MonoBehaviour
             collision.gameObject.GetComponent<PlayerController>()?.Die();
         }
 
-        if (collision.gameObject.CompareTag("Ghost"))
-        {
-            var ghost = collision.gameObject.GetComponent<Ghost>();
-            if (ghost.isVulnerable)
-            {
-                score += 5;
-                ghost.Die();
-            }
-            else
-            {
-                Die();
-            }
-        }
-
         if (collision.gameObject.CompareTag("Fruit"))
         {
             score += 1;
@@ -106,9 +92,9 @@ public class PlayerController : MonoBehaviour
         isAlive = false;
 
         if (playerCanvas != null)
-            playerCanvas.SetActive(true); // Show "You Died" UI
+            playerCanvas.SetActive(true);
 
         gameObject.SetActive(false);
-        GameManager.Instance.CheckGameOver();
+        //GameManager.Instance.CheckGameOver();
     }
 }

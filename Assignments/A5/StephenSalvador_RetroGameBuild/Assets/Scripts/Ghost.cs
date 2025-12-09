@@ -1,11 +1,6 @@
 using UnityEngine;
 using UnityEngine.AI;
-using System.Collections;
-using NUnit.Framework;
-
 using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.AI;
 
 public class Ghost : MonoBehaviour
 {
@@ -14,6 +9,7 @@ public class Ghost : MonoBehaviour
 
     public float fleeDistance = 5f;      // How far to flee when vulnerable
     public float updateRate = 0.2f;      // How often to update target
+    public float moveSpeed = 3.5f;       // Adjustable movement speed
 
     private NavMeshAgent agent;
     public GameObject currentTarget;
@@ -23,16 +19,27 @@ public class Ghost : MonoBehaviour
     void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
+        agent.speed = moveSpeed; // Set initial speed
     }
 
     void Update()
     {
+        if (PauseManager.IsPaused)
+        {
+            agent.isStopped = true; // stop NavMeshAgent
+            return;
+        }
+        else
+        {
+            agent.isStopped = false;
+        }
+
         timer += Time.deltaTime;
         if (timer >= updateRate)
         {
             if (!isVulnerable)
             {
-                UpdateCurrentTarget();  // always pick closest
+                UpdateCurrentTarget();  // pick closest
                 ChaseCurrentTarget();
             }
             else
@@ -43,7 +50,7 @@ public class Ghost : MonoBehaviour
         }
     }
 
-    // Update the current target to the closest player in the tracked list
+
     private void UpdateCurrentTarget()
     {
         GameObject closestPlayer = null;
@@ -103,19 +110,20 @@ public class Ghost : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (!collision.gameObject.CompareTag("Player")) return;
-
-        PlayerController hitPlayer = collision.gameObject.GetComponent<PlayerController>();
-        if (hitPlayer == null || !hitPlayer.isAlive) return;
-
-        if (isVulnerable)
+        if (collision.gameObject.CompareTag("Player"))
         {
-            hitPlayer.score += scoreValue;
-            Die();
-        }
-        else
-        {
-            hitPlayer.Die();
+            PlayerController hitPlayer = collision.gameObject.GetComponent<PlayerController>();
+            if (hitPlayer == null || !hitPlayer.isAlive) return;
+
+            if (isVulnerable)
+            {
+                hitPlayer.score += scoreValue;
+                Die();
+            }
+            else
+            {
+                hitPlayer.Die();
+            }
         }
     }
 
@@ -125,7 +133,6 @@ public class Ghost : MonoBehaviour
         transform.position = GhostManager.Instance.GetSpawnPosition();
     }
 
-    // Trigger system to add/remove players
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player") && !trackedPlayers.Contains(other.gameObject))
@@ -142,4 +149,3 @@ public class Ghost : MonoBehaviour
         }
     }
 }
-
