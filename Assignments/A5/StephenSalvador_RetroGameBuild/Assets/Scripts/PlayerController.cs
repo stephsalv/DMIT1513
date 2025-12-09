@@ -13,7 +13,7 @@ public class PlayerController : MonoBehaviour
     private Rigidbody rb;
     private Vector2 moveInput;
     private Vector2 lookInput;
-
+    In inputSystem_Actions
     public InputActionReference move, look;
 
     public GameObject playerCanvas;
