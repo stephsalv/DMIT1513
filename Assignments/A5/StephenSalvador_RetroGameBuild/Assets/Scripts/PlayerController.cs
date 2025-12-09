@@ -1,51 +1,90 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using TMPro;
 
 public class PlayerController : MonoBehaviour
 {
+    [Header("Player Info")]
     public float moveSpeed = 15f;
     public float rotationSpeed = 100f;
     public int score = 0;
     public bool isAlive = true;
 
+    [Header("Input Info")]
     public InputActionAsset inputActions;
+    public InputActionReference move, look;
+    public int playerIndex = 0; // 0 = first gamepad, 1 = second, etc.
 
+    [Header("Canvas")]
+    public GameObject playerDiedCanvas;
+    public GameObject playerWonCanvas;
+
+    [Header("Audio")]
+    public AudioSource audioSource;
+    public AudioClip walkClip;
+    public AudioClip eatClip;
+    public AudioClip switchClip;
+
+    [Header("UI")]
+    [SerializeField] public TMP_Text scoreText;
+
+    private bool isWalkingSoundPlaying = false;
     private Rigidbody rb;
     private Vector2 moveInput;
     private Vector2 lookInput;
-    In inputSystem_Actions
-    public InputActionReference move, look;
-
-    public GameObject playerCanvas;
-
-    public int playerIndex = 0; // 0 = first gamepad, 1 = second, etc.
-
     private Gamepad myGamepad;
-
+    private Joystick myJoystick;
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
-        AssignGamepad();
+        AssignInputDevice();
     }
 
-    void AssignGamepad()
+    void AssignInputDevice()
     {
+        // Prefer gamepad if available
         var gamepads = Gamepad.all;
         if (playerIndex < gamepads.Count)
         {
             myGamepad = gamepads[playerIndex];
-            Debug.Log($"Player {playerIndex + 1} assigned to {myGamepad.name}");
+            Debug.Log($"Player {playerIndex + 1} assigned to Gamepad {myGamepad.name}");
         }
         else
         {
-            Debug.LogWarning($"No gamepad available for player {playerIndex + 1}");
+            // If no gamepad, check for joystick
+            var joysticks = Joystick.all;
+            int joystickIndex = playerIndex - gamepads.Count;
+            if (joystickIndex < joysticks.Count)
+            {
+                myJoystick = joysticks[joystickIndex];
+                Debug.Log($"Player {playerIndex + 1} assigned to Joystick {myJoystick.name}");
+            }
+            else
+            {
+                Debug.LogWarning($"No input device available for player {playerIndex + 1}");
+            }
         }
     }
 
-    private void Update()
+    void Update()
     {
-        moveInput = move.action.ReadValue<Vector2>();
-        lookInput = look.action.ReadValue<Vector2>();
+        if (!isAlive) return;
+
+        // Read input from assigned device
+        if (myGamepad != null)
+        {
+            moveInput = myGamepad.leftStick.ReadValue();
+            lookInput = myGamepad.rightStick.ReadValue();
+        }
+        else if (myJoystick != null)
+        {
+            // Most joysticks use stick.x / stick.y for movement
+            moveInput = new Vector2(myJoystick.stick.x.ReadValue(), myJoystick.stick.y.ReadValue());
+            // For simplicity, lookInput can use the same as moveInput
+            lookInput = moveInput;
+        }
+        UpdateScoreUI();
+        HandleWalkingSound();
     }
 
     private void FixedUpdate()
@@ -78,23 +117,59 @@ public class PlayerController : MonoBehaviour
         {
             score += 1;
             Destroy(collision.gameObject);
+
+            UpdateScoreUI(); // <-- update UI here
+
+            if (audioSource != null && eatClip != null)
+                audioSource.PlayOneShot(eatClip);
         }
 
-        if (collision.gameObject.CompareTag("Plus"))
+        if (collision.gameObject.CompareTag("Plus")) // or "PowerUp"
         {
             Destroy(collision.gameObject);
             GhostManager.Instance.MakeGhostsVulnerable(5f);
+
+            if (audioSource != null && switchClip != null)
+                audioSource.PlayOneShot(switchClip);
         }
     }
-
     public void Die()
     {
+        if (!isAlive) return;
+
         isAlive = false;
 
-        if (playerCanvas != null)
-            playerCanvas.SetActive(true);
+        if (playerDiedCanvas != null)
+            playerDiedCanvas.SetActive(true);
+
+        // Notify GameManager
+        GameManager.Instance.PlayerDied(this);
 
         gameObject.SetActive(false);
-        //GameManager.Instance.CheckGameOver();
+        audioSource.Stop();
+
+        GameManager.Instance.GameOver();
+    }
+    void HandleWalkingSound()
+    {
+        bool isMoving = moveInput.magnitude > 0.1f && isAlive;
+
+        if (isMoving && !isWalkingSoundPlaying)
+        {
+            audioSource.clip = walkClip;
+            audioSource.loop = true;
+            audioSource.Play();
+            isWalkingSoundPlaying = true;
+        }
+        else if (!isMoving && isWalkingSoundPlaying)
+        {
+            audioSource.Stop();
+            isWalkingSoundPlaying = false;
+        }
+    }
+    private void UpdateScoreUI()
+    {
+        if (scoreText != null)
+            scoreText.text = "Score: " + score;
     }
 }

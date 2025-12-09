@@ -28,7 +28,7 @@
                     "name": "Attack",
                     "type": "Button",
                     "id": "6c2ab1b8-8984-453a-af3d-a3c78ae1679a",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -89,8 +89,17 @@
                 },
                 {
                     "name": "Pause",
-                    "type": "Button",
+                    "type": "Value",
                     "id": "5a07cdbd-f19b-4037-aebc-c744898edb48",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "Start",
+                    "type": "Button",
+                    "id": "82a25370-cd48-4df5-86ae-09f6545dab27",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -254,11 +263,11 @@
                 },
                 {
                     "name": "",
-                    "id": "3e5f5442-8668-4b27-a940-df99bad7e831",
+                    "id": "2671734e-b336-4dc0-8a1c-6e268e42f117",
                     "path": "<Joystick>/{Hatswitch}",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Joystick",
+                    "groups": "",
                     "action": "Look",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -497,10 +506,10 @@
                 {
                     "name": "",
                     "id": "3ddfa3ff-7fec-4de6-bdb0-1ae128c8cad0",
-                    "path": "<HID::HORI CO.,LTD. HORIPAD mini4>/button10",
+                    "path": "<HID::HORI CO.,LTD. HORIPAD mini4>/button9",
                     "interactions": "",
                     "processors": "",
-                    "groups": ";Gamepad",
+                    "groups": ";Gamepad;Joystick",
                     "action": "Pause",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -513,6 +522,28 @@
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
                     "action": "Pause",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e81e7585-78d5-4b02-9b05-3f0d4bde3727",
+                    "path": "<Gamepad>/start",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad;Joystick",
+                    "action": "Pause",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "aba85264-0850-4300-b684-7d7af917a850",
+                    "path": "<HID::HORI CO.,LTD. HORIPAD mini4>/button10",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "Start",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
@@ -535,7 +566,7 @@
                     "name": "Submit",
                     "type": "Button",
                     "id": "7607c7b6-cd76-4816-beef-bd0341cfe950",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -900,6 +931,28 @@
                 },
                 {
                     "name": "",
+                    "id": "71bc6f2f-fabe-46e3-a46e-86ec1b3149cd",
+                    "path": "<Gamepad>/buttonSouth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Joystick;Gamepad",
+                    "action": "Submit",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d4188a05-67d2-463a-b133-955f3318a7fe",
+                    "path": "<HID::HORI CO.,LTD. HORIPAD mini4>/button2",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Joystick;Gamepad",
+                    "action": "Submit",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "82627dcc-3b13-4ba9-841d-e4b746d6553e",
                     "path": "*/{Cancel}",
                     "interactions": "",
@@ -1058,7 +1111,7 @@
                     "path": "<HID::HORI CO.,LTD. HORIPAD mini4>/button10",
                     "interactions": "",
                     "processors": "",
-                    "groups": ";Gamepad",
+                    "groups": ";Gamepad;Joystick",
                     "action": "Pause",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -1070,6 +1123,17 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
+                    "action": "Pause",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d87f27df-c204-4f46-84d2-63ff144840f3",
+                    "path": "<Gamepad>/start",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad;Joystick",
                     "action": "Pause",
                     "isComposite": false,
                     "isPartOfComposite": false

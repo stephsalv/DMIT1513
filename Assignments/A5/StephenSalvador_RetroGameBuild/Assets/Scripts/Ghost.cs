@@ -7,49 +7,55 @@ public class Ghost : MonoBehaviour
     public int scoreValue = 5;
     public bool isVulnerable = false;
 
-    public float fleeDistance = 5f;      // How far to flee when vulnerable
-    public float updateRate = 0.2f;      // How often to update target
-    public float moveSpeed = 3.5f;       // Adjustable movement speed
+    public float fleeDistance = 5f;
+    public float updateRate = 0.2f;
+    public float moveSpeed = 3.5f;
 
     private NavMeshAgent agent;
     public GameObject currentTarget;
     public List<GameObject> trackedPlayers = new List<GameObject>();
     private float timer = 0f;
 
+    public bool canMove = true; // new flag to stop ghost movement
+
+    private Renderer ghostRenderer;
+    private Color originalColor;
+
     void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
-        agent.speed = moveSpeed; // Set initial speed
+        agent.speed = moveSpeed;
+
+        ghostRenderer = GetComponent<Renderer>();
+        if (ghostRenderer != null)
+            originalColor = ghostRenderer.material.color;
     }
 
     void Update()
     {
-        if (PauseManager.IsPaused)
-        {
-            agent.isStopped = true; // stop NavMeshAgent
-            return;
-        }
-        else
-        {
-            agent.isStopped = false;
-        }
+        if (!canMove) return;
 
         timer += Time.deltaTime;
         if (timer >= updateRate)
         {
             if (!isVulnerable)
             {
-                UpdateCurrentTarget();  // pick closest
-                ChaseCurrentTarget();
+                UpdateAndChase();
+                SetGhostColor(originalColor); // back to normal
             }
             else
             {
                 FleeFromPlayers();
+                SetGhostColor(Color.white);   // turn white when fleeing
             }
-            timer = 0f;
         }
     }
 
+    private void UpdateAndChase()
+    {
+        UpdateCurrentTarget();
+        ChaseCurrentTarget();
+    }
 
     private void UpdateCurrentTarget()
     {
@@ -76,9 +82,7 @@ public class Ghost : MonoBehaviour
     private void ChaseCurrentTarget()
     {
         if (currentTarget != null)
-        {
             agent.SetDestination(currentTarget.transform.position);
-        }
     }
 
     private void FleeFromPlayers()
@@ -103,9 +107,7 @@ public class Ghost : MonoBehaviour
         Vector3 fleeTarget = transform.position + fleeDirection * fleeDistance;
 
         if (NavMesh.SamplePosition(fleeTarget, out NavMeshHit hit, fleeDistance, NavMesh.AllAreas))
-        {
             agent.SetDestination(hit.position);
-        }
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -126,7 +128,17 @@ public class Ghost : MonoBehaviour
             }
         }
     }
-
+    public void StopMovement()
+    {
+        canMove = false;
+        if (agent != null)
+            agent.isStopped = true;
+    }
+    private void SetGhostColor(Color color)
+    {
+        if (ghostRenderer != null)
+            ghostRenderer.material.color = color;
+    }
     public void Die()
     {
         isVulnerable = false;
@@ -136,16 +148,12 @@ public class Ghost : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player") && !trackedPlayers.Contains(other.gameObject))
-        {
             trackedPlayers.Add(other.gameObject);
-        }
     }
 
     private void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Player") && trackedPlayers.Contains(other.gameObject))
-        {
             trackedPlayers.Remove(other.gameObject);
-        }
     }
 }

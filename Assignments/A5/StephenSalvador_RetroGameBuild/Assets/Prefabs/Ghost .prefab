@@ -77,16 +77,16 @@ SkinnedMeshRenderer:
   m_DynamicOccludee: 1
   m_StaticShadowCaster: 0
   m_MotionVectors: 1
-  m_LightProbeUsage: 1
+  m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 3
+  m_RayTracingMode: 0
   m_RayTraceProcedural: 0
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
   m_ForceMeshLod: -1
   m_MeshLodSelectionBias: 0
-  m_RenderingLayerMask: 1
+  m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: d11e6205c7cc9470aacd9fde3100bfe2, type: 2}
@@ -794,7 +794,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8694708045985607384}
-  m_Enabled: 0
+  m_Enabled: 1
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 5efebc9ff1bb643cc9fa371b503c0a80, type: 2}
   m_CullingMode: 0
@@ -822,6 +822,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Ghost
   scoreValue: 5
   isVulnerable: 1
+  fleeDistance: 5
+  updateRate: 0.2
+  moveSpeed: 3.5
+  currentTarget: {fileID: 0}
+  trackedPlayers: []
+  canMove: 1
 --- !u!195 &3043197183122496688
 NavMeshAgent:
   m_ObjectHideFlags: 0

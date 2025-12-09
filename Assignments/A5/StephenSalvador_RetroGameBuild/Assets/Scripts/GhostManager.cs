@@ -23,7 +23,12 @@ public class GhostManager : MonoBehaviour
 
     public Vector3 GetSpawnPosition()
     {
-        // Random or predefined spawn
         return new Vector3(Random.Range(-8, 8), 0, Random.Range(-8, 8));
+    }
+
+    public void StopAllGhosts()
+    {
+        foreach (var ghost in ghosts)
+            ghost.StopMovement();
     }
 }

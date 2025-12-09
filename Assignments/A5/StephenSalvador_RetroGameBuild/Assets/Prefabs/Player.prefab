@@ -216,10 +216,16 @@ MonoBehaviour:
   rotationSpeed: 100
   score: 0
   isAlive: 1
+  inputActions: {fileID: 0}
   move: {fileID: -1680190386980627800, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   look: {fileID: -5630151704836100654, guid: 052faaac586de48259a63d0c4782560b, type: 3}
-  playerCanvas: {fileID: 0}
   playerIndex: 0
+  playerDiedCanvas: {fileID: 0}
+  playerWonCanvas: {fileID: 0}
+  audioSource: {fileID: 0}
+  walkClip: {fileID: 0}
+  eatClip: {fileID: 0}
+  switchClip: {fileID: 0}
 --- !u!195 &5046104192096247996
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -253,7 +259,6 @@ GameObject:
   - component: {fileID: 6415696088023297604}
   - component: {fileID: 3090139045107526436}
   - component: {fileID: 5343270348889441500}
-  - component: {fileID: 3836484787617089758}
   - component: {fileID: 1122629962037266788}
   m_Layer: 3
   m_Name: Pac Man
@@ -333,27 +338,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!135 &3836484787617089758
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9038687599788210001}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &1122629962037266788
 MonoBehaviour:
   m_ObjectHideFlags: 0

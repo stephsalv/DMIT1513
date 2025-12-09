@@ -1,45 +1,53 @@
-using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
+
+
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
+
     public List<PlayerController> players;
+    public GhostManager ghostManager;
 
-    void Awake() { Instance = this; }
-
-    public void CheckGameOver()
+    void Awake()
     {
-        // Last alive
-        int alive = 0;
-        PlayerController winner = null;
-        foreach (var p in players)
-        {
-            if (p.isAlive)
-            {
-                alive++;
-                winner = p;
-            }
-            // Check score
-            if (p.score >= 100)
-            {
-                Debug.Log(p.name + " wins by points!");
-                EndGame();
-                return;
-            }
-        }
-
-        if (alive <= 1 && winner != null)
-        {
-            Debug.Log(winner.name + " wins!");
-            EndGame();
-        }
+        if (Instance == null) Instance = this;
     }
 
-    void EndGame()
+    public void PlayerDied(PlayerController deadPlayer)
     {
-        // Stop all movement
-        foreach (var p in players) p.enabled = false;
-        // Show UI or restart
+        // Stop all player movement
+        foreach (var p in players)
+        {
+            p.isAlive = false;
+        }
+
+        // Stop ghosts
+        if (ghostManager != null)
+            ghostManager.StopAllGhosts();
+
+        // Show winner canvas for surviving player(s)
+        foreach (var p in players)
+        {
+            if (p != deadPlayer)
+            {
+                if (p.playerWonCanvas != null)
+                    p.playerWonCanvas.SetActive(true);
+            }
+        }
+    }
+    public void GameOver()
+    {
+        StartCoroutine(LoadSceneAfterDelay());
+    }
+
+    private IEnumerator LoadSceneAfterDelay()
+    {
+        yield return new WaitForSeconds(5f);
+        SceneManager.LoadScene(0);
     }
 }
