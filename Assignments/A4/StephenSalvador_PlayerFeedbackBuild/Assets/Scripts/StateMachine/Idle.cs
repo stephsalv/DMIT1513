@@ -53,11 +53,34 @@ public class IdleState : State
 
         Transform target = waypoints[waypointIndex];
         Vector3 dir = (target.position - transform.position).normalized;
+
+        // Move
         rb.MovePosition(transform.position + dir * speed * Time.deltaTime);
 
+        // Rotate towards movement direction
+        if (dir != Vector3.zero)
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(dir);
+            rb.rotation = Quaternion.Slerp(rb.rotation, targetRotation, 5f * Time.deltaTime);
+        }
+
+        // Switch to next waypoint if close enough
         if (Vector3.Distance(transform.position, target.position) < 0.5f)
         {
             waypointIndex = (waypointIndex + 1) % waypoints.Length;
+        }
+    }
+    private void MoveTowards(Vector3 targetPosition, float moveSpeed)
+    {
+        Vector3 direction = (targetPosition - transform.position).normalized;
+        direction.y = 0f;
+
+        if (direction != Vector3.zero)
+        {
+            rb.MovePosition(transform.position + direction * moveSpeed * Time.deltaTime);
+
+            Quaternion targetRotation = Quaternion.LookRotation(direction);
+            rb.rotation = Quaternion.Slerp(rb.rotation, targetRotation, 5f * Time.deltaTime);
         }
     }
 }

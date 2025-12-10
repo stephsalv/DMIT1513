@@ -30,9 +30,22 @@ public class ChaseState : State
             return idleState;
 
         // Move toward player
-        Vector3 dir = (player.position - transform.position).normalized;
-        rb.MovePosition(transform.position + dir * speed * Time.deltaTime);
+        MoveTowards(player.position, speed);
 
         return this;
+    }
+    private void MoveTowards(Vector3 targetPosition, float moveSpeed)
+    {
+        Vector3 direction = (targetPosition - transform.position).normalized;
+        direction.y = 0f;
+
+        if (direction != Vector3.zero)
+        {
+            rb.MovePosition(transform.position + direction * moveSpeed * Time.deltaTime);
+
+            Quaternion targetRotation = Quaternion.LookRotation(direction);
+            float rotationSpeed = 10f; // increase rotation speed
+            rb.rotation = Quaternion.Slerp(rb.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+        }
     }
 }
