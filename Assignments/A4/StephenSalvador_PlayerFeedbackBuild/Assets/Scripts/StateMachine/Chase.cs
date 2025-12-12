@@ -7,7 +7,6 @@ public class ChaseState : State
     public float attackRange = 2f;
     public float losePlayerRange = 12f;
 
-    public AttackState attackState;
     public IdleState idleState;
 
     private Rigidbody rb;
@@ -16,14 +15,9 @@ public class ChaseState : State
     {
         rb = GetComponent<Rigidbody>();
     }
-
     public override State RunCurrentState()
     {
         float distance = Vector3.Distance(transform.position, player.position);
-
-        // Transition to Attack
-        if (distance <= attackRange)
-            return attackState;
 
         // Transition to Idle if player too far
         if (distance > losePlayerRange)

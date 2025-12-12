@@ -46,13 +46,15 @@ public class IdleState : State
 
         return this;
     }
-
     private void Patrol()
     {
         if (waypoints.Length == 0) return;
 
         Transform target = waypoints[waypointIndex];
-        Vector3 dir = (target.position - transform.position).normalized;
+
+        // FIX: Keep movement flat on the ground
+        Vector3 targetPos = new Vector3(target.position.x, transform.position.y, target.position.z);
+        Vector3 dir = (targetPos - transform.position).normalized;
 
         // Move
         rb.MovePosition(transform.position + dir * speed * Time.deltaTime);
@@ -64,8 +66,8 @@ public class IdleState : State
             rb.rotation = Quaternion.Slerp(rb.rotation, targetRotation, 5f * Time.deltaTime);
         }
 
-        // Switch to next waypoint if close enough
-        if (Vector3.Distance(transform.position, target.position) < 0.5f)
+        // Switch waypoint
+        if (Vector3.Distance(transform.position, targetPos) < 0.5f)
         {
             waypointIndex = (waypointIndex + 1) % waypoints.Length;
         }

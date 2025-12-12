@@ -101,4 +101,13 @@ public class PlayerController : MonoBehaviour
         playerCamera.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
         transform.Rotate(Vector3.up * mouseX);
     }
+    public void DisableInput()
+    {
+        controls.Player.Disable();
+    }
+
+    public void EnableInput()
+    {
+        controls.Player.Enable();
+    }
 }

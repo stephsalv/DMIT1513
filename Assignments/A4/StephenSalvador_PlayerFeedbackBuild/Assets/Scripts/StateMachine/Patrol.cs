@@ -38,13 +38,27 @@ public class PatrolState : State
         if (waypoints.Length == 0) return;
 
         Transform target = waypoints[waypointIndex];
-        Vector3 dir = (target.position - transform.position).normalized;
+
+        // Keep movement flat
+        Vector3 flatTargetPos = new Vector3(target.position.x, transform.position.y, target.position.z);
+        Vector3 dir = (flatTargetPos - transform.position).normalized;
+
+        // Move
         rb.MovePosition(transform.position + dir * speed * Time.deltaTime);
 
-        if (Vector3.Distance(transform.position, target.position) < 0.5f)
+        // Rotate toward movement direction
+        if (dir != Vector3.zero)
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(dir);
+            rb.rotation = Quaternion.Slerp(rb.rotation, targetRotation, 5f * Time.deltaTime);
+        }
+
+        // Advance waypoint
+        if (Vector3.Distance(transform.position, flatTargetPos) < 0.5f)
         {
             waypointIndex = (waypointIndex + 1) % waypoints.Length;
         }
     }
+
 }
 

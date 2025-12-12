@@ -10,11 +10,14 @@ public class PauseMenu : MonoBehaviour
     [SerializeField] GameObject pauseMenu, gameplayUI;
     [SerializeField] private AudioMixer myMixer;
     [SerializeField] private Slider musicSlider;
+    [SerializeField] private PlayerController playerController;
+
     private bool isPaused = false;
+
 
     void Start()
     {
-        pauseMenu .SetActive(false);
+        pauseMenu.SetActive(false);
 
         if (PlayerPrefs.HasKey("musicVolume"))
         {
@@ -51,27 +54,35 @@ public class PauseMenu : MonoBehaviour
         Debug.Log("Quitting Game...");
         Application.Quit();
     }
-
     public void Pause()
     {
         Time.timeScale = 0f;
         pauseMenu.SetActive(true);
-        gameplayUI.SetActive(false); // Hide everything else
+        gameplayUI.SetActive(false);
         isPaused = true;
 
-        // Show and unlock cursor
+        if (playerController != null)
+        {
+            playerController.DisableInput();   // stop movement + camera look
+            playerController.enabled = false;  // stop Update()
+        }
+
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
     }
-
     public void Resume()
     {
         Time.timeScale = 1f;
         pauseMenu.SetActive(false);
-        gameplayUI.SetActive(true); // Show gameplay UI again
+        gameplayUI.SetActive(true);
         isPaused = false;
 
-        // Hide and lock cursor
+        if (playerController != null)
+        {
+            playerController.enabled = true;   // allow Update()
+            playerController.EnableInput();    // re-enable all input
+        }
+
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }

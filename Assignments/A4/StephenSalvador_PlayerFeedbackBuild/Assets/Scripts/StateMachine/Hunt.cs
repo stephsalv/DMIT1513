@@ -25,11 +25,20 @@ public class HuntState : State
             return fleeState;
         }
 
-        // Move toward player
-        Vector3 dir = (player.position - transform.position).normalized;
+        // Flat movement toward player
+        Vector3 targetPos = new Vector3(player.position.x, transform.position.y, player.position.z);
+        Vector3 dir = (targetPos - transform.position).normalized;
+
+        // Move
         rb.MovePosition(transform.position + dir * speed * Time.deltaTime);
+
+        // Rotate toward movement
+        if (dir != Vector3.zero)
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(dir);
+            rb.rotation = Quaternion.Slerp(rb.rotation, targetRotation, 5f * Time.deltaTime);
+        }
 
         return this;
     }
 }
-

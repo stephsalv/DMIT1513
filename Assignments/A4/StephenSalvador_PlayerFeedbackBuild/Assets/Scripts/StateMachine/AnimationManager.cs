@@ -8,6 +8,16 @@ public class AnimationManager : MonoBehaviour
     [Header("State Manager")]
     public StateManager stateManager;
 
+    [Header("Animation Prefabs")]
+    public GameObject patrolEffectPrefab;
+    public GameObject chaseEffectPrefab;
+    public GameObject cryingEffectPrefab;
+
+    // Track previous frame states
+    private bool prevPatrolling = false;
+    private bool prevChasing = false;
+    private bool prevCrying = false;
+
     private void Start()
     {
         animator = GetComponent<Animator>();
@@ -18,31 +28,38 @@ public class AnimationManager : MonoBehaviour
         if (stateManager == null || stateManager.currentState == null)
             return;
 
-        // Example: trigger "Open" only when in IdleState
-        if (stateManager.currentState is IdleState)
+        bool isPatrolling = stateManager.currentState is IdleState;
+        bool isChasing = stateManager.currentState is ChaseState;
+        bool isCrying = stateManager.currentState is CryingState;
+
+        // Update animator
+        animator.SetBool("isPatrolling", isPatrolling);
+        animator.SetBool("isChasing", isChasing);
+        animator.SetBool("isCrying", isCrying);
+
+        // --- SPAWN PREFABS ON TRANSITION ---
+
+        // Patrolling
+        if (isPatrolling && !prevPatrolling && patrolEffectPrefab != null)
         {
-            animator.SetBool("isPatrolling", true);
-        }
-        //else
-        //{
-        //    animator.SetBool("Open", false);
-        //}
-        if (stateManager.currentState is ChaseState)
-        {
-            animator.SetBool("isChasing", true);
-        }
-        else
-        {
-            animator.SetBool("isChasing", false);
+            Instantiate(patrolEffectPrefab, transform.position, Quaternion.identity);
         }
 
-        if (stateManager.currentState is CryingState)
+        // Chasing
+        if (isChasing && !prevChasing && chaseEffectPrefab != null)
         {
-            animator.SetBool("isCrying", true);
+            Instantiate(chaseEffectPrefab, transform.position, Quaternion.identity);
         }
-        else
+
+        // Crying
+        if (isCrying && !prevCrying && cryingEffectPrefab != null)
         {
-            animator.SetBool("isCrying", false);
+            Instantiate(cryingEffectPrefab, transform.position, Quaternion.identity);
         }
+
+        // Save state for next frame
+        prevPatrolling = isPatrolling;
+        prevChasing = isChasing;
+        prevCrying = isCrying;
     }
 }
