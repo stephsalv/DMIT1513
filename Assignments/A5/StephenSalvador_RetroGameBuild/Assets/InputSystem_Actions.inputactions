@@ -88,6 +88,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "Start",
+                    "type": "Button",
+                    "id": "82a25370-cd48-4df5-86ae-09f6545dab27",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Pause",
                     "type": "Value",
                     "id": "5a07cdbd-f19b-4037-aebc-c744898edb48",
@@ -97,9 +106,9 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "Start",
+                    "name": "Cancel",
                     "type": "Button",
-                    "id": "82a25370-cd48-4df5-86ae-09f6545dab27",
+                    "id": "c5b4253a-4f08-434d-94ff-823d31c841ee",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -505,17 +514,6 @@
                 },
                 {
                     "name": "",
-                    "id": "3ddfa3ff-7fec-4de6-bdb0-1ae128c8cad0",
-                    "path": "<HID::HORI CO.,LTD. HORIPAD mini4>/button9",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Gamepad;Joystick",
-                    "action": "Pause",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "8d54b75f-bc34-4426-87d2-7edb521a2cd6",
                     "path": "<Keyboard>/p",
                     "interactions": "",
@@ -527,7 +525,7 @@
                 },
                 {
                     "name": "",
-                    "id": "e81e7585-78d5-4b02-9b05-3f0d4bde3727",
+                    "id": "895bc248-ab16-45cb-85c7-6d4f0678682a",
                     "path": "<Gamepad>/start",
                     "interactions": "",
                     "processors": "",
@@ -538,12 +536,34 @@
                 },
                 {
                     "name": "",
-                    "id": "aba85264-0850-4300-b684-7d7af917a850",
-                    "path": "<HID::HORI CO.,LTD. HORIPAD mini4>/button10",
+                    "id": "76c4bbcc-ccc4-44fd-a0e9-2937b3c22f8f",
+                    "path": "<Gamepad>/start",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Gamepad",
                     "action": "Start",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e27cda57-2787-4008-a75e-73042534a075",
+                    "path": "<Gamepad>/select",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad;Joystick",
+                    "action": "Cancel",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3a672e58-4f0d-4c20-9853-2417f7675f7c",
+                    "path": "<Gamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad;Joystick",
+                    "action": "Cancel",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
@@ -1102,17 +1122,6 @@
                     "processors": "",
                     "groups": "XR",
                     "action": "TrackedDeviceOrientation",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "e98a95cb-5cdb-4083-9378-24e0421b5e7a",
-                    "path": "<HID::HORI CO.,LTD. HORIPAD mini4>/button10",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Gamepad;Joystick",
-                    "action": "Pause",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

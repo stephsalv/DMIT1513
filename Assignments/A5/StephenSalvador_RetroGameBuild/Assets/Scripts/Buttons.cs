@@ -1,9 +1,10 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class MainMenuButtons : MonoBehaviour
 {
-    // Called by the Play button
+    public GameObject pauseMenuUI;
+    public GameObject gameplayUI;
     public void OnPlayPressed()
     {
         SceneManager.LoadScene(1);
@@ -18,6 +19,18 @@ public class MainMenuButtons : MonoBehaviour
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
 #endif
+    }
+    // ✔️ NEW — Called by the Resume button
+    public void OnResumePressed()
+    {
+        if (pauseMenuUI != null)
+            pauseMenuUI.SetActive(false);
+
+        if (gameplayUI != null)
+            gameplayUI.SetActive(true);
+
+        // Unpause the game
+        Time.timeScale = 1f;
     }
 }
 

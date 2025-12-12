@@ -21,7 +21,6 @@ public class PlayerController : MonoBehaviour
 
     [Header("Audio")]
     public AudioSource audioSource;
-    public AudioClip walkClip;
     public AudioClip eatClip;
     public AudioClip switchClip;
 
@@ -29,7 +28,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] public TMP_Text scoreText;
 
     private bool isWalkingSoundPlaying = false;
-    private Rigidbody rb;
+    public Rigidbody rb;
     private Vector2 moveInput;
     private Vector2 lookInput;
     private Gamepad myGamepad;
@@ -84,7 +83,6 @@ public class PlayerController : MonoBehaviour
             lookInput = moveInput;
         }
         UpdateScoreUI();
-        HandleWalkingSound();
     }
 
     private void FixedUpdate()
@@ -118,7 +116,9 @@ public class PlayerController : MonoBehaviour
             score += 1;
             Destroy(collision.gameObject);
 
-            UpdateScoreUI(); // <-- update UI here
+            UpdateScoreUI();
+
+            GameManager.Instance.CheckScoreWinner(this); // <-- ADD THIS
 
             if (audioSource != null && eatClip != null)
                 audioSource.PlayOneShot(eatClip);
@@ -149,23 +149,6 @@ public class PlayerController : MonoBehaviour
         audioSource.Stop();
 
         GameManager.Instance.GameOver();
-    }
-    void HandleWalkingSound()
-    {
-        bool isMoving = moveInput.magnitude > 0.1f && isAlive;
-
-        if (isMoving && !isWalkingSoundPlaying)
-        {
-            audioSource.clip = walkClip;
-            audioSource.loop = true;
-            audioSource.Play();
-            isWalkingSoundPlaying = true;
-        }
-        else if (!isMoving && isWalkingSoundPlaying)
-        {
-            audioSource.Stop();
-            isWalkingSoundPlaying = false;
-        }
     }
     private void UpdateScoreUI()
     {

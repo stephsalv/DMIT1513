@@ -1,9 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.EventSystems;
-using System.Collections;
-using System.Collections.Generic;
-
 
 public class MenuManager : MonoBehaviour
 {
@@ -18,23 +15,24 @@ public class MenuManager : MonoBehaviour
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private AudioClip pauseClip;
 
-    [Header("Input")]
-    [SerializeField] private InputAction pauseAction;
+    [Header("Input (Assign Pause Action Here)")]
+    public InputActionReference pauseActionRef;  // <-- FIX
 
-    [Header("First Selected Option")]
-    [SerializeField] private GameObject playButton;
-    [SerializeField] private GameObject resumeButton;
+    [Header("UI Buttons")]
+    public GameObject resumeButton;
 
     private bool isPaused = false;
 
     private void OnEnable()
     {
-        pauseAction.Enable();
+        pauseActionRef.action.Enable();
+        pauseActionRef.action.performed += OnPausePressed;
     }
 
     private void OnDisable()
     {
-        pauseAction.Disable();
+        pauseActionRef.action.performed -= OnPausePressed;
+        pauseActionRef.action.Disable();
     }
 
     private void Start()
@@ -42,68 +40,52 @@ public class MenuManager : MonoBehaviour
         pauseMenu.SetActive(false);
     }
 
-    private void Update()
+    private void OnPausePressed(InputAction.CallbackContext ctx)
     {
-        if (pauseAction.WasPressedThisFrame())
-        {
-            if (isPaused)
-                Unpause();
-            else
-                Pause();
-        }
+        if (isPaused)
+            Unpause();
+        else
+            Pause();
     }
 
     private void Pause()
     {
         isPaused = true;
-
         Time.timeScale = 0f;
 
         if (player != null) player.enabled = false;
         if (ghost != null) ghost.enabled = false;
 
-        OpenPauseMenu();
+        pauseMenu.SetActive(true);
 
-        if (audioSource != null && pauseClip != null)
+        // IMPORTANT FIX — reset selection first
+        EventSystem.current.SetSelectedGameObject(null);
+        EventSystem.current.SetSelectedGameObject(resumeButton);
+
+        if (audioSource && pauseClip)
             audioSource.PlayOneShot(pauseClip);
     }
 
-    private void OpenPauseMenu()
-    {
-        pauseMenu.SetActive(true);
 
-        EventSystem.current.SetSelectedGameObject(resumeButton);
-    }
-
-    private void Unpause()
+    public void Unpause()
     {
         isPaused = false;
-
         Time.timeScale = 1f;
 
         if (player != null) player.enabled = true;
         if (ghost != null) ghost.enabled = true;
 
-        if (pauseMenu != null)
-            pauseMenu.SetActive(false);
+        pauseMenu.SetActive(false);
 
-        if (audioSource != null && pauseClip != null)
+        if (audioSource && pauseClip)
             audioSource.PlayOneShot(pauseClip);
     }
 
-    // Called by UI Button
-    public void OnResumePressed()
-    {
-        Unpause();
-    }
+    public void OnResumePressed() => Unpause();
 
-    // Called by UI Button
     public void OnExitPressed()
     {
-        // Works in build
         Application.Quit();
-
-        // Works in editor
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
 #endif
