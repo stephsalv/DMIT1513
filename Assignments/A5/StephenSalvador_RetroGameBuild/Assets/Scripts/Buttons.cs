@@ -5,9 +5,13 @@ public class MainMenuButtons : MonoBehaviour
 {
     public GameObject pauseMenuUI;
     public GameObject gameplayUI;
-    public void OnPlayPressed()
+    public void On2PlayerPressed()
     {
         SceneManager.LoadScene(1);
+    }
+    public void On4PlayerPressed()
+    {
+        SceneManager.LoadScene(2);
     }
 
     // Called by the Quit button

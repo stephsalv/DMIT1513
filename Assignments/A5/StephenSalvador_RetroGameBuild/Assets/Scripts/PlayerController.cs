@@ -27,7 +27,6 @@ public class PlayerController : MonoBehaviour
     [Header("UI")]
     [SerializeField] public TMP_Text scoreText;
 
-    private bool isWalkingSoundPlaying = false;
     public Rigidbody rb;
     private Vector2 moveInput;
     private Vector2 lookInput;
@@ -108,7 +107,7 @@ public class PlayerController : MonoBehaviour
         if (collision.gameObject.CompareTag("Player"))
         {
             Die();
-            collision.gameObject.GetComponent<PlayerController>()?.Die();
+            //collision.gameObject.GetComponent<PlayerController>()?.Die();
         }
 
         if (collision.gameObject.CompareTag("Fruit"))
@@ -153,6 +152,6 @@ public class PlayerController : MonoBehaviour
     private void UpdateScoreUI()
     {
         if (scoreText != null)
-            scoreText.text = "Score: " + score;
+            scoreText.text = "" + score;
     }
 }

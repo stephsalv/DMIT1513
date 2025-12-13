@@ -17,7 +17,7 @@ public class GhostManager : MonoBehaviour
     private IEnumerator VulnerableRoutine(float duration)
     {
         foreach (var g in ghosts) g.isVulnerable = true;
-        yield return new WaitForSeconds(duration);
+        yield return new WaitForSeconds(5);
         foreach (var g in ghosts) g.isVulnerable = false;
     }
 

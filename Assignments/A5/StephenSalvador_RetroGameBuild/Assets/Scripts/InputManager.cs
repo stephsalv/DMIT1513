@@ -26,5 +26,4 @@ public class InputManager : MonoBehaviour
     {
         PauseMenuInput = pauseMenuAction.WasPressedThisFrame();
     }
-
 }

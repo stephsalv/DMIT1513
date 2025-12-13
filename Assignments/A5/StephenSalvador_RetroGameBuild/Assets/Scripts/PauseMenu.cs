@@ -1,95 +1,61 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
+using UnityEngine.Audio;
+using UnityEngine.UI;
+
 
 public class PauseMenu : MonoBehaviour
 {
-    [Header("UI")]
-    public GameObject pauseMenu;
-    public GameObject firstSelectedButton;
-
-    [Header("Input Actions")]
-    public InputActionReference pauseAction;   // Start button
-    public InputActionReference cancelAction;  // B / Circle / Back button
+    [SerializeField] GameObject pauseMenu;
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip pauseClip;
 
     private bool isPaused = false;
 
-    private void OnEnable()
-    {
-        pauseAction.action.Enable();
-        cancelAction.action.Enable();
 
-        pauseAction.action.performed += OnPausePressed;
-        cancelAction.action.performed += OnCancelPressed;
-    }
-
-    private void OnDisable()
-    {
-        pauseAction.action.performed -= OnPausePressed;
-        cancelAction.action.performed -= OnCancelPressed;
-
-        pauseAction.action.Disable();
-        cancelAction.action.Disable();
-    }
-
-    private void Start()
+    void Start()
     {
         pauseMenu.SetActive(false);
     }
 
-    // ---------------------------------------------------------
-    // Start button toggles pause on/off
-    // ---------------------------------------------------------
-    private void OnPausePressed(InputAction.CallbackContext ctx)
+    private void Update()
     {
-        if (isPaused)
-            Unpause();
-        else
-            Pause();
+        if (InputManager.instance.PauseMenuInput)
+        {
+            if (!isPaused)
+            {
+                Pause();
+            }
+            else
+            {
+                Resume();
+            }
+        }
     }
-
-    // ---------------------------------------------------------
-    // Cancel button exits menu (B / Circle / Back)
-    // ---------------------------------------------------------
-    private void OnCancelPressed(InputAction.CallbackContext ctx)
+    public void ReturnToTitle()
     {
-        if (isPaused)
-            Unpause();
+        Time.timeScale = 1f; // Reset time before switching scenes
+        SceneManager.LoadScene(0);
     }
-
-    // ---------------------------------------------------------
-    // Pause Logic
-    // ---------------------------------------------------------
-    private void Pause()
+    public void Exit()
     {
-        isPaused = true;
+        Debug.Log("Quitting Game...");
+        Application.Quit();
+    }
+    public void Pause()
+    {
         Time.timeScale = 0f;
-
         pauseMenu.SetActive(true);
+        isPaused = true;
 
-        // Reset selection so controller likes it
-        EventSystem.current.SetSelectedGameObject(null);
-        EventSystem.current.SetSelectedGameObject(firstSelectedButton);
+        if (audioSource && pauseClip)
+            audioSource.PlayOneShot(pauseClip);
     }
-
-    // ---------------------------------------------------------
-    // Unpause Logic
-    // ---------------------------------------------------------
-    public void Unpause()
+    public void Resume()
     {
-        isPaused = false;
         Time.timeScale = 1f;
-
         pauseMenu.SetActive(false);
-
-        // Clear selection when closing
-        EventSystem.current.SetSelectedGameObject(null);
-    }
-
-    // Button click calls this
-    public void OnResumePressed()
-    {
-        Unpause();
+        isPaused = false;
     }
 }
-
