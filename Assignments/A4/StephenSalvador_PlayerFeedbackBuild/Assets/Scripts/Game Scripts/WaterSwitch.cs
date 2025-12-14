@@ -12,6 +12,10 @@ public class WaterSprinkler : MonoBehaviour
     public TextMeshProUGUI uiText;
     private string promptMessage = "Press [E] to turn off sprinkler";
 
+    [Header("Audio")]
+    public AudioSource sprinklerAudio; // assign an AudioSource with the sound
+    public float audioDuration = 5f; // duration to play the sound
+
     private bool playerInRange = false;
     private bool isActive = true;
 
@@ -49,6 +53,10 @@ public class WaterSprinkler : MonoBehaviour
             if (uiPanel != null)
                 uiPanel.SetActive(false);
 
+            // Play audio for 3 seconds
+            if (sprinklerAudio != null)
+                StartCoroutine(PlayAudioTemporarily(sprinklerAudio, audioDuration));
+
             // Activate Hunter ghost
             if (hunterGhost != null)
             {
@@ -75,7 +83,13 @@ public class WaterSprinkler : MonoBehaviour
         uiPanel.SetActive(false);
     }
 
-
+    // Coroutine to play audio temporarily
+    private IEnumerator PlayAudioTemporarily(AudioSource audioSource, float duration)
+    {
+        audioSource.Play();
+        yield return new WaitForSeconds(duration);
+        audioSource.Stop();
+    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -103,4 +117,3 @@ public class WaterSprinkler : MonoBehaviour
             uiPanel.SetActive(false);
     }
 }
-

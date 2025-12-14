@@ -546,22 +546,22 @@ MonoBehaviour:
   uiText: {fileID: 2036513966}
   dialogueLines:
   - "\"You\u2019ve taken a night shift as the new security guard at an abandoned
-    office building. What seems like a simple job quickly turns sinister. Your boss
-    isn\u2019t who he seems... behind closed doors, \nhe uses this place to carry
-    out unspeakable acts. \n\n\npress [E] to continue...\n"
-  - "The last victims\u2026 a young mother and her daughter, their lives stolen and
-    their souls twisted by rage.\r\n\r\nNow they haunt this building, vengeful and
-    starving, hunting every living thing that dares enter.\r\n\r\nShadows move where
-    there should be none. Whispers crawl along the walls\u2026\r\n\r\nStay alert.
-    Survive the night. And uncover the dark secrets hidden within these walls\u2026"
+    office building. \nWhat seems like a simple job quickly turns sinister as your
+    boss isn\u2019t who they seem. \nBehind closed doors, he uses this place to carry
+    out unspeakable acts.\"\n\npress [E] to continue..."
+  - "The last victims, a young mother and her daughter, their lives stolen and their
+    souls twisted by rage.\r\n\r\nNow they haunt this building, vengeful, starving
+    and hunting every living thing that dares enter.\r\n\r\nShe cries trying to find
+    her daughter. Whispers crawl along the walls\u2026\r\n\r\nStay alert. Survive
+    the night. Uncover the dark secrets hidden within these walls\u2026"
   - "Movement: W A S D \u2013 Walk through the office, stay alert.\r\nJump: Space
     \u2013 Use to evade or navigate obstacles.\nSprint: Shift - It's late, you might
     not have energy to last the night...\r\nFlashlight: F \u2013 Only on for a few
     seconds at a time. Darkness hides dangers\u2026 use wisely.\r\nInteract: E \u2013
-    Use switches, doors, and objects to survive.\r\n\r\nSecurity cameras are glitchy.
-    You\u2019ll need to reset them using their switches,  \r\nor risk being blind
-    to the horrors lurking around you.\r\n\r\nRemember\u2026 every shadow could be
-    watching. Every noise could be a warning.  \r\nSurvive the night."
+    Use switches and doors.\r\n\nA water sprinkler and the security cameras are glitchy.
+    \nYou\u2019ll need to reset them using their switches, or risk being blind to
+    the horrors lurking around you.\r\n\r\nRemember\u2026 every shadow could be watching.
+    Every noise could be a warning.  \r\nSurvive the night."
 --- !u!4 &2016154153
 Transform:
   m_ObjectHideFlags: 0
