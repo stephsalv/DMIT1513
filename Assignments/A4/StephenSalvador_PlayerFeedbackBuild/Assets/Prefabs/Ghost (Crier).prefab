@@ -273,8 +273,6 @@ GameObject:
   - component: {fileID: 5925517485579872159}
   - component: {fileID: 8425840016782327640}
   - component: {fileID: 1318255971560858108}
-  - component: {fileID: 7752012077078149206}
-  - component: {fileID: 19059528061463044}
   m_Layer: 3
   m_Name: Ghost (Crier)
   m_TagString: Ghost
@@ -411,42 +409,6 @@ MonoBehaviour:
   idleState: {fileID: 5925517485579872159}
   cryingDuration: 7
   audioSource: {fileID: 135203715432304136}
---- !u!114 &7752012077078149206
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5682004920506900662}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 083194928d93fd34ca64db49c2154bfc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::AnimationManager
-  animator: {fileID: 19059528061463044}
-  stateManager: {fileID: 1461635593400002950}
---- !u!95 &19059528061463044
-Animator:
-  serializedVersion: 7
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5682004920506900662}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 3c96194ab9b528b4391af188b22b7748, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &7509967549054017621
 GameObject:
   m_ObjectHideFlags: 0

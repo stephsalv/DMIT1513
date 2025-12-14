@@ -19,7 +19,8 @@ public class Flashlight : MonoBehaviour
 
     void Start()
     {
-        spotLight.SetActive(false);
+        if (spotLight != null)
+            spotLight.SetActive(false);
     }
 
     void Update()
@@ -35,7 +36,6 @@ public class Flashlight : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.F))
         {
-            // Only allow turning on if not cooling down
             if (!isON && !isCoolingDown)
             {
                 TurnOn();
@@ -73,44 +73,42 @@ public class Flashlight : MonoBehaviour
     {
         isON = true;
         onTimer = 0f;
-        spotLight.SetActive(true);
+        if (spotLight != null)
+            spotLight.SetActive(true);
+
         Debug.Log("Flashlight ON");
     }
 
     private void TurnOff()
     {
         isON = false;
-        spotLight.SetActive(false);
         onTimer = 0f;
+        if (spotLight != null)
+            spotLight.SetActive(false);
+
         Debug.Log("Flashlight OFF");
     }
 
     private void ShineLight()
     {
+        if (spotLight == null) return;
+
         Ray ray = new Ray(spotLight.transform.position, spotLight.transform.forward);
         Debug.DrawLine(ray.origin, ray.origin + ray.direction * range, Color.yellow);
 
-        if (Physics.Raycast(ray, out RaycastHit hit, range, ghostLayer))
+        // Detect all ghosts in the flashlight ray
+        RaycastHit[] hits = Physics.RaycastAll(ray, range, ghostLayer);
+        foreach (RaycastHit hit in hits)
         {
-            Debug.Log("Flashlight hit: " + hit.collider.name);
-
-            CryingState crying = hit.collider.GetComponent<CryingState>();
-            if (crying != null)
+            LightDetector detector = hit.collider.GetComponent<LightDetector>();
+            if (detector != null)
             {
-                crying.enabled = true;
-                Debug.Log("Ghost entered CryingState: " + hit.collider.name);
-            }
-
-            AttackState attack = hit.collider.GetComponent<AttackState>();
-            if (attack != null)
-            {
-                attack.isHitByFlashlight = true;
-                Debug.Log("Triggered CryingState via AttackState: " + hit.collider.name);
+                detector.isLightOn = true;
             }
         }
     }
 
-    // Other scripts (like LightDetector) can read this
+    // Other scripts (like states) can read this
     public bool IsFlashlightOn()
     {
         return isON;

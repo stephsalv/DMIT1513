@@ -3,22 +3,29 @@ using UnityEngine;
 public class StateManager : MonoBehaviour
 {
     public State currentState;
-    void Update()
+
+    private void Start()
+    {
+        if (currentState != null)
+            currentState.Enter();
+    }
+
+    private void Update()
     {
         RunStateMachine();
     }
+
     private void RunStateMachine()
     {
         State nextState = currentState?.RunCurrentState();
 
-        if (nextState != null)
+        // ONLY switch if the state actually changes
+        if (nextState != null && nextState != currentState)
         {
-            SwitchToNextState(nextState);
+            currentState.Exit();
+            currentState = nextState;
+            currentState.Enter();
         }
     }
-
-    private void SwitchToNextState(State nextState)
-    {
-        currentState = nextState;
-    }
 }
+

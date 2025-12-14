@@ -5,7 +5,7 @@ public class FleeLightState : State
     public Transform safePoint;
     public float speed = 5f;
 
-    public PatrolState patrolState;
+    public RageState rageState;
     public LightDetector lightDetector;
 
     private Rigidbody rb;
@@ -23,7 +23,7 @@ public class FleeLightState : State
         // Once lights are off again → start hunting
         if (!lightDetector.isLightOn)
         {
-            return patrolState;
+            return rageState;
         }
 
         return this;
