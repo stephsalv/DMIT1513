@@ -591,17 +591,6 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""76c4bbcc-ccc4-44fd-a0e9-2937b3c22f8f"",
-                    ""path"": ""<Gamepad>/start"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Gamepad"",
-                    ""action"": ""Start"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""199e3f3b-17fc-4235-b463-5738bb53821b"",
                     ""path"": ""<Gamepad>/start"",
                     ""interactions"": """",

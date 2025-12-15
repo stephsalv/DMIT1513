@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 
 public class MenuManager : MonoBehaviour
 {
@@ -26,17 +27,31 @@ public class MenuManager : MonoBehaviour
         pauseMenu.SetActive(false);
         gameMenu.SetActive(true);
         EventSystem.current.SetSelectedGameObject(playButton);
+        InputSystem.actions.Enable();
     }
 
     private void Update()
     {
-        if (InputManager.instance.PauseMenuInput)
+        //Debug.Log(InputManager.instance.PauseMenuInput);
+
+        //if (InputManager.instance.PauseMenuInput)
+        //{
+        //    Debug.Log($"Start button pressed");
+        //    if (!isPaused)
+
+        //        Pause();
+        //    else
+        //        Unpause();
+        //}
+
+        if (Gamepad.current.startButton.wasPressedThisFrame)
         {
             if (!isPaused)
                 Pause();
             else
                 Unpause();
         }
+
         if (GameManager.Instance != null && GameManager.Instance.IsGameOver)
         {
             ShowGameOver();
