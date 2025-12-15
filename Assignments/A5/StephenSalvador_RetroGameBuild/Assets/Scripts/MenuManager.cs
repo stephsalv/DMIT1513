@@ -1,20 +1,17 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.InputSystem;
 
 public class MenuManager : MonoBehaviour
 {
     [Header("UI")]
     [SerializeField] private GameObject pauseMenu;
     [SerializeField] private GameObject gameMenu;
-    [SerializeField] private GameObject resumeButton;
     [SerializeField] private GameObject playButton;
 
     [Header("References")]
-    [SerializeField] public List <PlayerController> players;
+    [SerializeField] public List<PlayerController> players;
     [SerializeField] public List<Ghost> ghosts;
 
     [Header("Audio")]
@@ -36,14 +33,25 @@ public class MenuManager : MonoBehaviour
         if (InputManager.instance.PauseMenuInput)
         {
             if (!isPaused)
-            {
                 Pause();
-            }
             else
-            {
                 Unpause();
-            }
         }
+        if (GameManager.Instance != null && GameManager.Instance.IsGameOver)
+        {
+            ShowGameOver();
+        }
+    }
+
+    public void OnPauseButtonPressed()
+    {
+        if (!isPaused)
+            Pause();
+    }
+
+    public void OnResumePressed()
+    {
+        Unpause();
     }
 
     private void Pause()
@@ -54,13 +62,9 @@ public class MenuManager : MonoBehaviour
         pauseMenu.SetActive(true);
         gameMenu.SetActive(false);
 
-        EventSystem.current.SetSelectedGameObject(resumeButton);
-
-        // Disable players
         foreach (var p in players)
             if (p != null) p.enabled = false;
 
-        // Disable ghosts
         foreach (var g in ghosts)
             if (g != null) g.enabled = false;
 
@@ -70,8 +74,7 @@ public class MenuManager : MonoBehaviour
         if (bgMusic && bgMusic.isPlaying)
             bgMusic.Pause();
     }
-
-    public void Unpause()
+    private void Unpause()
     {
         isPaused = false;
         Time.timeScale = 1f;
@@ -79,7 +82,6 @@ public class MenuManager : MonoBehaviour
         pauseMenu.SetActive(false);
         gameMenu.SetActive(true);
 
-        // FIX: delayed selection
         StartCoroutine(SelectNextFrame(playButton));
 
         foreach (var p in players)
@@ -91,16 +93,22 @@ public class MenuManager : MonoBehaviour
         if (bgMusic)
             bgMusic.UnPause();
     }
-    public void OnResumePressed()
+    private void ShowGameOver()
     {
-        Unpause();
-        StartCoroutine(SelectNextFrame(playButton));
+        Time.timeScale = 0f;
+
+        gameMenu.SetActive(false);
+        pauseMenu.SetActive(false);
+
+        if (bgMusic && bgMusic.isPlaying)
+            bgMusic.Stop();
     }
     private IEnumerator SelectNextFrame(GameObject button)
     {
-        yield return null; // wait 1 frame
+        yield return null;
         EventSystem.current.SetSelectedGameObject(button);
     }
+
     public void OnExitPressed()
     {
         Application.Quit();

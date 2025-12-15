@@ -14,15 +14,10 @@ public class PlayerManager : MonoBehaviour
     {
         UpdatePlayerButtons();
     }
-
     private void UpdatePlayerButtons()
     {
         int playersConnected = gamepadManager.PlayerCount();
-
-        // Enable 2-player only if exactly 2 players connected
         twoPlayerButton.interactable = (playersConnected == 2);
-
-        // Enable 4-player only if exactly 4 players connected
         fourPlayerButton.interactable = (playersConnected == 4);
     }
 }

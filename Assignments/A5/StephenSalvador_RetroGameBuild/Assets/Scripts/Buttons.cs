@@ -14,17 +14,15 @@ public class MainMenuButtons : MonoBehaviour
         SceneManager.LoadScene(2);
     }
 
-    // Called by the Quit button
     public void OnQuitPressed()
     {
-        Application.Quit(); // Works in build
+        Application.Quit();
 
         // Works in Unity Editor
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
 #endif
     }
-    // ✔️ NEW — Called by the Resume button
     public void OnResumePressed()
     {
         if (pauseMenuUI != null)
@@ -35,6 +33,11 @@ public class MainMenuButtons : MonoBehaviour
 
         // Unpause the game
         Time.timeScale = 1f;
+    }
+
+    public void BackToMain()
+    {
+        SceneManager.LoadScene(0);
     }
 }
 

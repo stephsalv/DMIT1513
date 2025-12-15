@@ -1,46 +1,49 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using UnityEngine.EventSystems;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
+    [Header("Players & Ghosts")]
     public List<PlayerController> players;
     public GhostManager ghostManager;
 
+    [Header("Game Settings")]
     public int winScore = 25;
 
-    void Awake()
+    [Header("UI")]
+    public GameObject gameOverPanel;
+    public GameObject continueButton;
+
+    [Header("Audio")]
+    public AudioSource musicSource;
+    public AudioSource sfxSource;
+    public AudioClip gameOverClip;
+    [HideInInspector]
+    public bool IsGameOver { get; private set; } = false;
+
+    private void Awake()
     {
         if (Instance == null) Instance = this;
+        else Destroy(gameObject);
     }
-
-    // -------------------------------------------------
-    // CALLED BY PLAYER CONTROLLER WHEN SOMEONE DIES
-    // -------------------------------------------------
     public void PlayerDied(PlayerController deadPlayer)
     {
-        // Check how many alive players remain
         List<PlayerController> alivePlayers = players.FindAll(p => p.isAlive);
 
-        // If only one left → they win
         if (alivePlayers.Count == 1)
         {
             DeclareWinner(alivePlayers[0]);
         }
         else if (alivePlayers.Count == 0)
         {
-            // (Extremely rare) If all die at same time
             EndGameNoWinner();
         }
     }
-
-    // -------------------------------------------------
-    // CALLED BY PLAYER CONTROLLER WHEN FRUIT IS PICKED UP
-    // -------------------------------------------------
     public void CheckScoreWinner(PlayerController player)
     {
         if (player.score >= winScore)
@@ -48,10 +51,6 @@ public class GameManager : MonoBehaviour
             DeclareWinner(player);
         }
     }
-
-    // -------------------------------------------------
-    // DECLARE WINNER
-    // -------------------------------------------------
     private void DeclareWinner(PlayerController winner)
     {
         // Stop all players
@@ -59,28 +58,21 @@ public class GameManager : MonoBehaviour
             p.isAlive = false;
 
         // Stop ghosts
-        if (ghostManager != null)
-            ghostManager.StopAllGhosts();
+        ghostManager?.StopAllGhosts();
 
-        // Show win canvas for winner
+        // Show winner UI
         if (winner.playerWonCanvas != null)
             winner.playerWonCanvas.SetActive(true);
 
-        // Show death canvas for others
+        // Show death UI for others
         foreach (var p in players)
         {
-            if (p != winner)
-            {
-                if (p.playerDiedCanvas != null)
-                    p.playerDiedCanvas.SetActive(true);
-            }
+            if (p != winner && p.playerDiedCanvas != null)
+                p.playerDiedCanvas.SetActive(true);
         }
 
-        // Start scene reload
         GameOver();
     }
-
-    // If all players died simultaneously
     private void EndGameNoWinner()
     {
         foreach (var p in players)
@@ -91,18 +83,32 @@ public class GameManager : MonoBehaviour
 
         GameOver();
     }
-
-    // -------------------------------------------------
-    // RELOAD SCENE
-    // -------------------------------------------------
     public void GameOver()
     {
-        StartCoroutine(LoadSceneAfterDelay());
+        if (IsGameOver) return;
+
+        IsGameOver = true;
+
+        Time.timeScale = 0f;
+
+        if (musicSource != null && musicSource.isPlaying)
+            musicSource.Stop();
+
+        if (sfxSource != null && gameOverClip != null)
+            sfxSource.PlayOneShot(gameOverClip);
+
+        if (gameOverPanel != null)
+            gameOverPanel.SetActive(true);
+
+        StartCoroutine(ReloadSceneAfterDelay(10f));
     }
 
-    private IEnumerator LoadSceneAfterDelay()
+    private IEnumerator ReloadSceneAfterDelay(float delay)
     {
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSecondsRealtime(delay);
+
+        Time.timeScale = 1f;
+
         SceneManager.LoadScene(0);
     }
 }
