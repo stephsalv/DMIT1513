@@ -13,11 +13,10 @@ public class GameManager : MonoBehaviour
     public GhostManager ghostManager;
 
     [Header("Game Settings")]
-    public int winScore = 25;
+    public int winScore = 30;
 
     [Header("UI")]
     public GameObject gameOverPanel;
-    public GameObject continueButton;
 
     [Header("Audio")]
     public AudioSource musicSource;

@@ -513,6 +513,17 @@
                     "action": "Pause",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "4be7b47e-9554-434e-9fed-6dadde27924b",
+                    "path": "<HID::HORI CO.,LTD. HORIPAD mini4>/button10",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad;Joystick",
+                    "action": "Pause",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         },
@@ -1079,6 +1090,17 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Gamepad;Joystick",
+                    "action": "Pause",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a76f0388-f3d8-475f-85a7-4517fde5e746",
+                    "path": "<HID::HORI CO.,LTD. HORIPAD mini4>/button10",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Joystick;Gamepad",
                     "action": "Pause",
                     "isComposite": false,
                     "isPartOfComposite": false

@@ -3,13 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class MenuManager : MonoBehaviour
 {
     [Header("UI")]
     [SerializeField] private GameObject pauseMenu;
     [SerializeField] private GameObject gameMenu;
-    [SerializeField] private GameObject playButton;
+
+    [Header("Button to highlight")]
+    [SerializeField] private GameObject mainMenuButton;
+    [SerializeField] private GameObject pauseMenuButton;
 
     [Header("References")]
     [SerializeField] public List<PlayerController> players;
@@ -26,24 +30,11 @@ public class MenuManager : MonoBehaviour
     {
         pauseMenu.SetActive(false);
         gameMenu.SetActive(true);
-        EventSystem.current.SetSelectedGameObject(playButton);
-        InputSystem.actions.Enable();
+        EventSystem.current.SetSelectedGameObject(mainMenuButton);
     }
 
     private void Update()
     {
-        //Debug.Log(InputManager.instance.PauseMenuInput);
-
-        //if (InputManager.instance.PauseMenuInput)
-        //{
-        //    Debug.Log($"Start button pressed");
-        //    if (!isPaused)
-
-        //        Pause();
-        //    else
-        //        Unpause();
-        //}
-
         if (Gamepad.current.startButton.wasPressedThisFrame)
         {
             if (!isPaused)
@@ -58,17 +49,16 @@ public class MenuManager : MonoBehaviour
         }
     }
 
-    public void OnPauseButtonPressed()
+    public void OnPauseUIButtonPressed()
     {
         if (!isPaused)
             Pause();
     }
 
-    public void OnResumePressed()
+    public void OnResumeUIButtonPressed()
     {
         Unpause();
     }
-
     private void Pause()
     {
         isPaused = true;
@@ -76,6 +66,9 @@ public class MenuManager : MonoBehaviour
 
         pauseMenu.SetActive(true);
         gameMenu.SetActive(false);
+
+        EventSystem.current.SetSelectedGameObject(pauseMenuButton);//in-game scene has quit button
+
 
         foreach (var p in players)
             if (p != null) p.enabled = false;
@@ -97,7 +90,7 @@ public class MenuManager : MonoBehaviour
         pauseMenu.SetActive(false);
         gameMenu.SetActive(true);
 
-        StartCoroutine(SelectNextFrame(playButton));
+        StartCoroutine(SelectNextFrame(mainMenuButton));
 
         foreach (var p in players)
             if (p != null) p.enabled = true;
@@ -123,8 +116,11 @@ public class MenuManager : MonoBehaviour
         yield return null;
         EventSystem.current.SetSelectedGameObject(button);
     }
-
-    public void OnExitPressed()
+    public void OnMainMenuButtonPressed()
+    {
+        SceneManager.LoadScene(0);
+    }
+    public void OnQuitUIButtonPressed()
     {
         Application.Quit();
 #if UNITY_EDITOR

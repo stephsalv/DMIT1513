@@ -223,9 +223,10 @@ MonoBehaviour:
   playerDiedCanvas: {fileID: 0}
   playerWonCanvas: {fileID: 0}
   audioSource: {fileID: 0}
-  walkClip: {fileID: 0}
   eatClip: {fileID: 0}
   switchClip: {fileID: 0}
+  scoreText: {fileID: 0}
+  rb: {fileID: 0}
 --- !u!195 &5046104192096247996
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -315,7 +316,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: adb638d6055392d4cadbc3423ee8f419, type: 2}
+  - {fileID: 2100000, guid: dab7d7a55b50f254497c9a25708b901b, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -365,6 +366,6 @@ MonoBehaviour:
   m_ActionEvents: []
   m_NeverAutoSwitchControlSchemes: 1
   m_DefaultControlScheme: Gamepad
-  m_DefaultActionMap: df70fa95-8a34-4494-b137-73ab6b9c7d37
+  m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 8805375286909206670}

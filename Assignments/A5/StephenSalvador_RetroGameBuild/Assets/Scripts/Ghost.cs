@@ -2,76 +2,76 @@ using UnityEngine;
 using UnityEngine.AI;
 using System.Collections.Generic;
 
+[RequireComponent(typeof(NavMeshAgent))]
 public class Ghost : MonoBehaviour
 {
+    [Header("Gameplay")]
     public int scoreValue = 5;
     public bool isVulnerable = false;
 
+    [Header("Movement")]
+    public float moveSpeed = 3.5f;
     public float fleeDistance = 5f;
     public float updateRate = 0.2f;
-    public float moveSpeed = 3.5f;
+
+    [Header("Tracking")]
+    public List<GameObject> trackedPlayers = new List<GameObject>();
+    public GameObject currentTarget;
 
     private NavMeshAgent agent;
-    public GameObject currentTarget;
-    public List<GameObject> trackedPlayers = new List<GameObject>();
-    private float timer = 0f;
-
-    public bool canMove = true; // new flag to stop ghost movement
-
-    private Renderer ghostRenderer;
+    private Renderer[] ghostRenderers;
     private Color originalColor;
+    private float timer = 0f;
+    private bool canMove = true;
 
-    void Awake()
+    private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
         agent.speed = moveSpeed;
 
-        ghostRenderer = GetComponent<Renderer>();
-        if (ghostRenderer != null)
-            originalColor = ghostRenderer.material.color;
+        ghostRenderers = GetComponentsInChildren<Renderer>();
+        if (ghostRenderers.Length > 0)
+            originalColor = ghostRenderers[0].material.color;
     }
 
-    void Update()
+    private void Update()
     {
         if (!canMove) return;
 
         timer += Time.deltaTime;
         if (timer >= updateRate)
         {
-            if (!isVulnerable)
+            timer = 0f;
+
+            if (isVulnerable)
             {
-                UpdateAndChase();
-                SetGhostColor(originalColor); // back to normal
+                FleeFromPlayers();
+                SetGhostColor(Color.white);
             }
             else
             {
-                FleeFromPlayers();
-                SetGhostColor(Color.white);   // turn white when fleeing
+                ChaseClosestPlayer();
+                SetGhostColor(originalColor);
             }
         }
     }
 
-    private void UpdateAndChase()
-    {
-        UpdateCurrentTarget();
-        ChaseCurrentTarget();
-    }
-
     private void UpdateCurrentTarget()
     {
-        GameObject closestPlayer = null;
         float closestDistance = Mathf.Infinity;
+        GameObject closestPlayer = null;
 
         foreach (var player in trackedPlayers)
         {
             if (player == null) continue;
+
             PlayerController pc = player.GetComponent<PlayerController>();
             if (pc == null || !pc.isAlive) continue;
 
-            float dist = Vector3.Distance(transform.position, player.transform.position);
-            if (dist < closestDistance)
+            float distance = Vector3.Distance(transform.position, player.transform.position);
+            if (distance < closestDistance)
             {
-                closestDistance = dist;
+                closestDistance = distance;
                 closestPlayer = player;
             }
         }
@@ -79,31 +79,34 @@ public class Ghost : MonoBehaviour
         currentTarget = closestPlayer;
     }
 
-    private void ChaseCurrentTarget()
+    private void ChaseClosestPlayer()
     {
+        UpdateCurrentTarget();
         if (currentTarget != null)
             agent.SetDestination(currentTarget.transform.position);
     }
 
     private void FleeFromPlayers()
     {
+        if (trackedPlayers.Count == 0) return;
+
         Vector3 fleeDirection = Vector3.zero;
-        int count = 0;
+        int validPlayers = 0;
 
         foreach (var player in trackedPlayers)
         {
             if (player == null) continue;
+
             PlayerController pc = player.GetComponent<PlayerController>();
             if (pc == null || !pc.isAlive) continue;
 
             fleeDirection += (transform.position - player.transform.position).normalized;
-            count++;
+            validPlayers++;
         }
 
-        if (count == 0) return;
+        if (validPlayers == 0) return;
 
-        fleeDirection /= count;
-
+        fleeDirection /= validPlayers;
         Vector3 fleeTarget = transform.position + fleeDirection * fleeDistance;
 
         if (NavMesh.SamplePosition(fleeTarget, out NavMeshHit hit, fleeDistance, NavMesh.AllAreas))
@@ -112,37 +115,20 @@ public class Ghost : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Player"))
-        {
-            PlayerController hitPlayer = collision.gameObject.GetComponent<PlayerController>();
-            if (hitPlayer == null || !hitPlayer.isAlive) return;
+        if (!collision.gameObject.CompareTag("Player")) return;
 
-            if (isVulnerable)
-            {
-                hitPlayer.score += scoreValue;
-                Die();
-            }
-            else
-            {
-                hitPlayer.Die();
-            }
+        PlayerController player = collision.gameObject.GetComponent<PlayerController>();
+        if (player == null || !player.isAlive) return;
+
+        if (isVulnerable)
+        {
+            player.score += scoreValue;
+            Respawn();
         }
-    }
-    public void StopMovement()
-    {
-        canMove = false;
-        if (agent != null)
-            agent.isStopped = true;
-    }
-    private void SetGhostColor(Color color)
-    {
-        if (ghostRenderer != null)
-            ghostRenderer.material.color = color;
-    }
-    public void Die()
-    {
-        isVulnerable = false;
-        transform.position = GhostManager.Instance.GetSpawnPosition();
+        else
+        {
+            player.Die();
+        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -153,7 +139,30 @@ public class Ghost : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("Player") && trackedPlayers.Contains(other.gameObject))
+        if (other.CompareTag("Player"))
             trackedPlayers.Remove(other.gameObject);
+    }
+
+    public void StopMovement()
+    {
+        canMove = false;
+        if (agent != null)
+            agent.isStopped = true;
+    }
+
+    private void SetGhostColor(Color color)
+    {
+        if (ghostRenderers == null) return;
+
+        foreach (var rend in ghostRenderers)
+        {
+            rend.material.color = color;
+        }
+    }
+
+    public void Respawn()
+    {
+        isVulnerable = false;
+        transform.position = GhostManager.Instance.GetSpawnPosition();
     }
 }

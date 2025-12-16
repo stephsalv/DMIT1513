@@ -11,9 +11,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/1-TWO PLAYER.unity
     guid: 7e6d3f4e5d896154ab4438845532ac3e
-  - enabled: 1
-    path: Assets/Scenes/2-FOUR PLAYER.unity
-    guid: 6a2a9624dcecccf48b8847ea16bd358b
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: 7edc5401bd8edd3408fc104b60aada2d, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
