@@ -118,6 +118,7 @@ public class MenuManager : MonoBehaviour
     }
     public void OnMainMenuButtonPressed()
     {
+        Time.timeScale = 1f;
         SceneManager.LoadScene(0);
     }
     public void OnQuitUIButtonPressed()
