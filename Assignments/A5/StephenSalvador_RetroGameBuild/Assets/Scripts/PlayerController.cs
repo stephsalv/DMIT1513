@@ -13,7 +13,7 @@ public class PlayerController : MonoBehaviour
     [Header("Input Info")]
     public InputActionAsset inputActions;
     public InputActionReference move, look;
-    public int playerIndex = 0; // 0 = first gamepad, 1 = second, etc.
+    public int playerIndex = 0;
 
     [Header("Canvas")]
     public GameObject playerDiedCanvas;
@@ -32,6 +32,11 @@ public class PlayerController : MonoBehaviour
     private Vector2 lookInput;
     private Gamepad myGamepad;
     private Joystick myJoystick;
+    void Start()
+    {
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+    }
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
@@ -68,7 +73,6 @@ public class PlayerController : MonoBehaviour
     {
         if (!isAlive) return;
 
-        // Read input from assigned device
         if (myGamepad != null)
         {
             moveInput = myGamepad.leftStick.ReadValue();
@@ -76,11 +80,15 @@ public class PlayerController : MonoBehaviour
         }
         else if (myJoystick != null)
         {
-            // Most joysticks use stick.x / stick.y for movement
             moveInput = new Vector2(myJoystick.stick.x.ReadValue(), myJoystick.stick.y.ReadValue());
-            // For simplicity, lookInput can use the same as moveInput
             lookInput = moveInput;
         }
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+        }
+
         UpdateScoreUI();
     }
 
@@ -88,14 +96,12 @@ public class PlayerController : MonoBehaviour
     {
         if (!isAlive) return;
 
-        // Move forward/backward using stick Y
         Vector3 movement =
             (transform.forward * moveInput.y +
              transform.right * moveInput.x) * moveSpeed;
 
         rb.linearVelocity = movement;
 
-        // Rotate using stick X
         float rotation = moveInput.x * rotationSpeed * Time.fixedDeltaTime;
         rb.MoveRotation(rb.rotation * Quaternion.Euler(0f, rotation, 0f));
     }
@@ -107,7 +113,6 @@ public class PlayerController : MonoBehaviour
         if (collision.gameObject.CompareTag("Player"))
         {
             Die();
-            //collision.gameObject.GetComponent<PlayerController>()?.Die();
         }
 
         if (collision.gameObject.CompareTag("Fruit"))
@@ -117,13 +122,13 @@ public class PlayerController : MonoBehaviour
 
             UpdateScoreUI();
 
-            GameManager.Instance.CheckScoreWinner(this); // <-- ADD THIS
+            GameManager.Instance.CheckScoreWinner(this);
 
             if (audioSource != null && eatClip != null)
                 audioSource.PlayOneShot(eatClip);
         }
 
-        if (collision.gameObject.CompareTag("Plus")) // or "PowerUp"
+        if (collision.gameObject.CompareTag("Plus")) //
         {
             Destroy(collision.gameObject);
             GhostManager.Instance.MakeGhostsVulnerable(5f);
@@ -141,7 +146,6 @@ public class PlayerController : MonoBehaviour
         if (playerDiedCanvas != null)
             playerDiedCanvas.SetActive(true);
 
-        // Notify GameManager
         GameManager.Instance.PlayerDied(this);
 
         gameObject.SetActive(false);
