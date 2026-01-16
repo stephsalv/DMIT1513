@@ -55,6 +55,6 @@ public class CarSelection : MonoBehaviour
     {
         PlayerPrefs.SetInt("SelectedCarID", currentCar);
         PlayerPrefs.Save();
-        SceneManager.LoadScene(5); // Load gameplay scene
+        SceneManager.LoadScene(3); // Load gameplay scene
     }
 }
