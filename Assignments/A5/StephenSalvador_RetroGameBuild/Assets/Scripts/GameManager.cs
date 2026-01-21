@@ -22,7 +22,7 @@ public class GameManager : MonoBehaviour
     public AudioSource musicSource;
     public AudioSource sfxSource;
     public AudioClip gameOverClip;
-    [HideInInspector]
+
     public bool IsGameOver { get; private set; } = false;
 
     private void Awake()
