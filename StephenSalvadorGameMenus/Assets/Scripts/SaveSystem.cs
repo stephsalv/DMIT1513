@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using TMPro;
 using UnityEditor.Overlays;
 using UnityEngine;
 using UnityEngine.Profiling;
@@ -15,6 +16,7 @@ public class SaveSystem : MonoBehaviour
 
     public string filePath;
     string profileName;
+    public TMP_InputField profileNameInput;
 
     public SaveData saveData = new SaveData();
 
@@ -49,6 +51,29 @@ public class SaveSystem : MonoBehaviour
         string json = JsonUtility.ToJson(saveData, true);
         File.WriteAllText(filePath, json);
         Debug.Log("Game saved successfully!");
+    }
+    public void SaveNewProfile(string vehicleName)
+    {
+        if (profileNameInput == null)
+        {
+            Debug.LogError("InputField is empty!");
+            return;
+        }
+
+        string enteredName = profileNameInput.text.Trim();
+        if (string.IsNullOrEmpty(enteredName))
+        {
+            Debug.LogWarning("Please enter a profile name!");
+            return;
+        }
+        SaveProfile newProfile = new SaveProfile(enteredName, 0f, vehicleName);
+
+        saveData.profiles.Add(newProfile);
+
+        string json = JsonUtility.ToJson(saveData, true);
+        File.WriteAllText(filePath, json);
+
+        Debug.Log($"Profile '{enteredName}' with vehicle '{vehicleName}' saved successfully!");
     }
 
     [ContextMenu("JSON Load")]
