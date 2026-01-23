@@ -27,11 +27,12 @@ public class GhostDataRecorder : MonoBehaviour
         Vector3 rotation = transform.eulerAngles;
         float time = Time.deltaTime;
 
-        GhostDataFrame frame = new GhostDataFrame(
-                transform.position,
-                transform.rotation,
-                Time.timeSinceLevelLoad
-            );
+        GhostDataFrame frame = new GhostDataFrame
+        (
+            position,
+            rotation,
+            Time.timeSinceLevelLoad
+        );
 
         ghostData.ghostDataFrames.Add(frame);
     }

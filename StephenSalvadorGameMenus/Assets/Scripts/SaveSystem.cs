@@ -1,61 +1,58 @@
-using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text.RegularExpressions;
-using Unity.VisualScripting;
+using UnityEditor.Overlays;
 using UnityEngine;
 
 public class SaveSystem : MonoBehaviour
 {
+    public static SaveSystem instance;
+
+    [SerializeField] private string fileName = "saveData.json";
+
     public List<SaveProfile> profiles = new List<SaveProfile>();
+
     public string filePath;
 
-    public void Start()
+    public SaveData saveData = new SaveData();
+
+    private void Awake()
     {
-        //CreateSave(new SaveProfile("Stephen", 1));
-
-    }
-
-    public void CreateSave(SaveProfile profile)
-    {
-        bool fileExists = File.Exists(filePath);
-
-        using (StreamWriter sw = new StreamWriter(filePath, true))
+        if (instance == null)
         {
-            if (!fileExists)
-            {
-                sw.WriteLine("Profile Name, Score");
-            }
-
-            sw.WriteLine($"{profile.profileName}, {profile.bestTime}");
-            profiles.Add(profile);
+            instance = this;
+            DontDestroyOnLoad(gameObject);
         }
-    }
-    public void DeleteSave()
-    {
-
-    }
-    public void LoadSave(string profileToLoad)
-    {
-        if (!File.Exists(filePath))
+        else
         {
-            Debug.LogWarning("Save file not found!");
+            Destroy(gameObject);
             return;
         }
 
-        string[] lines = File.ReadAllLines(filePath);
+        LoadData();
+    }
+    [ContextMenu("JSON Save")]
+    public void SaveData()
+    {
+        string json = JsonUtility.ToJson(saveData, true);
+        File.WriteAllText(filePath, json);
+        Debug.Log("Game saved successfully!");
+    }
 
-        for (int i = 1; i < lines.Length; i++) // skip header
+    [ContextMenu("JSON Load")]
+    public void LoadData()
+    {
+        if (File.Exists(filePath))
         {
-            string[] columns = Regex.Split(lines[i], ",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)");
-
-            if (columns[0] == profileToLoad)
-            {
-                int score = int.Parse(columns[1]);
-                Debug.Log($"Profile {profileToLoad} loaded with score {score}.");
-                return;
-            }
+            string json = File.ReadAllText(filePath);
+            saveData = JsonUtility.FromJson<SaveData>(json);
+            Debug.Log("Game loaded");
+        }
+        else
+        {
+            Debug.Log("No save file found, creating new one");
+            saveData = new SaveData();
+            return;
         }
     }
 }
@@ -71,12 +68,17 @@ public class SaveProfile
 
     public SaveProfile(string profileName_, float bestTime_,string vehicle_, Color color_,  GhostData ghostData_)
     {
-        profileName = profileName_;
-        bestTime = bestTime_;
-        vehicle = vehicle_;
-        color = color_;
-        GhostData = ghostData_;
+        this.profileName = profileName_;
+        this.bestTime = bestTime_;
+        this.vehicle = vehicle_;
+        this.color = color_;
+        this.GhostData = ghostData_;
     }
+}
+[Serializable]
+public class SaveData
+{
+    public List<SaveProfile> profiles = new List<SaveProfile>();
 }
 
 

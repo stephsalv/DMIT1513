@@ -2,8 +2,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-
-
 public class CarSelection : MonoBehaviour
 {
     public GameObject[] cars;
@@ -19,12 +17,6 @@ public class CarSelection : MonoBehaviour
             currentCar = selectedCar;
         }
     }
-
-    void Update()
-    {
-
-    }
-
     public void Next()
     {
         if (currentCar < cars.Length - 1)
@@ -37,7 +29,6 @@ public class CarSelection : MonoBehaviour
             }
         }
     }
-
     public void Previous()
     {
         if (currentCar > 0)
@@ -50,7 +41,6 @@ public class CarSelection : MonoBehaviour
             }
         }
     }
-
     public void Select()
     {
         PlayerPrefs.SetInt("SelectedCarID", currentCar);

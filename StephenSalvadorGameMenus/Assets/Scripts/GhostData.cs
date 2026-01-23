@@ -8,6 +8,7 @@ public class GhostData : MonoBehaviour
 {
     public List<GhostDataFrame> ghostDataFrames = new List<GhostDataFrame>();
 }
+
 [Serializable]
 public class GhostDataFrame
 {

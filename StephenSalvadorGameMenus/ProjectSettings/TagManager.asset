@@ -11,6 +11,7 @@ TagManager:
   - Pos2
   - Pos3
   - Audio
+  - AICar
   layers:
   - Default
   - TransparentFX
