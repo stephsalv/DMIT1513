@@ -13,9 +13,11 @@ public class GhostDataFrame
 {
     Vector3 position;
     Vector3 rotation;
-    public GhostDataFrame(Vector3 position_, Vector3 rotation_)
+    float time;
+    public GhostDataFrame(Vector3 position_, Vector3 rotation_, float time)
     {
         this.position =  position_;
         this.rotation = rotation_;
+        this.time = time;
     }
 }

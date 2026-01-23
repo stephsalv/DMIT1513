@@ -28,7 +28,7 @@ public class SaveSystem : MonoBehaviour
                 sw.WriteLine("Profile Name, Score");
             }
 
-            sw.WriteLine($"{profile.profileName}, {profile.highScore}");
+            sw.WriteLine($"{profile.profileName}, {profile.bestTime}");
             profiles.Add(profile);
         }
     }
@@ -64,13 +64,17 @@ public class SaveSystem : MonoBehaviour
 public class SaveProfile
 {
     public string profileName;
-    public int highScore;
+    public float bestTime;
+    public string vehicle;
+    public Color color;
     GhostData GhostData;
 
-    public SaveProfile(string profileName_, int highScore_, GhostData ghostData_)
+    public SaveProfile(string profileName_, float bestTime_,string vehicle_, Color color_,  GhostData ghostData_)
     {
         profileName = profileName_;
-        highScore = highScore_;
+        bestTime = bestTime_;
+        vehicle = vehicle_;
+        color = color_;
         GhostData = ghostData_;
     }
 }

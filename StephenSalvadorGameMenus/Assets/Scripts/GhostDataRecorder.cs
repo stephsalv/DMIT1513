@@ -14,14 +14,24 @@ public class GhostDataRecorder : MonoBehaviour
     {
         isRecording = true;
     }
+    public void StopRecording()
+    {
+        isRecording = false;
+    }
+
     private void FixedUpdate()
     {
         if (!isRecording) return;
 
         Vector3 position = transform.position;
         Vector3 rotation = transform.eulerAngles;
+        float time = Time.deltaTime;
 
-        GhostDataFrame frame = new GhostDataFrame(position, rotation);
+        GhostDataFrame frame = new GhostDataFrame(
+                transform.position,
+                transform.rotation,
+                Time.timeSinceLevelLoad
+            );
 
         ghostData.ghostDataFrames.Add(frame);
     }
