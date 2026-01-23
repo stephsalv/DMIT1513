@@ -1,10 +1,8 @@
-using System.Security.Cryptography.X509Certificates;
 using UnityEngine;
 
 public class AudioSettings : MonoBehaviour
 {
     [SerializeField] AudioSource musicSource;
-    //[SerializeField] AudioSource SFXSource;
 
     public AudioClip background;
     //public AudioClip gtr;
@@ -16,30 +14,23 @@ public class AudioSettings : MonoBehaviour
     public static AudioSettings instance;
     private void Awake()
     {
-        //if (instance == null)
-        //{
-        //    instance = this;
-        //    DontDestroyOnLoad(this);
-
-        //}
-        //else
-        //{
-        //    Destroy(gameObject);
-        //}
-        DontDestroyOnLoad(gameObject);
-
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject); // keep this object alive
+        }
+        else
+        {
+            Destroy(gameObject); // destroy duplicate instances
+        }
     }
 
     private void Start()
     {
-        musicSource.clip = background;
-        musicSource.Play();
+        if (!musicSource.isPlaying) // optional safety check
+        {
+            musicSource.clip = background;
+            musicSource.Play();
+        }
     }
-
-    //public void PlaySFX(AudioClip clip)
-    //{
-    //    SFXSource.PlayOneShot(clip);
-    //}
-
-
 }

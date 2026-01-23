@@ -3,16 +3,18 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEditor.Overlays;
 using UnityEngine;
+using UnityEngine.Profiling;
 
 public class SaveSystem : MonoBehaviour
 {
     public static SaveSystem instance;
-
+    public SaveProfile profileData;
     [SerializeField] private string fileName = "saveData.json";
 
     public List<SaveProfile> profiles = new List<SaveProfile>();
 
     public string filePath;
+    string profileName;
 
     public SaveData saveData = new SaveData();
 
@@ -34,6 +36,16 @@ public class SaveSystem : MonoBehaviour
     [ContextMenu("JSON Save")]
     public void SaveData()
     {
+        SaveProfile saveProfile = new SaveProfile("Stephen", 1, "GTR");
+        string file = filePath + profileName + ".json";
+        string json = JsonUtility.ToJson(saveProfile, true);
+
+        File.WriteAllText(filePath, json);
+
+    }
+    public void SaveData(SaveData profile_)
+    {
+        string file = filePath + profile_.profiles + ".json";
         string json = JsonUtility.ToJson(saveData, true);
         File.WriteAllText(filePath, json);
         Debug.Log("Game saved successfully!");
@@ -41,6 +53,22 @@ public class SaveSystem : MonoBehaviour
 
     [ContextMenu("JSON Load")]
     public void LoadData()
+    {
+        if (File.Exists(filePath))
+        {
+            string json = File.ReadAllText(filePath);
+            saveData = JsonUtility.FromJson<SaveData>(json);
+            Debug.Log("Game loaded");
+        }
+        else
+        {
+            Debug.Log("No save file found, creating new one");
+            saveData = new SaveData();
+            return;
+        }
+    }
+    [ContextMenu("JSON Delete")]
+    public void DeleteData(SaveData profile_)
     {
         if (File.Exists(filePath))
         {
@@ -63,16 +91,14 @@ public class SaveProfile
     public string profileName;
     public float bestTime;
     public string vehicle;
-    public Color color;
+    //public Color color;
     GhostData GhostData;
 
-    public SaveProfile(string profileName_, float bestTime_,string vehicle_, Color color_,  GhostData ghostData_)
+    public SaveProfile(string profileName_, float bestTime_,string vehicle_)
     {
-        this.profileName = profileName_;
-        this.bestTime = bestTime_;
-        this.vehicle = vehicle_;
-        this.color = color_;
-        this.GhostData = ghostData_;
+        profileName = profileName_;
+        bestTime = bestTime_;
+        vehicle = vehicle_;
     }
 }
 [Serializable]
