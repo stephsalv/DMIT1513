@@ -5,7 +5,7 @@ public class CheckpointManager : MonoBehaviour
     public Checkpoint[] checkpoints;
     public FinalCheckpoint finalCheckpoint;
 
-    private void Start()
+    private void Awake()
     {
         foreach (Checkpoint cp in checkpoints)
         {
