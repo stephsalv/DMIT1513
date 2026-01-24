@@ -9,6 +9,7 @@ using UnityEngine.Profiling;
 public class SaveSystem : MonoBehaviour
 {
     public static SaveSystem instance;
+
     public SaveProfile profileData;
     [SerializeField] private string fileName = "saveData.json";
 
@@ -19,6 +20,7 @@ public class SaveSystem : MonoBehaviour
     public TMP_InputField profileNameInput;
 
     public SaveData saveData = new SaveData();
+    private int index;
 
     private void Awake()
     {
@@ -56,7 +58,7 @@ public class SaveSystem : MonoBehaviour
     {
         if (profileNameInput == null)
         {
-            Debug.LogError("InputField is empty!");
+            Debug.LogError("InputField not assigned!");
             return;
         }
 
@@ -66,13 +68,17 @@ public class SaveSystem : MonoBehaviour
             Debug.LogWarning("Please enter a profile name!");
             return;
         }
-        SaveProfile newProfile = new SaveProfile(enteredName, 0f, vehicleName);
 
+        if (saveData.profiles.Exists(p => p.profileName == enteredName))
+        {
+            Debug.LogWarning($"Profile '{enteredName}' already exists!");
+            return;
+        }
+
+        SaveProfile newProfile = new SaveProfile(enteredName, 0f, vehicleName);
         saveData.profiles.Add(newProfile);
 
-        string json = JsonUtility.ToJson(saveData, true);
-        File.WriteAllText(filePath, json);
-
+        SaveData();
         Debug.Log($"Profile '{enteredName}' with vehicle '{vehicleName}' saved successfully!");
     }
 
@@ -95,18 +101,17 @@ public class SaveSystem : MonoBehaviour
     [ContextMenu("JSON Delete")]
     public void DeleteData(SaveData profile_)
     {
-        if (File.Exists(filePath))
-        {
-            string json = File.ReadAllText(filePath);
-            saveData = JsonUtility.FromJson<SaveData>(json);
-            Debug.Log("Game loaded");
-        }
-        else
-        {
-            Debug.Log("No save file found, creating new one");
-            saveData = new SaveData();
-            return;
-        }
+        List<SaveData> savedProfiles = new List<SaveData>();
+        // iterate through the list
+        // remove the correspond item
+        savedProfiles.RemoveAt(index);
+
+        //delete the existing file (json)
+
+        string profileName;
+
+        //string filePath = "Assets/Resources/" + profileName + ".json";
+        System.IO.File.Delete(filePath);
     }
 }
 
