@@ -8,6 +8,8 @@ public class CarSelection : MonoBehaviour
     public int currentCar;
     public bool inGameplayScene = false;
 
+    public Speedometer speedometer;
+
     void Start()
     {
         int selectedCar = PlayerPrefs.GetInt("SelectedCarID");
@@ -45,6 +47,16 @@ public class CarSelection : MonoBehaviour
     {
         PlayerPrefs.SetInt("SelectedCarID", currentCar);
         PlayerPrefs.Save();
-        SceneManager.LoadScene(2); // Load gameplay scene
+        SceneManager.LoadScene(2);
+    }
+    private void ActivateCar(int index)
+    {
+        currentCar = index;
+
+        for (int i = 0; i < cars.Length; i++)
+            cars[i].SetActive(i == currentCar);
+
+        if (speedometer != null)
+            speedometer.SetTarget(currentCar);
     }
 }
