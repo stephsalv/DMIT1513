@@ -9,10 +9,10 @@ public class ProfileData
     public int vehicleID;
     public float bestTime;
 
-    public ProfileData(Profile profile)
+    public ProfileData(string name, int vehicleID, float bestTime)
     {
-        profileName = profile.profileName;
-        vehicleID = profile.vehicleID;
-        bestTime = profile.bestTime;
+        this.profileName = name;
+        this.vehicleID = vehicleID;
+        this.bestTime = bestTime;
     }
 }
