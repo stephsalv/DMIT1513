@@ -43,7 +43,7 @@ public class CarSelection : MonoBehaviour
         SceneManager.LoadScene(2);
     }
 
-    private void ActivateCar(int index)
+    public void ActivateCar(int index)
     {
         currentCar = index;
 
