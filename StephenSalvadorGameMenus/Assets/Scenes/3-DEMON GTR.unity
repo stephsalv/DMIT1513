@@ -52694,7 +52694,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2897019757181541504
 Transform:
   m_ObjectHideFlags: 0
@@ -60957,7 +60957,7 @@ MonoBehaviour:
   - {fileID: 1677423922963417186}
   currentCar: 0
   inGameplayScene: 1
-  speedometer: {fileID: 0}
+  speedometer: {fileID: 8671451626034674302}
 --- !u!54 &6500812251868636411
 Rigidbody:
   m_ObjectHideFlags: 0

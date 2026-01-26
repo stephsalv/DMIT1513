@@ -12,43 +12,37 @@ public class CarSelection : MonoBehaviour
 
     void Start()
     {
-        int selectedCar = PlayerPrefs.GetInt("SelectedCarID");
-        if (inGameplayScene == true)
+        int selectedCar = PlayerPrefs.GetInt("SelectedCarID", 0);
+
+        if (inGameplayScene)
         {
-            cars[selectedCar].SetActive(true);
-            currentCar = selectedCar;
+            ActivateCar(selectedCar);
         }
     }
+
     public void Next()
     {
         if (currentCar < cars.Length - 1)
         {
-            currentCar += 1;
-            for (int i = 0; i < cars.Length; i++)
-            {
-                cars[i].SetActive(false);
-                cars[currentCar].SetActive(true);
-            }
+            ActivateCar(currentCar + 1);
         }
     }
+
     public void Previous()
     {
         if (currentCar > 0)
         {
-            currentCar -= 1;
-            for (int i = 0; i < cars.Length; i++)
-            {
-                cars[i].SetActive(false);
-                cars[currentCar].SetActive(true);
-            }
+            ActivateCar(currentCar - 1);
         }
     }
+
     public void Select()
     {
         PlayerPrefs.SetInt("SelectedCarID", currentCar);
         PlayerPrefs.Save();
         SceneManager.LoadScene(2);
     }
+
     private void ActivateCar(int index)
     {
         currentCar = index;
