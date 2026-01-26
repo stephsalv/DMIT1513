@@ -340,7 +340,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1858035320}
   m_Direction: 2
   m_Value: 0
-  m_Size: 1
+  m_Size: 0.9999177
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -4933,7 +4933,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.00016774944}
+  m_AnchoredPosition: {x: 0, y: 0.000021039654}
   m_SizeDelta: {x: 0, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!1 &1127628323
@@ -7896,7 +7896,7 @@ MonoBehaviour:
   vehicleNameText: {fileID: 1198764173}
   createFeedbackText: {fileID: 1006123095}
   scrollContent: {fileID: 1108384758}
-  profileButtonPrefab: {fileID: 0}
+  profileButtonPrefab: {fileID: 420097418}
   carSelection: {fileID: 1378299451}
   saveSystem: {fileID: 627506234}
   playerInfoText: {fileID: 1874181191}
