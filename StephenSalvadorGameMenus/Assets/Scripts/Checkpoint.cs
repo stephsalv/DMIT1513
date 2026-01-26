@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityStandardAssets.Vehicles.Car;
 
 public class Checkpoint : MonoBehaviour
 {
@@ -6,23 +7,32 @@ public class Checkpoint : MonoBehaviour
     public Checkpoint[] checkpoints;
     public FinalCheckpoint finalCheckpoint;
 
+    public float speedBoostMultiplier = 1.1f;
+    public float speedBoostDuration = 2f;
+
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (!other.CompareTag("Player")) return;
+
+        Debug.Log($"Player hit checkpoint {index}");
+
+        gameObject.SetActive(false);
+
+        CarController car = other.GetComponent<CarController>();
+        if (car != null)
         {
-            Debug.Log($"Player hit checkpoint {index}");
+            car.ApplySpeedBoost(speedBoostMultiplier, speedBoostDuration);
+        }
 
-            gameObject.SetActive(false);
-
-            if (index == checkpoints.Length - 1)
-            {
-                finalCheckpoint.gameObject.SetActive(true);
-            }
-            else
-            {
-                checkpoints[index + 1].gameObject.SetActive(true);
-            }
+        if (index == checkpoints.Length - 1)
+        {
+            finalCheckpoint.gameObject.SetActive(true);
+        }
+        else
+        {
+            checkpoints[index + 1].gameObject.SetActive(true);
         }
     }
 }
+
 

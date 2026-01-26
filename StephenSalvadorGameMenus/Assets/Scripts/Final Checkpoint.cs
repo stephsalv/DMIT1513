@@ -1,14 +1,13 @@
-using System;
-using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class FinalCheckpoint : MonoBehaviour
 {
     private bool raceFinished = false;
-    public GameObject gameWonPanel;
-    public GameObject gameLostPanel;
+
+    public GameOverUI gameOverUI;
+    public TimerScript timer;
+    public SaveProfile currentProfile;
+    public GhostData currentGhostData;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -17,24 +16,22 @@ public class FinalCheckpoint : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             raceFinished = true;
-            Debug.Log("PLAYER WINS!");
-            ShowGameWon();
+            timer.StopTimer();
+            gameOverUI.ShowGameWon(
+                currentProfile,
+                timer.GetFinalTime(),
+                currentGhostData
+            );
         }
         else if (other.CompareTag("AICar"))
         {
             raceFinished = true;
-            Debug.Log("AI WINS!");
-            ShowGameLost();
+            timer.StopTimer();
+            gameOverUI.ShowGameLost(
+                currentProfile,
+                timer.GetFinalTime(),
+                currentGhostData
+            );
         }
-    }
-
-    private void ShowGameWon()
-    {
-        gameWonPanel.SetActive(true);
-    }
-
-    private void ShowGameLost()
-    {
-        gameLostPanel.SetActive(true);
     }
 }

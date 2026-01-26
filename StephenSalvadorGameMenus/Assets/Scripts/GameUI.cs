@@ -90,7 +90,7 @@ public class GameUI : MonoBehaviour
     private void UpdateVehicleText()
     {
         if (vehicleNameText != null && carSelection != null)
-            vehicleNameText.text = "Vehicle: " + carSelection.cars[carSelection.currentCar].name;
+            vehicleNameText.text = carSelection.cars[carSelection.currentCar].name;
     }
 
     private void PopulateLoadProfiles()
@@ -153,7 +153,10 @@ public class GameUI : MonoBehaviour
         createProfilePanel.SetActive(false);
         loadProfilePanel.SetActive(false);
     }
-
+    public void BackToMainMenu()
+    {
+        ShowMainMenu();
+    }
     private void UpdatePlayerInfoUI()
     {
         if (playerInfoText != null && currentProfile != null)

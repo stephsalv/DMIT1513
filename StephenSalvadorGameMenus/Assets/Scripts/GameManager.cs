@@ -4,13 +4,13 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    public string dataPath { get; private set; }
     public static GameManager instance { get; private set; }
-    public SaveProfile currentProfile;
     public SaveSystem SavingSystem;
+    public SaveProfile currentProfile;
 
-    [SerializeField]
     public List<SaveProfile> profiles;
+
+    public string dataPath => SavingSystem != null ? SavingSystem.filePath : string.Empty;
 
     private void Awake()
     {
@@ -22,17 +22,28 @@ public class GameManager : MonoBehaviour
 
         instance = this;
         DontDestroyOnLoad(gameObject);
-        dataPath = System.IO.Path.Combine(Application.persistentDataPath, "SaveData");
-        System.IO.Directory.CreateDirectory(dataPath);
-        Debug.Log($"Data Path set as {dataPath}");
+
+        if (SavingSystem == null)
+            return;
+
+        if (string.IsNullOrWhiteSpace(SavingSystem.filePath))
+            SavingSystem.filePath = System.IO.Path.Combine(Application.persistentDataPath, "SaveData") + "/";
+
+        if (!System.IO.Directory.Exists(SavingSystem.filePath))
+            System.IO.Directory.CreateDirectory(SavingSystem.filePath);
 
         profiles = SavingSystem.LoadAllSaveData();
     }
+
     public void AddProfile(SaveProfile profile)
     {
+        if (profiles == null)
+            profiles = new List<SaveProfile>();
+
         profiles.Add(profile);
         SavingSystem.CreateSaveData(profile);
     }
+
     public static void MoveScene(int index)
     {
         SceneManager.LoadScene(index);

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 namespace UnityStandardAssets.Vehicles.Car
@@ -24,8 +25,8 @@ namespace UnityStandardAssets.Vehicles.Car
         [SerializeField] private WheelEffects[] m_WheelEffects = new WheelEffects[4];
         [SerializeField] private Vector3 m_CentreOfMassOffset;
         [SerializeField] private float m_MaximumSteerAngle;
-        [Range(0, 1)] [SerializeField] private float m_SteerHelper;
-        [Range(0, 1)] [SerializeField] private float m_TractionControl;
+        [Range(0, 1)][SerializeField] private float m_SteerHelper;
+        [Range(0, 1)][SerializeField] private float m_TractionControl;
         [SerializeField] private float m_FullTorqueOverAllWheels;
         [SerializeField] private float m_ReverseTorque;
         [SerializeField] private float m_MaxHandbrakeTorque;
@@ -49,9 +50,9 @@ namespace UnityStandardAssets.Vehicles.Car
 
         public bool Skidding { get; private set; }
         public float BrakeInput { get; private set; }
-        public float CurrentSteerAngle{ get { return m_SteerAngle; }}
-        public float CurrentSpeed{ get { return m_Rigidbody.linearVelocity.magnitude*2.23693629f; }}
-        public float MaxSpeed{get { return m_Topspeed; }}
+        public float CurrentSteerAngle { get { return m_SteerAngle; } }
+        public float CurrentSpeed { get { return m_Rigidbody.linearVelocity.magnitude * 2.23693629f; } }
+        public float MaxSpeed { get { return m_Topspeed; } }
         public float Revs { get; private set; }
         public float AccelInput { get; private set; }
 
@@ -66,7 +67,7 @@ namespace UnityStandardAssets.Vehicles.Car
 
             m_MaxHandbrakeTorque = float.MaxValue;
 
-            m_CurrentTorque = m_FullTorqueOverAllWheels - (m_TractionControl*m_FullTorqueOverAllWheels);
+            m_CurrentTorque = m_FullTorqueOverAllWheels - (m_TractionControl * m_FullTorqueOverAllWheels);
         }
         private void Awake()
         {
@@ -76,9 +77,9 @@ namespace UnityStandardAssets.Vehicles.Car
 
         private void GearChanging()
         {
-            float f = Mathf.Abs(CurrentSpeed/MaxSpeed);
-            float upgearlimit = (1/(float) NoOfGears)*(m_GearNum + 1);
-            float downgearlimit = (1/(float) NoOfGears)*m_GearNum;
+            float f = Mathf.Abs(CurrentSpeed / MaxSpeed);
+            float upgearlimit = (1 / (float)NoOfGears) * (m_GearNum + 1);
+            float downgearlimit = (1 / (float)NoOfGears) * m_GearNum;
 
             if (m_GearNum > 0 && f < downgearlimit)
             {
@@ -92,26 +93,26 @@ namespace UnityStandardAssets.Vehicles.Car
         }
         private static float CurveFactor(float factor)
         {
-            return 1 - (1 - factor)*(1 - factor);
+            return 1 - (1 - factor) * (1 - factor);
         }
         private static float ULerp(float from, float to, float value)
         {
-            return (1.0f - value)*from + value*to;
+            return (1.0f - value) * from + value * to;
         }
 
 
         private void CalculateGearFactor()
         {
-            float f = (1/(float) NoOfGears);
-            var targetGearFactor = Mathf.InverseLerp(f*m_GearNum, f*(m_GearNum + 1), Mathf.Abs(CurrentSpeed/MaxSpeed));
-            m_GearFactor = Mathf.Lerp(m_GearFactor, targetGearFactor, Time.deltaTime*5f);
+            float f = (1 / (float)NoOfGears);
+            var targetGearFactor = Mathf.InverseLerp(f * m_GearNum, f * (m_GearNum + 1), Mathf.Abs(CurrentSpeed / MaxSpeed));
+            m_GearFactor = Mathf.Lerp(m_GearFactor, targetGearFactor, Time.deltaTime * 5f);
         }
 
 
         private void CalculateRevs()
         {
             CalculateGearFactor();
-            var gearNumFactor = m_GearNum/(float) NoOfGears;
+            var gearNumFactor = m_GearNum / (float)NoOfGears;
             var revsRangeMin = ULerp(0f, m_RevRangeBoundary, CurveFactor(gearNumFactor));
             var revsRangeMax = ULerp(m_RevRangeBoundary, 1f, gearNumFactor);
             Revs = ULerp(revsRangeMin, revsRangeMax, m_GearFactor);
@@ -131,10 +132,10 @@ namespace UnityStandardAssets.Vehicles.Car
 
             steering = Mathf.Clamp(steering, -1, 1);
             AccelInput = accel = Mathf.Clamp(accel, 0, 1);
-            BrakeInput = footbrake = -1*Mathf.Clamp(footbrake, -1, 0);
+            BrakeInput = footbrake = -1 * Mathf.Clamp(footbrake, -1, 0);
             handbrake = Mathf.Clamp(handbrake, 0, 1);
 
-            m_SteerAngle = steering*m_MaximumSteerAngle;
+            m_SteerAngle = steering * m_MaximumSteerAngle;
             m_WheelColliders[0].steerAngle = m_SteerAngle;
             m_WheelColliders[1].steerAngle = m_SteerAngle;
 
@@ -144,7 +145,7 @@ namespace UnityStandardAssets.Vehicles.Car
 
             if (handbrake > 0f)
             {
-                var hbTorque = handbrake*m_MaxHandbrakeTorque;
+                var hbTorque = handbrake * m_MaxHandbrakeTorque;
                 m_WheelColliders[2].brakeTorque = hbTorque;
                 m_WheelColliders[3].brakeTorque = hbTorque;
             }
@@ -168,13 +169,13 @@ namespace UnityStandardAssets.Vehicles.Car
 
                     speed *= 2.23693629f;
                     if (speed > m_Topspeed)
-                        m_Rigidbody.linearVelocity = (m_Topspeed/2.23693629f) * m_Rigidbody.linearVelocity.normalized;
+                        m_Rigidbody.linearVelocity = (m_Topspeed / 2.23693629f) * m_Rigidbody.linearVelocity.normalized;
                     break;
 
                 case SpeedType.KPH:
                     speed *= 3.6f;
-                    if (speed > m_Topspeed)
-                        m_Rigidbody.linearVelocity = (m_Topspeed/3.6f) * m_Rigidbody.linearVelocity.normalized;
+                    if (speed > m_Topspeed * speedMultiplier)
+                        m_Rigidbody.linearVelocity = (m_Topspeed * speedMultiplier / speed) * m_Rigidbody.linearVelocity;
                     break;
             }
         }
@@ -210,12 +211,12 @@ namespace UnityStandardAssets.Vehicles.Car
             {
                 if (CurrentSpeed > 5 && Vector3.Angle(transform.forward, m_Rigidbody.linearVelocity) < 50f)
                 {
-                    m_WheelColliders[i].brakeTorque = m_BrakeTorque*footbrake;
+                    m_WheelColliders[i].brakeTorque = m_BrakeTorque * footbrake;
                 }
                 else if (footbrake > 0)
                 {
                     m_WheelColliders[i].brakeTorque = 0f;
-                    m_WheelColliders[i].motorTorque = -m_ReverseTorque*footbrake;
+                    m_WheelColliders[i].motorTorque = -m_ReverseTorque * footbrake;
                 }
             }
         }
@@ -242,7 +243,7 @@ namespace UnityStandardAssets.Vehicles.Car
 
         private void AddDownForce()
         {
-            m_WheelColliders[0].attachedRigidbody.AddForce(-transform.up*m_Downforce*
+            m_WheelColliders[0].attachedRigidbody.AddForce(-transform.up * m_Downforce *
                                                          m_WheelColliders[0].attachedRigidbody.linearVelocity.magnitude);
         }
 
@@ -329,6 +330,24 @@ namespace UnityStandardAssets.Vehicles.Car
                 }
             }
             return false;
+        }
+        // Add temporary speed boost
+        private float speedMultiplier = 1f;
+        private Coroutine boostCoroutine;
+
+        public void ApplySpeedBoost(float multiplier, float duration)
+        {
+            if (boostCoroutine != null)
+                StopCoroutine(boostCoroutine);
+
+            boostCoroutine = StartCoroutine(SpeedBoostRoutine(multiplier, duration));
+        }
+
+        private IEnumerator SpeedBoostRoutine(float multiplier, float duration)
+        {
+            speedMultiplier = multiplier;
+            yield return new WaitForSeconds(duration);
+            speedMultiplier = 1f;
         }
     }
 }
