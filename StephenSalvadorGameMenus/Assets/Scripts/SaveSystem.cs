@@ -46,7 +46,6 @@ public class SaveSystem : MonoBehaviour
             SaveProfile profile = JsonUtility.FromJson<SaveProfile>(json);
             list.Add(profile);
         }
-
         return list;
     }
 

@@ -102,16 +102,18 @@ public class GameUI : MonoBehaviour
 
         foreach (var profile in allProfiles)
         {
+            SaveProfile capturedProfile = profile;
+
             GameObject buttonObj = Instantiate(profileButtonPrefab, scrollContent);
             TextMeshProUGUI buttonText = buttonObj.GetComponentInChildren<TextMeshProUGUI>();
-            buttonText.text = profile.profileName;
+            buttonText.text = capturedProfile.profileName;
 
             Button btn = buttonObj.GetComponent<Button>();
-            btn.onClick.AddListener(() => LoadProfile(profile));
+            btn.onClick.AddListener(() => LoadProfile(capturedProfile));
 
-            Button deleteBtn = buttonObj.transform.Find("DeleteButton")?.GetComponent<Button>();
+            Button deleteBtn = buttonObj.GetComponent<Button>();
             if (deleteBtn != null)
-                deleteBtn.onClick.AddListener(() => DeleteProfile(profile));
+                deleteBtn.onClick.AddListener(() => DeleteProfile(capturedProfile));
         }
     }
 
@@ -132,8 +134,6 @@ public class GameUI : MonoBehaviour
         currentProfile = profile;
         UpdatePlayerInfoUI();
         CloseMenus();
-
-        Debug.Log($"Loaded profile: {profile.profileName}");
     }
 
     private void DeleteProfile(SaveProfile profile)
@@ -144,7 +144,6 @@ public class GameUI : MonoBehaviour
             File.Delete(file);
 
         PopulateLoadProfiles();
-        Debug.Log($"Deleted profile: {profile.profileName}");
     }
 
     private void CloseMenus()
@@ -153,10 +152,12 @@ public class GameUI : MonoBehaviour
         createProfilePanel.SetActive(false);
         loadProfilePanel.SetActive(false);
     }
+
     public void BackToMainMenu()
     {
         ShowMainMenu();
     }
+
     private void UpdatePlayerInfoUI()
     {
         if (playerInfoText != null && currentProfile != null)
