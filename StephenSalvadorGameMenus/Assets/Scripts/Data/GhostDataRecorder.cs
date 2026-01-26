@@ -4,12 +4,12 @@ public class GhostDataRecorder : MonoBehaviour
 {
     GhostData ghostData;
     bool isRecording;
+    public float lapTime { get; private set; }
 
     private void Start()
     {
         StartRecording();
     }
-
     public void StartRecording()
     {
         isRecording = true;
@@ -23,17 +23,7 @@ public class GhostDataRecorder : MonoBehaviour
     {
         if (!isRecording) return;
 
-        Vector3 position = transform.position;
-        Vector3 rotation = transform.eulerAngles;
-        float time = Time.deltaTime;
-
-        GhostDataFrame frame = new GhostDataFrame
-        (
-            position,
-            rotation,
-            Time.timeSinceLevelLoad
-        );
-
-        ghostData.ghostDataFrames.Add(frame);
+        ghostData.AddFrame(transform.position, transform.eulerAngles);
+        lapTime += Time.fixedDeltaTime;
     }
 }

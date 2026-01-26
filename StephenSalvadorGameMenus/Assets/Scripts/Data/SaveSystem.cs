@@ -1,80 +1,66 @@
+using System;
+using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
 public class SaveSystem : MonoBehaviour
 {
-    public Profile profile;
-    public string filePath;
-
-    public void SaveData()
+    public void CreateSaveData(SaveProfile saveProfile)
     {
-        if (profile == null)
-        {
-            Debug.LogError("Save failed: Profile is null.");
-        }
+        var profileName = saveProfile.profileName;
+        string file = Path.Combine(GameManager.instance.dataPath, saveProfile.profileName + ".json");
 
-        if (string.IsNullOrEmpty(profile.profileName))
-        {
-            Debug.LogError("Save failed: Profile name is empty.");
-        }
+        string json = JsonUtility.ToJson(saveProfile, true);
 
-        string file = Path.Combine(filePath, profile.profileName + ".json");
-
-        ProfileData newData = new ProfileData(
-            profile.profileName,
-            profile.vehicleID,
-            profile.bestTime
-        );
+        File.WriteAllText(file, json);
+        Debug.Log("Saving to file");
+    }
+    public void LoadSaveData(SaveProfile saveProfile)
+    {
+        var profileName = saveProfile.profileName;
+        string file = Path.Combine(GameManager.instance.dataPath, saveProfile.profileName + ".json");
 
         if (File.Exists(file))
         {
-            string oldJson = File.ReadAllText(file);
-            ProfileData existingData = JsonUtility.FromJson<ProfileData>(oldJson);
+            string json = File.ReadAllText(file);
 
-            if (existingData.bestTime > 0 &&
-                (newData.bestTime <= 0 || existingData.bestTime < newData.bestTime))
-            {
-                newData.bestTime = existingData.bestTime;
-            }
+            saveProfile = JsonUtility.FromJson<SaveProfile>(json);
         }
-
-        string json = JsonUtility.ToJson(newData, true);
-        File.WriteAllText(file, json);
-
-        Debug.Log($"Profile saved/overwritten: {file}");
-    }
-
-    public void LoadData(string profileName)
-    {
-        string file = Path.Combine(filePath, profileName + ".json");
-
-        if (!File.Exists(file))
+        else
         {
-            Debug.LogError($"Load failed: {file}");
+            Debug.LogError("Save file not found");
         }
-
-        string json = File.ReadAllText(file);
-        ProfileData data = JsonUtility.FromJson<ProfileData>(json);
-
-        profile.profileName = data.profileName;
-        profile.vehicleID = data.vehicleID;
-        profile.bestTime = data.bestTime;
     }
-    public void CreateProfile(Profile profile)
+    public List<SaveProfile> LoadAllSaveData()
     {
-        //if (profile == null || string.IsNullOrEmpty(profile.profileName)) ;
+        List<SaveProfile> list = new();
 
-        //string file = Path.Combine(filePath, profile.profileName + ".json");
+        if (!Directory.Exists(GameManager.instance.dataPath))
+            return list;
 
-        //if (File.Exists(file))
+        string[] files = Directory.GetFiles(GameManager.instance.dataPath, "files.json");
 
-        //ProfileData data = new ProfileData(
-        //    profile.profileName,
-        //    profile.vehicleID,
-        //    profile.bestTime
-        //);
-
-        //string json = JsonUtility.ToJson(data, true);
-        //File.WriteAllText(file, json);
+        foreach (string file in files)
+        {
+            string json = File.ReadAllText(file);
+            SaveProfile profile = JsonUtility.FromJson<SaveProfile>(json);
+            list.Add(profile);
+        }
+        return list;
     }
 }
+[Serializable]
+public class SaveProfile
+{
+    public string profileName;
+    public float bestTime;
+    public GhostData ghostData;
+    public string vehicleName;
+
+    public SaveProfile(string profileName, string vehicleName)
+    {
+        this.profileName = profileName;
+        this.vehicleName = vehicleName;
+    }
+}
+

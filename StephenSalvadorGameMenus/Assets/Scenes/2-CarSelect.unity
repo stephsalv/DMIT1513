@@ -2441,9 +2441,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 627506232}
-  - component: {fileID: 627506231}
-  - component: {fileID: 627506233}
   - component: {fileID: 627506234}
+  - component: {fileID: 627506233}
   m_Layer: 0
   m_Name: Scripts
   m_TagString: Untagged
@@ -2451,25 +2450,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &627506231
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 627506230}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4529b5fbf5b006344a2e4e51795dd6e2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ProfileUI
-  nameInput: {fileID: 1630415724}
-  createButton: {fileID: 0}
-  messageText: {fileID: 1006123095}
-  profile: {fileID: 627506233}
-  createProfilePanel: {fileID: 0}
-  messageDisplayTime: 2
-  profileInfoText: {fileID: 1874181191}
 --- !u!4 &627506232
 Transform:
   m_ObjectHideFlags: 0
@@ -2494,13 +2474,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 627506230}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8004e5ec315f16f4499b8c06beff3192, type: 3}
+  m_Script: {fileID: 11500000, guid: 64360295c8fa0a04d831ddf661af02c8, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Profile
-  profileName: 
-  vehicleID: 0
-  bestTime: 0
-  ghostData: []
+  m_EditorClassIdentifier: Assembly-CSharp::GameManager
+  currentProfile:
+    profileName: 
+    bestTime: 0
+    ghostData:
+      ghostDataFrames: []
+      bestTime: 0
+    vehicleName: 
+  SavingSystem: {fileID: 627506234}
+  profiles: []
 --- !u!114 &627506234
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2513,8 +2498,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1ccdb519a17a67479a2b75a260ca84c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SaveSystem
-  profile: {fileID: 0}
-  filePath: Assets/Resources
 --- !u!1 &655707428
 GameObject:
   m_ObjectHideFlags: 0
@@ -2598,9 +2581,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 627506234}
+      - m_Target: {fileID: 627506230}
         m_TargetAssemblyTypeName: SaveSystem, Assembly-CSharp
-        m_MethodName: SaveData
+        m_MethodName: 
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2810,7 +2793,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 627506234}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: SaveSystem, Assembly-CSharp
         m_MethodName: LoadData
         m_Mode: 5
@@ -3609,7 +3592,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 627506234}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: SaveSystem, Assembly-CSharp
         m_MethodName: SaveData
         m_Mode: 1
@@ -4017,7 +4000,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 627506234}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: SaveSystem, Assembly-CSharp
         m_MethodName: LoadData
         m_Mode: 5
@@ -8270,7 +8253,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 627506234}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: SaveSystem, Assembly-CSharp
         m_MethodName: LoadData
         m_Mode: 5
