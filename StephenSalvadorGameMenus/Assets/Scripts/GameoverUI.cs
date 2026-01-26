@@ -1,18 +1,23 @@
+using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityStandardAssets.Vehicles.Car;
 
 public class GameOverUI : MonoBehaviour
 {
     public SaveSystem saveSystem;
-    public GhostDataRecorder ghostRecorder;
+    public CarAudio[] playerCarAudio;
 
     public GameObject gameWonPanel;
     public GameObject gameLostPanel;
 
-    float lastRaceTime;
-    GhostData lastGhostData;
+    public TextMeshProUGUI feedbackText;
+    public TextMeshProUGUI resultsText;
 
-    SaveProfile currentProfile;
+    private SaveProfile currentProfile;
+    private float lastRaceTime;
+    private GhostData lastGhostData;
 
     public void ShowGameWon(SaveProfile profile, float raceTime, GhostData ghostData)
     {
@@ -21,7 +26,16 @@ public class GameOverUI : MonoBehaviour
         lastGhostData = ghostData;
 
         Time.timeScale = 0f;
+        MuteAllCarAudio();
+
+        resultsText.text =
+            $"Profile: {profile.profileName}\n" +
+            $"Previous Best: {profile.bestTime:F2}\n" +
+            $"New Time: {raceTime:F2}";
+
+        feedbackText.text = "Would you like to save and overwrite your profile?";
         gameWonPanel.SetActive(true);
+        gameLostPanel.SetActive(false);
     }
 
     public void ShowGameLost(SaveProfile profile, float raceTime, GhostData ghostData)
@@ -31,27 +45,63 @@ public class GameOverUI : MonoBehaviour
         lastGhostData = ghostData;
 
         Time.timeScale = 0f;
+        MuteAllCarAudio();
+
+        resultsText.text =
+            $"Profile: {profile.profileName}\n" +
+            $"Best Time: {profile.bestTime:F2}\n" +
+            $"Race Time: {raceTime:F2}";
+
+        feedbackText.text = "You lost! Try again?";
         gameLostPanel.SetActive(true);
+        gameWonPanel.SetActive(false);
     }
 
-    public void SaveProfile()
+    private void MuteAllCarAudio()
     {
-        if (currentProfile == null)
+        foreach (var carAudio in playerCarAudio)
         {
-            Debug.LogWarning("No profile loaded");
-            return;
+            if (carAudio != null)
+                carAudio.MuteAudio();
         }
+    }
 
-        float runTime = ghostRecorder.lapTime;
-
-        if (currentProfile.bestTime == 0 || runTime < currentProfile.bestTime)
+    private void UnmuteAllCarAudio()
+    {
+        foreach (var carAudio in playerCarAudio)
         {
-            currentProfile.bestTime = runTime;
-            currentProfile.ghostData = ghostRecorder.GetGhostData();
+            if (carAudio != null)
+                carAudio.UnmuteAudio();
+        }
+    }
+
+    public void SaveAndOverwrite()
+    {
+        if (currentProfile == null) return;
+
+        if (currentProfile.bestTime == 0f || lastRaceTime < currentProfile.bestTime)
+        {
+            currentProfile.bestTime = lastRaceTime;
+            currentProfile.ghostData = lastGhostData;
         }
 
         saveSystem.CreateSaveData(currentProfile);
-        Debug.Log($"Saved profile: {currentProfile.profileName}");
+        feedbackText.text = "Saved successfully!";
+        StartCoroutine(AutoReturnToMenu(2f));
+    }
+
+    public void DontSave()
+    {
+        feedbackText.text = "Progress not saved.";
+        StartCoroutine(AutoReturnToMenu(2f));
+    }
+
+    private IEnumerator AutoReturnToMenu(float delay)
+    {
+        yield return new WaitForSecondsRealtime(delay);
+        Time.timeScale = 1f;
+        UnmuteAllCarAudio();
+        SceneManager.LoadScene(0);
     }
 
     public void ReplayRace()

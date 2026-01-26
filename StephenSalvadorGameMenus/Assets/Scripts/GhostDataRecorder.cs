@@ -2,14 +2,14 @@ using UnityEngine;
 
 public class GhostDataRecorder : MonoBehaviour
 {
-    public GhostData ghostData { get; private set; }
+    GhostData ghostData;
     public float lapTime { get; private set; }
 
     bool isRecording;
 
-    private void Awake()
+    private void Start()
     {
-        ghostData = new GhostData();
+        StartRecording();
     }
 
     public void StartRecording()

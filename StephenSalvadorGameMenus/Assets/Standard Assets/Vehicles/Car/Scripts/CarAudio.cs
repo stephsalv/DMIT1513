@@ -180,5 +180,22 @@ namespace UnityStandardAssets.Vehicles.Car
         {
             return (1.0f - value)*from + value*to;
         }
+        public void MuteAudio()
+        {
+            AudioSource[] sources = GetComponents<AudioSource>();
+            foreach (var src in sources)
+            {
+                src.enabled = false;
+            }
+        }
+        public void UnmuteAudio()
+        {
+            AudioSource[] sources = GetComponents<AudioSource>();
+            foreach (var src in sources)
+            {
+                src.enabled = true;
+            }
+        }
+
     }
 }

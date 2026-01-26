@@ -6,8 +6,14 @@ public class FinalCheckpoint : MonoBehaviour
 
     public GameOverUI gameOverUI;
     public TimerScript timer;
-    public SaveProfile currentProfile;
-    public GhostData currentGhostData;
+    public GhostDataRecorder ghostRecorder;
+
+    private SaveProfile currentProfile;
+
+    private void Start()
+    {
+        currentProfile = GameManager.instance.currentProfile;
+    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -16,21 +22,29 @@ public class FinalCheckpoint : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             raceFinished = true;
+            Debug.Log("Player passed the final checkpoint");
+
             timer.StopTimer();
+            ghostRecorder.StopRecording();
+
             gameOverUI.ShowGameWon(
                 currentProfile,
                 timer.GetFinalTime(),
-                currentGhostData
+                ghostRecorder.GetGhostData()
             );
         }
-        else if (other.CompareTag("AICar"))
+        if (other.CompareTag("AICar"))
         {
+            Debug.Log("AICar passed the final checkpoint");
             raceFinished = true;
+
             timer.StopTimer();
+            ghostRecorder.StopRecording();
+
             gameOverUI.ShowGameLost(
                 currentProfile,
                 timer.GetFinalTime(),
-                currentGhostData
+                ghostRecorder.GetGhostData()
             );
         }
     }

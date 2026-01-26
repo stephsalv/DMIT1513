@@ -13,16 +13,16 @@ public class GameUI : MonoBehaviour
     public TMP_InputField profileNameInput;
     public TextMeshProUGUI vehicleNameText;
     public TextMeshProUGUI createFeedbackText;
+    public TextMeshProUGUI deleteFeedbackText;
 
-    public Transform scrollContent;
-    public GameObject profileButtonPrefab;
-
+    public TMP_Dropdown profileDropdown;
     public CarSelection carSelection;
     public SaveSystem saveSystem;
 
     public TextMeshProUGUI playerInfoText;
 
-    private SaveProfile currentProfile;
+    private List<SaveProfile> savedProfiles = new();
+    private bool deleteConfirm;
 
     private void Start()
     {
@@ -80,7 +80,7 @@ public class GameUI : MonoBehaviour
         SaveProfile newProfile = new SaveProfile(profileName, carSelection.cars[carSelection.currentCar].name);
         saveSystem.CreateSaveData(newProfile);
 
-        currentProfile = newProfile;
+        GameManager.instance.currentProfile = newProfile;
         UpdatePlayerInfoUI();
 
         createFeedbackText.text = "Profile created successfully!";
@@ -95,30 +95,41 @@ public class GameUI : MonoBehaviour
 
     private void PopulateLoadProfiles()
     {
-        foreach (Transform child in scrollContent)
-            Destroy(child.gameObject);
+        profileDropdown.ClearOptions();
+        savedProfiles = saveSystem.LoadAllSaveData();
 
-        List<SaveProfile> allProfiles = saveSystem.LoadAllSaveData();
+        List<string> options = new();
+        foreach (var profile in savedProfiles)
+            options.Add(profile.profileName);
 
-        foreach (var profile in allProfiles)
-        {
-            SaveProfile capturedProfile = profile;
-
-            GameObject buttonObj = Instantiate(profileButtonPrefab, scrollContent);
-            TextMeshProUGUI buttonText = buttonObj.GetComponentInChildren<TextMeshProUGUI>();
-            buttonText.text = capturedProfile.profileName;
-
-            Button btn = buttonObj.GetComponent<Button>();
-            btn.onClick.AddListener(() => LoadProfile(capturedProfile));
-
-            Button deleteBtn = buttonObj.GetComponent<Button>();
-            if (deleteBtn != null)
-                deleteBtn.onClick.AddListener(() => DeleteProfile(capturedProfile));
-        }
+        profileDropdown.AddOptions(options);
+        deleteFeedbackText.text = "";
     }
 
-    private void LoadProfile(SaveProfile profile)
+    public void OnDropdownChanged()
     {
+        deleteConfirm = false;
+        deleteFeedbackText.text = "";
+        OnProfileSelected();
+    }
+
+    private void OnProfileSelected()
+    {
+        int index = profileDropdown.value;
+        if (index < 0 || index >= savedProfiles.Count) return;
+
+        GameManager.instance.currentProfile = savedProfiles[index];
+        UpdatePlayerInfoUI();
+    }
+
+    public void LoadSelectedProfile()
+    {
+        int index = profileDropdown.value;
+        if (index < 0 || index >= savedProfiles.Count) return;
+
+        GameManager.instance.currentProfile = savedProfiles[index];
+
+        SaveProfile profile = GameManager.instance.currentProfile;
         for (int i = 0; i < carSelection.cars.Length; i++)
         {
             if (carSelection.cars[i].name == profile.vehicleName)
@@ -128,20 +139,30 @@ public class GameUI : MonoBehaviour
             }
         }
 
-        PlayerPrefs.SetInt("SelectedCarID", carSelection.currentCar);
-        PlayerPrefs.Save();
-
-        currentProfile = profile;
         UpdatePlayerInfoUI();
-        CloseMenus();
+        deleteFeedbackText.text = $"Loaded {profile.profileName}";
     }
 
-    private void DeleteProfile(SaveProfile profile)
+    public void DeleteSelectedProfile()
     {
-        string file = Path.Combine(GameManager.instance.dataPath, profile.profileName + ".json");
+        int index = profileDropdown.value;
+        if (index < 0 || index >= savedProfiles.Count) return;
 
+        SaveProfile profile = savedProfiles[index];
+
+        if (!deleteConfirm)
+        {
+            deleteFeedbackText.text = $"Delete {profile.profileName}? Press delete again to confirm.";
+            deleteConfirm = true;
+            return;
+        }
+
+        string file = Path.Combine(saveSystem.filePath, profile.profileName + ".json");
         if (File.Exists(file))
             File.Delete(file);
+
+        deleteConfirm = false;
+        deleteFeedbackText.text = $"{profile.profileName} deleted";
 
         PopulateLoadProfiles();
     }
@@ -160,12 +181,13 @@ public class GameUI : MonoBehaviour
 
     private void UpdatePlayerInfoUI()
     {
-        if (playerInfoText != null && currentProfile != null)
+        SaveProfile profile = GameManager.instance.currentProfile;
+
+        if (playerInfoText != null && profile != null)
         {
             playerInfoText.text =
-                $"Profile: {currentProfile.profileName}\n" +
-                $"Vehicle: {currentProfile.vehicleName}\n" +
-                $"Best Time: {currentProfile.bestTime:F2}";
+                $"Profile: {profile.profileName}\n" +
+                $"Vehicle: {profile.vehicleName}";
         }
         else if (playerInfoText != null)
         {
