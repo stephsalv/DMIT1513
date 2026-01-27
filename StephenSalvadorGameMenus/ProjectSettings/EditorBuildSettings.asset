@@ -14,8 +14,5 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/3-DEMON GTR.unity
     guid: 3561a2c8b32e45640a4dcbd7ecbbcfcd
-  - enabled: 0
-    path: Assets/Scenes/6-MapDefault.unity
-    guid: b3b87f0b13a808b47b42576df6cf148e
   m_configObjects: {}
   m_UseUCBPForAssetBundles: 0

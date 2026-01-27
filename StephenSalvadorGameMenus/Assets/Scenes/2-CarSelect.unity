@@ -7743,6 +7743,8 @@ MonoBehaviour:
   pauseButton: {fileID: 701239947}
   playButton: {fileID: 1525919742}
   exitButton: {fileID: 1525919742}
+  playerCarAudio:
+  - {fileID: 0}
 --- !u!4 &1566387431
 Transform:
   m_ObjectHideFlags: 0

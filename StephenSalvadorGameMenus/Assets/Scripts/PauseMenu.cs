@@ -1,13 +1,14 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using UnityStandardAssets.Vehicles.Car;
 
 
 public class PauseMenu : MonoBehaviour
 {
     [SerializeField] GameObject pauseMenu, gameplayUI, pauseButton, playButton, exitButton;
     private bool isPaused = false;
-
+    public CarAudio[] playerCarAudio;
 
     void Start()
     {
@@ -50,16 +51,36 @@ public class PauseMenu : MonoBehaviour
     public void Pause()
     {
         Time.timeScale = 0f;
+        MuteAllCarAudio();
         pauseMenu.SetActive(true);
         gameplayUI.SetActive(false); // Hide everything else
         isPaused = true;
+
     }
 
     public void Resume()
     {
         Time.timeScale = 1f;
+        UnmuteAllCarAudio();
         pauseMenu.SetActive(false);
         gameplayUI.SetActive(true); // Show gameplay UI again
         isPaused = false;
+    }
+    private void MuteAllCarAudio()
+    {
+        foreach (var carAudio in playerCarAudio)
+        {
+            if (carAudio != null)
+                carAudio.MuteAudio();
+        }
+    }
+
+    private void UnmuteAllCarAudio()
+    {
+        foreach (var carAudio in playerCarAudio)
+        {
+            if (carAudio != null)
+                carAudio.UnmuteAudio();
+        }
     }
 }
