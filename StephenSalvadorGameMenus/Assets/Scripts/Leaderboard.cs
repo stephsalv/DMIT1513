@@ -32,7 +32,7 @@ public class Leaderboard : MonoBehaviour
             else
             {
                 placementTexts[i].text =
-                    $"{i + 1}. ---\n---\n--.--";
+                    $"{i + 1}. ----------";
             }
         }
     }

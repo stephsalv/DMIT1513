@@ -2,11 +2,10 @@ using UnityEngine;
 
 public class FinalCheckpoint : MonoBehaviour
 {
-    private bool raceFinished = false;
+    private bool raceFinished;
 
     public GameOverUI gameOverUI;
     public TimerScript timer;
-    public GhostDataRecorder ghostRecorder;
 
     private SaveProfile currentProfile;
 
@@ -19,32 +18,31 @@ public class FinalCheckpoint : MonoBehaviour
     {
         if (raceFinished) return;
 
+        GhostDataRecorder recorder = other.GetComponent<GhostDataRecorder>();
+        if (recorder == null) return;
+
+        raceFinished = true;
+        timer.StopTimer();
+        recorder.StopRecording();
+
         if (other.CompareTag("Player"))
         {
-            raceFinished = true;
-            Debug.Log("Player passed the final checkpoint");
-
-            timer.StopTimer();
-            ghostRecorder.StopRecording();
+            Debug.Log("Player passed final checkpoint");
 
             gameOverUI.ShowGameWon(
                 currentProfile,
                 timer.GetFinalTime(),
-                ghostRecorder.GetGhostData()
+                recorder.GetGhostData()
             );
         }
-        if (other.CompareTag("AICar"))
+        else if (other.CompareTag("AICar"))
         {
-            Debug.Log("AICar passed the final checkpoint");
-            raceFinished = true;
-
-            timer.StopTimer();
-            ghostRecorder.StopRecording();
+            Debug.Log("AI Car passed final checkpoint");
 
             gameOverUI.ShowGameLost(
                 currentProfile,
                 timer.GetFinalTime(),
-                ghostRecorder.GetGhostData()
+                recorder.GetGhostData()
             );
         }
     }

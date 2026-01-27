@@ -78,6 +78,5 @@ public class SaveProfile
         this.profileName = profileName;
         this.vehicleName = vehicleName;
         bestTime = 0f;
-        ghostData = null;
     }
 }

@@ -3,7 +3,6 @@ using UnityEngine;
 public class GhostPlayer : MonoBehaviour
 {
     public GhostData ghostData;
-
     int frameIndex;
 
     void FixedUpdate()
@@ -17,5 +16,17 @@ public class GhostPlayer : MonoBehaviour
         transform.rotation = Quaternion.Euler(frame.rotation);
 
         frameIndex++;
+    }
+    void Awake()
+    {
+        if (GameManager.instance.currentProfile.ghostData != null)
+        {
+            ghostData = GameManager.instance.currentProfile.ghostData;
+            this.gameObject.SetActive(true);
+        }
+        else
+        {
+            this.gameObject.SetActive(false);
+        }
     }
 }
