@@ -88,6 +88,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &5012621168369631589
 GameObject:
@@ -178,6 +179,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!65 &7699211554355866382
 BoxCollider:
@@ -210,6 +212,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6278275479165420742}
   - component: {fileID: 4622384024255636001}
+  - component: {fileID: -958849294844678099}
   m_Layer: 0
   m_Name: GrenadeLauncher
   m_TagString: Untagged
@@ -248,8 +251,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de9ac0c6901749447a405f9d840d421c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Weapon
+  fireRate: 0.5
+  velocity: 20
   barrelEnd: {fileID: 5885855903655644429}
   projectile: {fileID: 3151874379457695655, guid: c944a1295ec5b8d4a975227256876b98, type: 3}
+--- !u!114 &-958849294844678099
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5069921670690585112}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5174ab49d0f9df3448f5335f712f7ace, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WeaponPickup
+  weapon: {fileID: 5069921670690585112}
 --- !u!1 &5885855903655644429
 GameObject:
   m_ObjectHideFlags: 0
@@ -370,6 +388,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!136 &7153883140394827520
 CapsuleCollider:

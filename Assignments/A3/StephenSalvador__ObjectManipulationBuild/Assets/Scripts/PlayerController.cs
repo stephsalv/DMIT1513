@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+
 public class PlayerController : MonoBehaviour
 {
     [Header("Input Actions")]
@@ -8,61 +10,82 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private InputAction fireAction;
     [SerializeField] private InputAction jumpAction;
 
-    [Header("Movement Settings")]
+    [Header("Movement")]
     [SerializeField] private float movementSpeed = 8f;
     [SerializeField] private float rotationSpeed = 80f;
+    [SerializeField] private float jumpForce = 5f;
+    [SerializeField] private float gravity = -9.81f;
+    [SerializeField] private float groundHeight = 0f;
 
-
-    [Header("References")]
+    [Header("Cameras")]
     [SerializeField] private GameObject weaponPivot;
     [SerializeField] private GameObject firstPerson;
     [SerializeField] private GameObject thirdPerson;
     [SerializeField] private GameObject playerCam;
     [SerializeField] private GameObject sideCam;
 
-
-    public static bool dialogue = false;
-    private Vector2 moveValue;
-    private Vector2 rotateValue;
-    private bool firstPersonPerspective = true;
-    private Vector3 angles;
-
-    [SerializeField] private float jumpForce = 5f;
-    [SerializeField] private float gravity = -9.81f;
-    [SerializeField] private float groundHeight = 0f;
-
     [Header("Weapons")]
-    [SerializeField] private GameObject weapon1;
-    [SerializeField] private GameObject weapon2;
-    private int activeWeaponIndex = 1;
+    [SerializeField] private List<WeaponData> weapons = new List<WeaponData>();
+    [SerializeField] private GameObject weaponPickupPrefab;
 
+    private int activeWeaponIndex = 0;
+    private GameObject currentWeaponInstance;
     private float verticalVelocity = 0f;
     private bool isGrounded = true;
+    private bool firstPersonPerspective = true;
+    private Vector2 moveValue;
+    private Vector2 rotateValue;
+
+    public static bool dialogue = false;
 
     void Start()
     {
         playerCam.transform.localPosition = firstPerson.transform.localPosition;
+        EquipWeapon(activeWeaponIndex);
     }
-    // Update is called once per frame
+
     void Update()
+    {
+        HandleCursor();
+
+        if (dialogue) { SetDialogueCamera(true); return; }
+        else { SetDialogueCamera(false); }
+
+        HandleCameraSwitch();
+        HandleMovementInput();
+        HandleRotation();
+        HandleJumpAndGravity();
+        HandleFire();
+        HandleWeaponSwap();
+        HandleWeaponDrop();
+    }
+
+    private void FixedUpdate()
+    {
+        if (!dialogue)
+        {
+            Vector3 move = new Vector3(moveValue.x, 0, moveValue.y) * movementSpeed * Time.fixedDeltaTime;
+            transform.Translate(move, Space.Self);
+        }
+    }
+
+    private void HandleCursor()
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+    }
 
-        if (dialogue)
-        {
-            // Activate dialogue camera
-            sideCam.SetActive(true);
-            playerCam.SetActive(false);
-            return; // Skip movement, rotation, weapons
-        }
-        else
-        {
-            // Restore player camera
-            sideCam.SetActive(false);
-            playerCam.SetActive(true);
+    private void SetDialogueCamera(bool dialogueActive)
+    {
+        sideCam.SetActive(dialogueActive);
+        playerCam.SetActive(!dialogueActive);
+    }
 
-            // Restore first/third person camera positions
+    private void HandleCameraSwitch()
+    {
+        if (Keyboard.current.cKey.wasPressedThisFrame)
+        {
+            firstPersonPerspective = !firstPersonPerspective;
             if (firstPersonPerspective)
             {
                 playerCam.transform.localPosition = firstPerson.transform.localPosition;
@@ -74,63 +97,37 @@ public class PlayerController : MonoBehaviour
                 playerCam.transform.localRotation = thirdPerson.transform.localRotation;
             }
         }
+    }
 
-
-        if (Keyboard.current.escapeKey.wasPressedThisFrame)
-        {
-            Application.Quit();
-        }
-
+    private void HandleMovementInput()
+    {
         moveValue = moveAction.ReadValue<Vector2>();
         rotateValue = rotateAction.ReadValue<Vector2>();
+    }
+
+    private void HandleRotation()
+    {
         transform.Rotate(Vector3.up, rotateValue.x * rotationSpeed * Time.fixedDeltaTime);
         weaponPivot.transform.Rotate(Vector3.right, -rotateValue.y * rotationSpeed * Time.fixedDeltaTime);
 
-        angles = weaponPivot.transform.localEulerAngles;
-        if (angles.x < 300 && angles.x > 180)
-        {
-            weaponPivot.transform.localRotation = Quaternion.Euler(300, 0, 0);
-        }
-        if (angles.x > 45 && angles.x < 180)
-        {
-            weaponPivot.transform.localRotation = Quaternion.Euler(45, 0, 0);
-        }
-        if (fireAction.IsPressed())
-        {
-            BroadcastMessage("FireWeapon");
-        }
-        if (Keyboard.current.cKey.wasPressedThisFrame)
-        {
-            firstPersonPerspective = !firstPersonPerspective;
-            if (firstPersonPerspective)
-            {
-                playerCam.transform.localPosition = firstPerson.transform.localPosition;
-            }
-            else
-            {
-                playerCam.transform.localPosition = thirdPerson.transform.localPosition;
-            }
-        }
-        // Skip movement during dialogue
-        if (dialogue) return;
+        Vector3 angles = weaponPivot.transform.localEulerAngles;
+        if (angles.x < 300 && angles.x > 180) weaponPivot.transform.localRotation = Quaternion.Euler(300, 0, 0);
+        if (angles.x > 45 && angles.x < 180) weaponPivot.transform.localRotation = Quaternion.Euler(45, 0, 0);
+    }
 
-        // Jump input
+    private void HandleJumpAndGravity()
+    {
         if (Keyboard.current.spaceKey.wasPressedThisFrame && isGrounded)
         {
             verticalVelocity = jumpForce;
             isGrounded = false;
         }
 
-        // Apply gravity
         if (!isGrounded)
-        {
             verticalVelocity += gravity * Time.deltaTime;
-        }
 
-        // Apply vertical movement
         transform.Translate(Vector3.up * verticalVelocity * Time.deltaTime, Space.World);
 
-        // Simple ground check (flat ground)
         if (transform.position.y <= groundHeight)
         {
             Vector3 pos = transform.position;
@@ -139,35 +136,83 @@ public class PlayerController : MonoBehaviour
             verticalVelocity = 0f;
             isGrounded = true;
         }
-
-        if (Keyboard.current.qKey.wasPressedThisFrame)
-        {
-            SwapWeapons();
-        }
-
-        if (Keyboard.current.escapeKey.wasPressedThisFrame)
-        {
-            Application.Quit();
-        }
     }
-    private void FixedUpdate()
+
+    private void HandleFire()
     {
-        if (!PlayerController.dialogue)
+        if (fireAction.IsPressed() && currentWeaponInstance != null)
         {
-            transform.Translate(new Vector3(moveValue.x, 0, moveValue.y) * movementSpeed * Time.fixedDeltaTime);
+            currentWeaponInstance.GetComponent<Weapon>()?.FireWeapon();
         }
-        if (dialogue)
+    }
+
+    private void HandleWeaponSwap()
+    {
+        if (Keyboard.current.qKey.wasPressedThisFrame && weapons.Count > 1)
         {
-            return;
+            activeWeaponIndex++;
+            if (activeWeaponIndex >= weapons.Count) activeWeaponIndex = 0;
+            EquipWeapon(activeWeaponIndex);
+        }
+    }
+
+    private void HandleWeaponDrop()
+    {
+        if (Keyboard.current.gKey.wasPressedThisFrame && weapons.Count > 0)
+        {
+            DropWeapon(activeWeaponIndex);
+        }
+    }
+
+    public void PickupWeapon(WeaponData weapon)
+    {
+        if (!weapons.Contains(weapon))
+        {
+            weapons.Add(weapon);
+            EquipWeapon(weapons.Count - 1);
+        }
+    }
+
+    public void DropWeapon(int index)
+    {
+        if (index < 0 || index >= weapons.Count) return;
+
+        WeaponData droppedWeapon = weapons[index];
+        weapons.RemoveAt(index);
+
+        if (weaponPickupPrefab != null)
+        {
+            GameObject pickup = Instantiate(weaponPickupPrefab, transform.position + transform.forward, Quaternion.identity);
+            pickup.GetComponent<WeaponPickup>().weaponData = droppedWeapon;
         }
 
+        if (activeWeaponIndex >= weapons.Count) activeWeaponIndex = weapons.Count - 1;
+        EquipWeapon(activeWeaponIndex);
     }
-    void MyInput()
+
+    private void EquipWeapon(int index)
     {
-        // Get horizontal and vertical input
-        moveValue.x = Input.GetAxis("Horizontal"); // A/D or Left/Right
-        moveValue.y = Input.GetAxis("Vertical"); // W/S or Up/Down
+        if (currentWeaponInstance != null)
+            Destroy(currentWeaponInstance);
+
+        if (weapons.Count == 0) return;
+
+        activeWeaponIndex = index;
+        WeaponData weapon = weapons[index];
+
+        if (weapon.weaponPrefab != null)
+        {
+            currentWeaponInstance = Instantiate(weapon.weaponPrefab, weaponPivot.transform);
+            currentWeaponInstance.transform.localPosition = Vector3.zero;
+            currentWeaponInstance.transform.localRotation = Quaternion.identity;
+
+            // Assign WeaponData to Weapon script
+            Weapon weaponComp = currentWeaponInstance.GetComponent<Weapon>();
+            if (weaponComp != null)
+                weaponComp.weaponData = weapon;
+        }
     }
+
     private void OnEnable()
     {
         moveAction.Enable();
@@ -182,16 +227,5 @@ public class PlayerController : MonoBehaviour
         rotateAction.Disable();
         fireAction.Disable();
         jumpAction.Disable();
-    }
-    private void SwapWeapons()
-    {
-        activeWeaponIndex = (activeWeaponIndex == 1) ? 2 : 1;
-        SetActiveWeapon(activeWeaponIndex);
-    }
-
-    private void SetActiveWeapon(int index)
-    {
-        if (weapon1 != null) weapon1.SetActive(index == 1);
-        if (weapon2 != null) weapon2.SetActive(index == 2);
     }
 }
