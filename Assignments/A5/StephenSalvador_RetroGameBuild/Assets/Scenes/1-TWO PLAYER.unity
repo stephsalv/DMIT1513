@@ -4029,8 +4029,15 @@ MonoBehaviour:
   gameMenu: {fileID: 811070579}
   mainMenuButton: {fileID: 811070579}
   pauseMenuButton: {fileID: 226688926}
-  players: []
-  ghosts: []
+  players:
+  - {fileID: 950277401}
+  - {fileID: 1834863181}
+  ghosts:
+  - {fileID: 1959373146}
+  - {fileID: 1225865201}
+  - {fileID: 1761272973}
+  - {fileID: 417521885}
+  - {fileID: 1566354208}
   audioSource: {fileID: 1407729603}
   pauseClip: {fileID: 8300000, guid: f7adba9901fc71847b0d3160957bfa9f, type: 3}
   bgMusic: {fileID: 1064311808}
@@ -12126,9 +12133,21 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1834863183}
     - target: {fileID: 3320788416269364044, guid: 119f00f445d3580468986c4d07c031bf, type: 3}
+      propertyPath: look
+      value: 
+      objectReference: {fileID: -7503492448808307876, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+    - target: {fileID: 3320788416269364044, guid: 119f00f445d3580468986c4d07c031bf, type: 3}
+      propertyPath: move
+      value: 
+      objectReference: {fileID: -540864866223464162, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+    - target: {fileID: 3320788416269364044, guid: 119f00f445d3580468986c4d07c031bf, type: 3}
       propertyPath: eatClip
       value: 
       objectReference: {fileID: 8300000, guid: 37f34806c652ff14db060a085c702add, type: 3}
+    - target: {fileID: 3320788416269364044, guid: 119f00f445d3580468986c4d07c031bf, type: 3}
+      propertyPath: isAlive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3320788416269364044, guid: 119f00f445d3580468986c4d07c031bf, type: 3}
       propertyPath: walkClip
       value: 

@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.InputSystem;
 using TMPro;
 
@@ -83,7 +83,28 @@ public class PlayerController : MonoBehaviour
             moveInput = new Vector2(myJoystick.stick.x.ReadValue(), myJoystick.stick.y.ReadValue());
             lookInput = moveInput;
         }
-        if (Input.GetKeyDown(KeyCode.Escape))
+        else
+        {
+            if (playerIndex == 0)
+            {
+                moveInput = new Vector2(
+                    (Keyboard.current.dKey.isPressed ? 1 : 0) - (Keyboard.current.aKey.isPressed ? 1 : 0),
+                    (Keyboard.current.wKey.isPressed ? 1 : 0) - (Keyboard.current.sKey.isPressed ? 1 : 0)
+                );
+            }
+            else if (playerIndex == 1) // Player 2 → Arrow Keys
+            {
+                moveInput = new Vector2(
+                    (Keyboard.current.rightArrowKey.isPressed ? 1 : 0) - (Keyboard.current.leftArrowKey.isPressed ? 1 : 0),
+                    (Keyboard.current.upArrowKey.isPressed ? 1 : 0) - (Keyboard.current.downArrowKey.isPressed ? 1 : 0)
+                );
+            }
+
+            moveInput = moveInput.normalized;
+            lookInput = moveInput;
+        }
+
+        if (Keyboard.current.escapeKey.wasPressedThisFrame)
         {
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;

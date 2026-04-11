@@ -35,7 +35,8 @@ public class MenuManager : MonoBehaviour
 
     private void Update()
     {
-        if (Gamepad.current.startButton.wasPressedThisFrame)
+        if ((Gamepad.current != null && Gamepad.current.startButton.wasPressedThisFrame) ||
+            (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame))
         {
             if (!isPaused)
                 Pause();
